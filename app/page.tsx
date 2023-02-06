@@ -1,8 +1,9 @@
 /**
  * Index page.
  */
-export default function Index() {
+export default async function Index() {
+
   return (
-    <h1>Index</h1>
+    <h1>Hi Index</h1>
   )
 }
