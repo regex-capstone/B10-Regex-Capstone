@@ -14,7 +14,7 @@ if (!cached) {
  * not allow multiple connections to reduce redundency.
  * @returns whole Mongoose object
  */
-async function connectToDatabase() {
+export default async function connectToDatabase() {
     if (!MONGODB_URI) { // ERROR - no MONGODB_URI has been determined
         throw new Error(
             'Please define the MONGODB_MONGODB_URI environment variable inside .env.local'
@@ -54,4 +54,3 @@ async function connectToDatabase() {
     return cached.conn
 }
 
-connectToDatabase()

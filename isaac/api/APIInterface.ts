@@ -1,6 +1,6 @@
-import Page from "../models/Page"
-import User from "../models/User"
-import Metric from "../models/Metric"
+import Page from "../models/IPage"
+import User from "../models/IUser"
+import Metric from "../models/IMetric"
 
 export default interface API {
   getPage(id: string): Promise<Page>,

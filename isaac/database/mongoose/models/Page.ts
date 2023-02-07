@@ -1,9 +1,5 @@
 import mongoose from 'mongoose'
-
-interface IPage {
-    title: String;
-    content: String;
-}
+import IPage from '@/isaac/models/IPage'
 
 const pageSchema = new mongoose.Schema<IPage>({
     title: { type: String, required: true },
