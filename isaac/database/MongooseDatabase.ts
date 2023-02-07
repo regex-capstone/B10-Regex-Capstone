@@ -1,7 +1,7 @@
-import Database from "./DatabaseInterface";
-import connectToDatabase from '@/isaac/database/mongoose/MongooseProvider';
-import { Page } from './mongoose/models/index'
 import type { IPage } from '../models/index';
+import Database from "./DatabaseInterface";
+import { Page } from './mongoose/models/index';
+import connectToDatabase from './mongoose/MongooseProvider';
 
 async function init() {
   console.log('Initializing Mongoose connection to MongoDB...');
@@ -11,7 +11,7 @@ async function init() {
 const databaseConnection = await init();
 console.log(databaseConnection ? 'Mongoose database initialized' : 'Mongoose database failed to initialize');
 
-const mongooseDatabase: Database = {
+const MongooseDatabase: Database = {
   getPage: async (id: string) => {
     const page: IPage[] = await Page.find({ _id: id });
 
@@ -19,7 +19,7 @@ const mongooseDatabase: Database = {
   },
 
   // getUser: (id: string) => {
-  //   return Promise.resolve({
+  //   return Promise.resolve({s
   //     ...MockUser,
   //     id: id
   //   });
@@ -30,4 +30,4 @@ const mongooseDatabase: Database = {
   // }
 };
 
-export default mongooseDatabase;
+export default MongooseDatabase;

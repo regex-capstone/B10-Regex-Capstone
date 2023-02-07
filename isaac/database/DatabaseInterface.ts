@@ -1,5 +1,4 @@
-import IPage from '../models/IPage';
-import IUser from '../models/IUser';
+import type { IPage, IUser } from '../models/index';
 
 export default interface Database {
   getPage(id: string): Promise<IPage>,

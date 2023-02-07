@@ -11,13 +11,13 @@ const ServerAPI: API = {
     return [];
   },
 
-  async getUser(id: string): Promise<IUser> {
-    return IsaacAPI.getUser(id);
-  },
+  // async getUser(id: string): Promise<IUser> {
+  //   return IsaacAPI.getUser(id);
+  // },
 
-  async getMetrics(options: any): Promise<any> {
-    return {};
-  }
+  // async getMetrics(options: any): Promise<any> {
+  //   return {};
+  // }
 }
 
 export default ServerAPI;

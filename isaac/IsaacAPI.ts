@@ -1,12 +1,11 @@
-import type Database from "./database/DatabaseInterface";
-import mongooseDatabase from "./database/MongooseDatabase";
-import Page from "./models/IPage";
-import User from "./models/IUser";
+import type { IPage, IUser } from './models/index';
+import type Database from './database/DatabaseInterface';
+import MongooseDatabase from './database/MongooseDatabase';
 
-const database: Database = mongooseDatabase;
+const database: Database = MongooseDatabase;
 
-async function getPage(id: string): Promise<Page> {
-  const page: Page = await database.getPage(id);
+async function getPage(id: string): Promise<IPage> {
+  const page: IPage = await database.getPage(id);
   return page;
 }
 

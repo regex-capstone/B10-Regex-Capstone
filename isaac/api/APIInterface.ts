@@ -1,12 +1,10 @@
-import Page from "../models/IPage"
-import User from "../models/IUser"
-import Metric from "../models/IMetric"
+import type { IPage, IUser, IMetric } from '@/isaac/models';
 
 export default interface API {
-  getPage(id: string): Promise<Page>,
-  search(options: SearchOptions): Promise<Page[]>,
-  getUser(id: string): Promise<User>,
-  getMetrics(options?: MetricsOptions): Promise<Metric>,
+  getPage(id: string): Promise<IPage>,
+  search(options: SearchOptions): Promise<IPage[]>,
+  // getUser(id: string): Promise<User>,
+  // getMetrics(options?: MetricsOptions): Promise<IMetric>,
 }
 
 export interface SearchOptions {

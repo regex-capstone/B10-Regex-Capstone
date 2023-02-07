@@ -40,7 +40,6 @@ export default async function connectToDatabase() {
 
     try {
         const mongo = await cached.promise
-        console.log('a mongo connection is successful')
 
         if (mongo.connections.length > 1) { // ERROR - multiple mongo connections when supposed to be a singleton
             throw Error('Should not have multiple mongo connections.')
