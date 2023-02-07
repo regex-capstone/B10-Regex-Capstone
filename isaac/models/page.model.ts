@@ -13,3 +13,4 @@ const pageSchema = new mongoose.Schema<IPage>({
 const modelName = mongoose.models.Page || mongoose.model<IPage>('Page', pageSchema)
 
 export default modelName
+ 

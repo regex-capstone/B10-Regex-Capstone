@@ -14,7 +14,7 @@ if (!cached) {
  * not allow multiple connections to reduce redundency.
  * @returns whole Mongoose object
  */
-export default async function connectToDatabase() {
+async function connectToDatabase() {
     if (!MONGODB_URI) { // ERROR - no MONGODB_URI has been determined
         throw new Error(
             'Please define the MONGODB_MONGODB_URI environment variable inside .env.local'
@@ -40,6 +40,7 @@ export default async function connectToDatabase() {
 
     try {
         const mongo = await cached.promise
+        console.log('a mongo connection is successful')
 
         if (mongo.connections.length > 1) { // ERROR - multiple mongo connections when supposed to be a singleton
             throw Error('Should not have multiple mongo connections.')
@@ -52,3 +53,5 @@ export default async function connectToDatabase() {
     }
     return cached.conn
 }
+
+connectToDatabase()

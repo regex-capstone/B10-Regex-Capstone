@@ -1,17 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import connectToDatabase from '@/providers/MongooseProvider';
-import Page from '@/models/page.model';
+import '@/isaac/providers/MongooseProvider';
+import Page from '@/isaac/models/page.model';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    await connectToDatabase()
 
-    const page = new Page({
-        title: 'Test Title',
-        content: 'Test content'
-    })
+    // const page = new Page({
+    //     title: 'Test Title',
+    //     content: 'Test content'
+    // })
 
-    await page.save();
+    // await page.save();
 
-    return res.status(200).json(page);
+    return res.status(200).json({ text: 'hi' });
 }
