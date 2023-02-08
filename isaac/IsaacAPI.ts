@@ -1,13 +1,46 @@
-import type { IPage, IUser } from './models/index';
+import type { Page, User, Revision } from './models/index';
 import type Database from './database/DatabaseInterface';
-import MongooseDatabase from './database/MongooseDatabase';
+import MongooseDatabase from './database/mongoose/MongooseDatabase';
 
 const database: Database = MongooseDatabase;
 
-async function getPage(id: string): Promise<IPage> {
-  const page: IPage = await database.getPage(id);
-  return page;
+async function getPages() {
+  return await database.getPages();
 }
+
+async function getPageById(id: string) {
+  return (await database.getPages(id))[0];
+}
+
+async function addNewPage(p: Page) {
+  // add a new page
+  const pageId: string = await database.addPage(p);
+
+  if (!pageId) {
+    throw new Error('Error adding new page.');
+  }
+
+  return pageId;
+}
+
+
+async function getRevisions(p_id: string) {
+  return await database.getRevisions(p_id);;
+}
+
+async function getRevisionById(r_id: string) {
+  return (await database.getRevisions(r_id))[0];
+}
+
+async function addNewRevision(p_id: string, content: string) {
+  const rev: Revision = {
+    content: content,
+    rev_page_id: p_id
+  };
+
+  return await database.addRevision(rev);;
+}
+
 
 // async function getUser(id: string): Promise<User> {
 //   const user: User = await database.getUser(id);
@@ -15,6 +48,10 @@ async function getPage(id: string): Promise<IPage> {
 // }
 
 export default {
-  getPage: getPage,
-  // getUser: getUser,
+  getPages: getPages,
+  getPageById: getPageById,
+  addNewPage: addNewPage,
+  getRevisions: getRevisions,
+  getRevisionById: getRevisionById,
+  addNewRevision: addNewRevision 
 };

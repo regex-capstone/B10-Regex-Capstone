@@ -1,9 +1,11 @@
-import IPage from './IPage';
-import IUser from './IUser';
-import IMetric from './IMetric';
+import Page from './Page';
+import User from './User';
+import Metric from './Metric';
+import Revision from './Revision';
 
 export type {
-    IPage,
-    IUser,
-    IMetric
+    Page,
+    User,
+    Metric,
+    Revision
 }

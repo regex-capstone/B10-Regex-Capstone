@@ -1,8 +1,12 @@
-import type { IPage, IUser } from '../models/index';
+import type { Page, User } from '../models/index';
+import Revision from '../models/Revision';
 
 export default interface Database {
-  getPage(id: string): Promise<IPage>,
-  // getUser(id: string): Promise<IUser>,
+  getPages(p_id?: string): Promise<Page[]>,
+  addPage(page: Page): Promise<string>,
+  getRevisions(p_id: string): Promise<Revision[]>,
+  addRevision(rev: Revision): Promise<string>
+  // getUser(id: string): Promise<User>,
 
-  // search(options?: any): Promise<IPage[]>,
+  // search(options?: any): Promise<Page[]>,
 }
