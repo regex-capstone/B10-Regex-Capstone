@@ -24,12 +24,12 @@ async function addNewPage(p: Page) {
 }
 
 
-async function getRevisions(p_id: string) {
-  return await database.getRevisions(p_id);;
+async function getRevisionsByPId(p_id: string) {
+  return await database.getRevisionsByPId(p_id);
 }
 
-async function getRevisionById(r_id: string) {
-  return (await database.getRevisions(r_id))[0];
+async function getRevisionByRId(r_id: string) {
+  return await database.getRevisionByRId(r_id);
 }
 
 async function addNewRevision(p_id: string, content: string) {
@@ -51,7 +51,7 @@ export default {
   getPages: getPages,
   getPageById: getPageById,
   addNewPage: addNewPage,
-  getRevisions: getRevisions,
-  getRevisionById: getRevisionById,
+  getRevisionsByPId: getRevisionsByPId,
+  getRevisionByRId: getRevisionByRId,
   addNewRevision: addNewRevision 
 };

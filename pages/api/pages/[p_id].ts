@@ -10,15 +10,15 @@ const api: API = ServerAPI;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const method = req.method
   const query = req.query
-  const id = query.id
+  const p_id = query.p_id
 
   try {
     switch (method) {
       case 'GET':
         // get the page information
-        const page: Page = await api.getPage(id);
+        const page: Page = await api.getPage(p_id);
         // get the latest revision information
-        const rev: Revision = await api.getRecentPageRevision(id);
+        const rev: Revision = await api.getRecentPageRevision(p_id);
         res.status(200).json({
           success: true,
           page: page,

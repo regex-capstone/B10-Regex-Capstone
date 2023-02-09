@@ -6,6 +6,7 @@ export default interface API {
   getRecentPageRevision(p_id: string): Promise<Revision>,
   addNewPage(p: Page): Promise<string>,
   getPageRevisions(p_id: string): Promise<Revision[]>,
+  getRevision(r_id: string): Promise<Revision>,
   updateLatestPageRevision(p_id: string, content: string): Promise<string>
   // search(options: SearchOptions): Promise<Page[]>,
   // getUser(id: string): Promise<User>,

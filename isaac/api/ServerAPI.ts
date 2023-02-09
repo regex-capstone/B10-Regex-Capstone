@@ -10,7 +10,7 @@ const ServerAPI: API = {
     return await IsaacAPI.getPageById(p_id)
   },
   async getRecentPageRevision(p_id: string) {
-    return (await IsaacAPI.getRevisions(p_id))[0]
+    return (await IsaacAPI.getRevisionsByPId(p_id))[0]
   },
   async addNewPage(p: Page) {
     // add a new page
@@ -30,20 +30,14 @@ const ServerAPI: API = {
     return pageId;
   },
   async getPageRevisions(p_id: string) {
-    return await IsaacAPI.getRevisions(p_id);
+    return await IsaacAPI.getRevisionsByPId(p_id);
+  },
+  async getRevision(r_id: string) {
+    return await IsaacAPI.getRevisionByRId(r_id);
   },
   async updateLatestPageRevision(p_id: string, content: string) {
-    return IsaacAPI.addNewRevision(p_id, content);
-  },
-
-
-  // async getUser(id: string): Promise<User> {
-  //   return IsaacAPI.getUser(id);
-  // },
-
-  // async getMetrics(options: any): Promise<any> {
-  //   return {};
-  // }
+    return await IsaacAPI.addNewRevision(p_id, content);
+  }
 }
 
 export default ServerAPI;

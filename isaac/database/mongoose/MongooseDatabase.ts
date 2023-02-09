@@ -28,11 +28,17 @@ const MongooseDatabase: Database = {
     });
     return page._id.toString();
   },
-  getRevisions: async (p_id: string) => {
+  getRevisionsByPId: async (p_id: string) => {
     const revs: Revision[] = await MongooseModels.Revision
       .find({ rev_page_id: p_id })
       .sort({ created_at: -1 });
     return revs;
+  },
+  getRevisionByRId: async (r_id: string) => {
+    const revs: Revision[] = await MongooseModels.Revision
+      .find({ _id: r_id })
+      .sort({ created_at: -1 });
+    return revs[0];
   },
   addRevision: async (r: Revision) => {
     r.created_at = Date.now();
@@ -42,17 +48,6 @@ const MongooseDatabase: Database = {
     });
     return rev._id.toString();
   }
-
-  // getUser: (id: string) => {
-  //   return Promise.resolve({s
-  //     ...MockUser,
-  //     id: id
-  //   });
-  // },
-
-  // search: (options?: any) => {
-  //   return Promise.resolve([MockPage]);
-  // }
 };
 
 export default MongooseDatabase;
