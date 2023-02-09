@@ -2,7 +2,6 @@
 Repository for UW Informatics Capstone group B10 (Regex), 2023
 
 # Contact Info
-
 Elbert Cheng
 echeng23@uw.edu
 
