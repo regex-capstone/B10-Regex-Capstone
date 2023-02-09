@@ -11,22 +11,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const method = req.method
     const body = req.body;
 
-    switch (method) {
-        case 'GET':
-            const allPages = await api.getPages();
-            res.status(200).json(allPages)
-            break
-        case 'POST':
-            if (!body) throw new Error('POST request has no body.');
+    try {
+        switch (method) {
+            case 'GET':
+                const allPages = await api.getPages();
+                res.status(200).json(allPages)
+                break
+            case 'POST':
+                if (!body) throw new Error('POST request has no body.');
     
-            const pageId = await api.addNewPage(body.page);
-            res.status(200).json({
-                success: true,
-                page_id: pageId
-            });
-            break;
-        default:
-            res.setHeader('Allow', ['GET', 'POST'])
-            res.status(405).end(`Method ${method} Not Allowed`)
+                const pageId = await api.addNewPage(body.page);
+                res.status(200).json({
+                    success: true,
+                    page_id: pageId
+                });
+                break;
+            default:
+                res.setHeader('Allow', ['GET', 'POST'])
+                res.status(405).end(`Method ${method} Not Allowed`)
+        }
+    } catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong...',
+            error: '' + e
+        });
     }
 }

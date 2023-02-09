@@ -20,7 +20,7 @@ export default async function connectToDatabase() {
             'Please define the MONGODB_MONGODB_URI environment variable inside .env.local'
         )
     }
-    
+
     if (!MONGODB_DBNAME) { // ERROR - no db has been determined
         throw new Error(
             'Please define the MONGODB_DB environment variable inside .env.local'

@@ -5,40 +5,40 @@ import MongooseDatabase from './database/mongoose/MongooseDatabase';
 const database: Database = MongooseDatabase;
 
 async function getPages() {
-  return await database.getPages();
+    return await database.getPages();
 }
 
-async function getPageById(id: string) {
-  return (await database.getPages(id))[0];
+async function getPageByPId(p_id: string) {
+    return (await database.getPages(p_id))[0];
 }
 
 async function addNewPage(p: Page) {
-  // add a new page
-  const pageId: string = await database.addPage(p);
+    // add a new page
+    const pageId: string = await database.addPage(p);
 
-  if (!pageId) {
-    throw new Error('Error adding new page.');
-  }
+    if (!pageId) {
+        throw new Error('Error adding new page.');
+    }
 
-  return pageId;
+    return pageId;
 }
 
 
 async function getRevisionsByPId(p_id: string) {
-  return await database.getRevisionsByPId(p_id);
+    return await database.getRevisionsByPId(p_id);
 }
 
 async function getRevisionByRId(r_id: string) {
-  return await database.getRevisionByRId(r_id);
+    return await database.getRevisionByRId(r_id);
 }
 
 async function addNewRevision(p_id: string, content: string) {
-  const rev: Revision = {
-    content: content,
-    rev_page_id: p_id
-  };
+    const rev: Revision = {
+        content: content,
+        rev_page_id: p_id
+    };
 
-  return await database.addRevision(rev);;
+    return await database.addRevision(rev);;
 }
 
 
@@ -48,10 +48,10 @@ async function addNewRevision(p_id: string, content: string) {
 // }
 
 export default {
-  getPages: getPages,
-  getPageById: getPageById,
-  addNewPage: addNewPage,
-  getRevisionsByPId: getRevisionsByPId,
-  getRevisionByRId: getRevisionByRId,
-  addNewRevision: addNewRevision 
+    getPages: getPages,
+    getPageByPId: getPageByPId,
+    addNewPage: addNewPage,
+    getRevisionsByPId: getRevisionsByPId,
+    getRevisionByRId: getRevisionByRId,
+    addNewRevision: addNewRevision
 };

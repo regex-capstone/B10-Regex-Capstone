@@ -8,26 +8,32 @@ import Revision from '../../../isaac/models/Revision';
 const api: API = ServerAPI;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const method = req.method
-  const query = req.query
-  const r_id = query.r_id
+    const method = req.method
+    const query = req.query
+    const r_id = query.r_id
 
-  try {
-    switch (method) {
-      case 'GET':
-        // get the page information
-        const rev: Revision = await api.getRevision(r_id);
-        res.status(200).json({
-          success: true,
-          rev: rev
+    try {
+        switch (method) {
+            case 'GET':
+                const rev: Revision = await api.getRevision(r_id);
+
+                if (!rev) {
+                    throw new Error('Revision not found.');
+                }
+
+                res.status(200).json({
+                    success: true,
+                    rev: rev
+                });
+                break;
+            default:
+                res.setHeader('Allow', ['GET'])
+                res.status(405).send(`Method ${method} Not Allowed`)
+        }
+    } catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong...',
+            error: '' + e
         });
-        //@TODO: handle cannot find page
-        break;
-      default:
-        res.setHeader('Allow', ['GET'])
-        res.status(405).send(`Method ${method} Not Allowed`)
     }
-  } catch (e) {
-    res.status(500).send(e);
-  }
 }

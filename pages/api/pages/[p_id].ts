@@ -8,29 +8,39 @@ import Revision from '../../../isaac/models/Revision';
 const api: API = ServerAPI;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const method = req.method
-  const query = req.query
-  const p_id = query.p_id
+    const method = req.method
+    const query = req.query
+    const p_id = query.p_id
 
-  try {
-    switch (method) {
-      case 'GET':
-        // get the page information
-        const page: Page = await api.getPage(p_id);
-        // get the latest revision information
-        const rev: Revision = await api.getRecentPageRevision(p_id);
-        res.status(200).json({
-          success: true,
-          page: page,
-          rev: rev
+    try {
+        switch (method) {
+            case 'GET':
+                const page: Page = await api.getPage(p_id);
+
+                if (!page) {
+                    throw new Error('Page not found.');
+                }
+
+                const rev: Revision = await api.getRecentPageRevision(p_id);
+
+                if (!rev) {
+                    throw new Error('Page has no revision content.');
+                }
+
+                res.status(200).json({
+                    success: true,
+                    page: page,
+                    rev: rev
+                });
+                break;
+            default:
+                res.setHeader('Allow', ['GET'])
+                res.status(405).send(`Method ${method} Not Allowed`)
+        }
+    } catch (e) {
+        res.status(500).json({
+            message: 'Something went wrong...',
+            error: '' + e
         });
-        //@TODO: handle cannot find page
-        break;
-      default:
-        res.setHeader('Allow', ['GET'])
-        res.status(405).send(`Method ${method} Not Allowed`)
     }
-  } catch (e) {
-    res.status(500).send(e);
-  }
 }
