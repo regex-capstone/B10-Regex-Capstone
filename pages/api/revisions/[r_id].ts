@@ -10,7 +10,7 @@ const api: API = ServerAPI;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
     const query = req.query
-    const r_id = query.r_id
+    const r_id = query.r_id as string
 
     try {
         switch (method) {

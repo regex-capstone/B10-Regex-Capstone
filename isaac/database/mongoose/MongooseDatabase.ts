@@ -23,7 +23,7 @@ const MongooseDatabase: Database = {
     addPage: async (p: Page) => {
         p.created_at = Date.now();
         const page = new MongooseModels.Page(p);
-        await page.save((err, res) => {
+        await page.save((err: string | undefined, res: any) => {
             if (err) throw new Error(err);
         });
         return page._id.toString();
@@ -43,7 +43,7 @@ const MongooseDatabase: Database = {
     addRevision: async (r: Revision) => {
         r.created_at = Date.now();
         const rev = new MongooseModels.Revision(r);
-        await rev.save((err, res) => {
+        await rev.save((err: string | undefined, res: any) => {
             if (err) throw new Error(err);
         });
         return rev._id.toString();
