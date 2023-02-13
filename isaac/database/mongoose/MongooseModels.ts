@@ -1,19 +1,27 @@
 import mongoose from 'mongoose';
-import Page from '@/isaac/models/Page';
-import Revision from '../../models/Revision';
+import { Page, Revision, Category } from '../../models';
 
-const pageSchema = new mongoose.Schema({
-    title: String,
-    created_at: Date,
-})
+const MongooseModels = {
+    Page: new mongoose.Schema({
+        title: String,
+        created_at: Date,
+        page_category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
+    }),
 
-const revisionSchema = new mongoose.Schema({
-    content: String,
-    created_at: Date,
-    rev_page_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Page' }
-})
+    Revision: new mongoose.Schema({
+        content: String,
+        created_at: Date,
+        rev_page_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Page' }
+    }),
+
+    Category: new mongoose.Schema({
+        name: String,
+        created_at: Date
+    })
+}
 
 export default {
-    Page: mongoose.models.Page || mongoose.model<Page>('Page', pageSchema),
-    Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', revisionSchema),
+    Page: mongoose.models.Page || mongoose.model<Page>('Page', MongooseModels.Page),
+    Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', MongooseModels.Revision),
+    Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category)
 }

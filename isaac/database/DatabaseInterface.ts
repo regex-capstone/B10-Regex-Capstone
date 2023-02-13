@@ -1,13 +1,19 @@
-import type { Page, User } from '../models/index';
-import Revision from '../models/Revision';
+import type { Page, Revision, Category } from '../models/index';
 
 export default interface Database {
-    getPages(p_id?: string): Promise<Page[]>,
-    addPage(page: Page): Promise<string>,
-    getRevisionsByPId(p_id: string): Promise<Revision[]>,
-    getRevisionByRId(r_id: string): Promise<Revision>,
-    addRevision(rev: Revision): Promise<string>
-    // getUser(id: string): Promise<User>,
-
+    getLatestPages(query: Object): Promise<DatabaseResponse>,
+    getLatestRevisions(query: Object): Promise<DatabaseResponse>,
+    getLatestCategories(query: Object): Promise<DatabaseResponse>,
+    addPage(page: Page): Promise<DatabaseResponse>,
+    addRevision(rev: Revision): Promise<DatabaseResponse>,
+    addCategory(cat: Category): Promise<DatabaseResponse>,
     // search(options?: any): Promise<Page[]>,
+}
+
+export interface DatabaseResponse {
+    success: boolean,
+    payload?: string |
+        Page | Page[] |
+        Revision | Revision[] |
+        Category | Category[]
 }

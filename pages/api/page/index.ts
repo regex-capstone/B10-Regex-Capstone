@@ -1,11 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next';
-import MongooseModels from '@/isaac/database/mongoose/MongooseModels';
 import '@/isaac/database/mongoose/MongooseProvider';
 import API from '@/isaac/api/APIInterface';
-import ServerAPI from '@/isaac/api/ServerAPI';
+import ApiEndpoint from '@/isaac/api/APIEndpoint';
 
-const api: API = ServerAPI;
+const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
@@ -13,21 +12,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
+            case 'GET':
+                const allPages = await api.getPages();
+                res.status(200).json(allPages)
+                break
             case 'POST':
                 if (!body) throw new Error('POST request has no body.');
-
-                const p_id = body.p_id;
-                const content = body.content
-
-                const revId = await api.updateLatestPageRevision(p_id, content);
-
+    
+                const pageId = await api.addNewPage(body.page);
                 res.status(200).json({
                     success: true,
-                    rev_id: revId
+                    page_id: pageId
                 });
                 break;
             default:
-                res.setHeader('Allow', ['POST'])
+                res.setHeader('Allow', ['GET', 'POST'])
                 res.status(405).end(`Method ${method} Not Allowed`)
         }
     } catch (e) {
