@@ -25,6 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     success: true,
                     category_id: categoryId
                 });
+                
                 break;
             default:
                 res.setHeader('Allow', ['GET', 'POST'])

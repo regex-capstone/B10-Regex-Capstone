@@ -46,11 +46,9 @@ const MongooseDatabase: Database = {
     },
 
     addPage: async (p: Page) => {
-        console.log(p);
         const page = new MongooseModels.Page(p);
         await page.save((err: string | undefined, res: any) => {
             if (err) throw new Error(err);
-            console.log(res);
         });
 
         return {
@@ -75,7 +73,6 @@ const MongooseDatabase: Database = {
         const cat = new MongooseModels.Category(c);
         await cat.save((err: string | undefined, res: any) => {
             if (err) throw new Error(err);
-            console.log(res);
         });
 
         return {
