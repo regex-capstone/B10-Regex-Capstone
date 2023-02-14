@@ -1,9 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { NextApiRequest, NextApiResponse } from 'next'
-import type API from '../../../isaac/api/APIInterface';
-import Page from '../../../isaac/models/Page';
-import Revision from '../../../isaac/models/Revision';
+import type API from '../../../../isaac/api/APIInterface';
+import Page from '../../../../isaac/models/Page';
+import Revision from '../../../../isaac/models/Revision';
 
 const api: API = ApiEndpoint;
 
@@ -21,16 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     throw new Error('Page not found.');
                 }
 
-                const rev: Revision = await api.getRecentPageRevision(p_id);
+                const revs: Revision[] = await api.getAllPageRevisions(p_id);
 
-                if (!rev) {
+                if (!revs) {
                     throw new Error('Page has no revision content.');
                 }
 
                 res.status(200).json({
                     success: true,
-                    page: page,
-                    revision: rev
+                    revision: revs
                 });
                 break;
             default:

@@ -26,7 +26,7 @@ const ApiEndpoint: API = {
         // start the page's first revision
         const revId: string = await IsaacAPI.addNewRevision({
             created_at: createdAt,
-            content: '',
+            content: '<add content here>',
             rev_page_id: pageId
         }) as string;
 
@@ -37,11 +37,11 @@ const ApiEndpoint: API = {
 
     // revisions
     async getRecentPageRevision(p_id: string) {
-        return (await IsaacAPI.getRevisions({ id: p_id, single: true })) as Revision;
+        return (await IsaacAPI.getRevisions({ parent_id: p_id, single: true })) as Revision;
     },
 
     async getAllPageRevisions(p_id: string) {
-        return (await IsaacAPI.getRevisions({ id: p_id })) as Revision[];
+        return (await IsaacAPI.getRevisions({ parent_id: p_id })) as Revision[];
     },
 
     async getRevision(r_id: string) {
