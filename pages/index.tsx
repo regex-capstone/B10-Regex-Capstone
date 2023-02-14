@@ -32,8 +32,8 @@ export default function Index() {
         <Divider />
         <Container>
           <Grid2 container>
-            {categories.map((category) => (
-              <Grid2 xs={6}>
+            {categories.map((category, i) => (
+              <Grid2 key={i} xs={6}>
                 <a href="#">{category}</a>
               </Grid2>
             ))}

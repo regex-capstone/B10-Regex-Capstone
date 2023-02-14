@@ -19,7 +19,7 @@ const ApiEndpoint: API = {
         const pageId: string = await IsaacAPI.addNewPage({
             ...p,
             created_at: createdAt
-        });
+        }) as string;
 
         if (!pageId) throw new Error('Error adding new page.');
 
@@ -28,7 +28,7 @@ const ApiEndpoint: API = {
             created_at: createdAt,
             content: '',
             rev_page_id: pageId
-        });
+        }) as string;
 
         if (!revId) throw new Error('Error adding new revision.');
 

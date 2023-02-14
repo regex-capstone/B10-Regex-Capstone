@@ -8,51 +8,57 @@ const database: Database = MongooseDatabase;
 
 async function getPages(options: PageOptions) {
     const id = options.id;
-    const isSingle = options.single;
 
-    let payload: Page[];
+    let response;
 
     if (id) {
-        payload = (await database.getLatestPages({ _id: id })).payload as Page[];
+        response = (await database.getLatestPages({ _id: id }));
     } else {
-       payload = (await database.getLatestPages({})).payload as Page[];
+        response = (await database.getLatestPages({}));
     }
 
-    return isSingle ? payload[0] : payload;
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as Page[];
+
+    return options.single ? payload[0] : payload;
 }
 
 async function getRevisions(options: RevisionOptions) {
     const parentId = options.parent_id;
     const id = options.id;
-    const isSingle = options.single;
 
-    let payload: Revision[];
+    let response;
 
     if (parentId) {
-        payload = (await database.getLatestRevisions({ rev_page_id: id })).payload as Revision[];
-    } else if (id) {
-        payload = (await database.getLatestRevisions({ _id: id })).payload as Revision[];
+        response = (await database.getLatestRevisions({ rev_page_id: parentId }));
     } else {
-        // error
-        payload = [];
+        response = (await database.getLatestRevisions({ _id: id }));
     }
 
-    return isSingle ? payload[0] : payload;
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as Revision[];
+
+    return options.single ? payload[0] : payload;
 }
 
 async function getCategories(options: CategoryOptions) {
     const id = options.id;
-    const isSingle = options.single;
 
-    let payload: Category[];
+    let response;
 
     if (id) {
-        payload = (await database.getLatestCategories({ _id: id })).payload as Category[];
+        response = (await database.getLatestCategories({ _id: id }));
     } else {
-       payload = (await database.getLatestCategories({})).payload as Category[];
+        response = (await database.getLatestCategories({}));
     }
 
-    return isSingle ? payload[0] : payload;
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as Category[];
+
+    return options.single ? payload[0] : payload;
 }
 
 async function addNewPage(p: Page) {
