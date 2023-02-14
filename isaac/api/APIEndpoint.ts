@@ -48,16 +48,11 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.getRevisions({ id: r_id, single: true })) as Revision;
     },
 
-    async updateLatestPageRevision(p_id: string, content: string) {
-        const revId: string = await IsaacAPI.addNewRevision({
-            created_at: Date.now(),
-            content: content,
-            rev_page_id: p_id
-        })
-
-        if (!revId) throw new Error('Error adding new revision.');
-
-        return revId;
+    async addRevision(r: Revision) {
+        return (await IsaacAPI.addNewRevision({
+            ...r,
+            created_at: Date.now()
+        })) as string;
     },
     
     // categories
@@ -70,14 +65,10 @@ const ApiEndpoint: API = {
     },
 
     async addNewCategory(c: Category) {
-        const catId: string = await IsaacAPI.addNewCategory({
+        return (await IsaacAPI.addNewCategory({
             ...c,
             created_at: Date.now()
-        });
-        
-        if (!catId) throw new Error('Error adding new category.');
-        
-        return catId;
+        })) as string;
     }
 }
 

@@ -16,10 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'POST':
                 if (!body) throw new Error('POST request has no body.');
 
-                const p_id = body.p_id;
-                const content = body.content
-
-                const revId = await api.updateLatestPageRevision(p_id, content);
+                const revId = await api.addRevision(body.revision);
 
                 res.status(200).json({
                     success: true,

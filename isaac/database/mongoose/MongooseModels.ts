@@ -3,21 +3,47 @@ import { Page, Revision, Category } from '../../models';
 
 const MongooseModels = {
     Page: new mongoose.Schema({
-        title: String,
-        created_at: Date,
-        page_category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' }
-    }),
+        title: { 
+            type: String,
+            required: [true, 'Title is missing...'] 
+        },
+        created_at: { 
+            type: Date, 
+            required: [true, 'Creation date is missing...']
+        },
+        page_category_id: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            required: [true, 'Category reference is missing...'],
+            ref: 'Category' 
+        }
+    }, { strict: true }),
 
     Revision: new mongoose.Schema({
-        content: String,
-        created_at: Date,
-        rev_page_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Page' }
-    }),
+        content: {
+            type: String,
+            required: [true, 'Content is missing...'] 
+        },
+        created_at: {
+            type: Date,
+            required: [true, 'Creation date is missing...'] 
+        },
+        rev_page_id: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            required: [true, 'Page reference is missing...'],
+            ref: 'Page' 
+        }
+    }, { strict: true }),
 
     Category: new mongoose.Schema({
-        name: String,
-        created_at: Date
-    })
+        name: {
+            type: String,
+            required: [true, 'Name is missing...'] 
+        },
+        created_at: {
+            type: Date,
+            required: [true, 'Creation date is missing...'] 
+        }
+    }, { strict: true })
 }
 
 export default {

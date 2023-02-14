@@ -1,5 +1,3 @@
-import Page from './Page';
-
 export default interface Revision {
     content: string;
     created_at?: number;

@@ -2,6 +2,7 @@ import type { Page, Revision, Category } from './models/index';
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
 import { CategoryOptions, PageOptions, RevisionOptions } from './ISAACOptions';
+import { isErrorResponse } from './database/DatabaseInterface';
 
 const database: Database = MongooseDatabase;
 
@@ -55,27 +56,39 @@ async function getCategories(options: CategoryOptions) {
 }
 
 async function addNewPage(p: Page) {
-    const pageId: string = (await database.addPage(p)).payload as string;
+    const response = (await database.addPage(p));
 
-    if (!pageId) throw new Error('Error adding new page.');
+    if (isErrorResponse(response)) throw response.error;
 
-    return pageId;
+    const resultPageId = response.payload;
+
+    if (!resultPageId) throw new Error('Error adding new page.');
+
+    return resultPageId;
 }
 
 async function addNewRevision(r: Revision) {
-    const revId: string = (await database.addRevision(r)).payload as string;
+    const response = (await database.addRevision(r));
 
-    if (!revId) throw new Error('Error adding new revision.');
+    if (isErrorResponse(response)) throw response.error;
 
-    return revId;
+    const resultRevId = response.payload;
+
+    if (!resultRevId) throw new Error('Error adding new revision.');
+
+    return resultRevId;
 }
 
 async function addNewCategory(c: Category) {
-    const catId: string = (await database.addCategory(c)).payload as string;
+    const response = (await database.addCategory(c));
 
-    if (!catId) throw new Error('Error adding new category.');
+    if (isErrorResponse(response)) throw response.error;
 
-    return catId;
+    const resultCatId = response.payload;
+
+    if (!resultCatId) throw new Error('Error adding new category.');
+
+    return resultCatId;
 }
 
 export default {

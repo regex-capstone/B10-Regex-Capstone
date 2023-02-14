@@ -1,19 +1,28 @@
 import type { Page, Revision, Category } from '../models/index';
 
 export default interface Database {
-    getLatestPages(query: Object): Promise<DatabaseResponse>,
-    getLatestRevisions(query: Object): Promise<DatabaseResponse>,
-    getLatestCategories(query: Object): Promise<DatabaseResponse>,
-    addPage(page: Page): Promise<DatabaseResponse>,
-    addRevision(rev: Revision): Promise<DatabaseResponse>,
-    addCategory(cat: Category): Promise<DatabaseResponse>,
+    getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getLatestRevisions(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getLatestCategories(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+    addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
+    addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
+    addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
     // search(options?: any): Promise<Page[]>,
 }
 
-export interface DatabaseResponse {
+interface SuccessDBResponse {
     success: boolean,
     payload?: string |
         Page | Page[] |
         Revision | Revision[] |
         Category | Category[]
+}
+
+interface ErrorDBResponse {
+    error: Error
+}
+
+// type checking functions
+export function isErrorResponse(res: any): res is ErrorDBResponse {
+    return 'error' in res;
 }

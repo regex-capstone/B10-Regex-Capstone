@@ -8,76 +8,113 @@ async function init() {
     return await connectToDatabase();
 }
 
-const databaseConnection = await init();
-console.log(databaseConnection ? 'Mongoose database initialized' : 'Mongoose database failed to initialize');
+try {
+    const databaseConnection = await init();
+    console.log(databaseConnection ? 'Mongoose database initialized' : 'Mongoose database failed to initialize');
+} catch (err) {
+    throw err;
+}
 
 const MongooseDatabase: Database = {
     getLatestPages: async (query: Object) => {
-        const pages: Page[] = await MongooseModels.Page
-            .find(query)
-            .sort({ created_at: -1 });
-
-        return {
-            success: true,
-            payload: pages
-        };
+        try {
+            const pages: Page[] = await MongooseModels.Page
+                .find(query)
+                .sort({ created_at: -1 });
+    
+            return {
+                success: true,
+                payload: pages
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
     },
 
     getLatestRevisions: async (query: Object) => {
-        const revs: Revision[] = await MongooseModels.Revision
-            .find(query)
-            .sort({ created_at: -1 });
-
-        return {
-            success: true,
-            payload: revs
-        };
+        try {
+            const revs: Revision[] = await MongooseModels.Revision
+                .find(query)
+                .sort({ created_at: -1 });
+    
+            return {
+                success: true,
+                payload: revs
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
     },
 
     getLatestCategories: async (query: Object) => {
-        const cats: Category[] = await MongooseModels.Category
-            .find(query)
-            .sort({ created_at: -1 });
-
-        return {
-            success: true,
-            payload: cats
-        };
+        try {
+            const cats: Category[] = await MongooseModels.Category
+                .find(query)
+                .sort({ created_at: -1 });
+    
+            return {
+                success: true,
+                payload: cats
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
     },
 
     addPage: async (p: Page) => {
-        const page = new MongooseModels.Page(p);
-        await page.save((err: string | undefined, res: any) => {
-            if (err) throw new Error(err);
-        });
+        try {
+            const page = new MongooseModels.Page(p);
+            await page.validate();
+            await page.save();
 
-        return {
-            success: true,
-            payload: page._id.toString()
+            return {
+                success: true,
+                payload: page._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
         }
     },
 
     addRevision: async (r: Revision) => {
-        const rev = new MongooseModels.Revision(r);
-        await rev.save((err: string | undefined, res: any) => {
-            if (err) throw new Error(err);
-        });
-
-        return {
-            success: true,
-            payload: rev._id.toString()
+        try {
+            const rev = new MongooseModels.Revision(r);
+            await rev.validate();
+            await rev.save();
+    
+            return {
+                success: true,
+                payload: rev._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
         }
     },
 
     addCategory: async (c: Category) => {
-        const cat = new MongooseModels.Category(c);
-        await cat.save((err: string | undefined, res: any) => {
-            if (err) throw new Error(err);
-        });
-
-        return {
-            success: true,
-            payload: cat._id.toString()
+        try {
+            const cat = new MongooseModels.Category(c);
+            await cat.validate();
+            await cat.save();
+    
+            return {
+                success: true,
+                payload: cat._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
         }
     }
 };
