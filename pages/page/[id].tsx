@@ -3,29 +3,63 @@ import { Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { useRouter } from "next/router";
 import { Page as PageData } from "@/isaac/models";
+import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { execute } from '@/client/network/NetworkHandler'
+import GetPages from "@/client/network/requests/GetPages";
+
+export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
+  const pages: PageData[] = await execute<PageData[]>(GetPages)
+  const ids: string[] = pages.map(page => page._id)
+  console.log(ids);
+  return {
+    paths: ids.map(id => {
+      return {
+        params: {
+          id: id
+        }
+      }
+    }),
+    fallback: false
+  }
+}
+
+export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
+  const { id } = context.params ?? {};
+  // TODO: Fetch data of page id
+  const pageData: PageData = {
+    _id: `Example Page ${id}`,
+    page_category_id: "Example"
+  }
+  return {
+    props: {
+      pageData: pageData
+    }
+  }
+}
+
+interface PageProps {
+  pageData: PageData
+}
 
 /* (root)/page/[id] */
-export default function Page() {
+export default function Page(props: PageProps) {
   const router = useRouter();
   const { id } = router.query;
   const query = "";
-  const page: PageData = {
-    title: "Academic Planning",
-    page_category_id: "Academic Planning",
-  }
+  const { pageData } = props;
   return (
     <Container>
       <Grid2 container spacing={2}>
         <Grid2 xs={3}>
           <Stack direction={'column'} spacing={2}>
             <h1>ISAAC</h1>
-            <ContentTable page={page} />
+            <ContentTable page={pageData} />
           </Stack>
         </Grid2>
         <Grid2 xs={6}>
           <Stack direction={'column'} spacing={2}>
             <SearchBar query={query} />
-            <Content page={page} />
+            <Content page={pageData} />
           </Stack>
         </Grid2>
       </Grid2>
@@ -59,7 +93,7 @@ function Content(props: { page: PageData }) {
   // TODO: Get content from page data
   return (
     <Container>
-      <h1>{page.title}</h1>
+      <h1>{page._id}</h1>
       <hr />
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad  , quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
       <h2>Heading 2</h2>

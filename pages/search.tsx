@@ -15,15 +15,15 @@ export default function Search() {
 
   const results: Page[] = [
     {
-      title: "Academic Planning",
+      _id: "Academic Planning",
       page_category_id: "Academic Planning",
     },
     {
-      title: "Academic Support",
+      _id: "Academic Support",
       page_category_id: "Academic Support",
     },
     {
-      title: "Advising",
+      _id: "Advising",
       page_category_id: "Advising",
     },
   ]
@@ -73,7 +73,7 @@ function SearchResult(props: { result: Page }) {
   const { result} = props;
   return (
     <Box>
-      <a href="#">{result.title}</a>
+      <a href="#">{result._id}</a>
       <p>{result.page_category_id}</p>
     </Box>
   )
