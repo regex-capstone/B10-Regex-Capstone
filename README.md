@@ -1,5 +1,8 @@
-# B10-Regex-Capstone
+# ISAAC
 Repository for UW Informatics Capstone group B10 (Regex), 2023
+
+# Latest
+https://isaac-wenjalan.vercel.app/
 
 # Contact Info
 Elbert Cheng
