@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
-import { Box, Button, Container, Stack, TextField, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
+import { Box, Button, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page } from '@/isaac/models';
+import SearchBar from '@/client/SearchBar';
 
 /* (root)/search */
 export default function Search() {
@@ -68,20 +69,10 @@ function Filters(props: { filters: string[] }) {
   )
 }
 
-function SearchBar(props: { query: string | string[] | undefined }) {
-  const { query } = props;
+function SearchResult(props: { result: Page }) {
+  const { result} = props;
   return (
-    <Stack direction={'row'} spacing={2}>
-      <TextField value={query} />
-      <Button variant="contained">Search</Button>
-    </Stack>
-  )
-}
-
-function SearchResult(props: { result: Page, key: number }) {
-  const { result, key } = props;
-  return (
-    <Box key={key}>
+    <Box>
       <a href="#">{result.title}</a>
       <p>{result.page_category_id}</p>
     </Box>
