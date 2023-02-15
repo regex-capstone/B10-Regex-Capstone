@@ -1,4 +1,5 @@
 import { Button, Stack, TextField } from "@mui/material";
+import Search from "@/client/Search";
 
 export default function SearchBar(props: { query: string | string[] | undefined }) {
   const { query } = props;
@@ -12,7 +13,7 @@ export default function SearchBar(props: { query: string | string[] | undefined 
       <TextField value={query} sx={{
         flexGrow: 1,
       }} />
-      <Button variant="contained">Search</Button>
+      <Button variant="contained" onClick={Search}>Search</Button>
     </Stack>
   )
 }
