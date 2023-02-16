@@ -15,27 +15,30 @@ export default function Search() {
 
   const results: Page[] = [
     {
-      title: "Academic Planning",
+      id: "Academic Planning",
       page_category_id: "Academic Planning",
       headings: [],
       created_at: 80085
+      title: "Academic Planning",
     },
     {
-      title: "Academic Support",
+      id: "Academic Support",
       page_category_id: "Academic Support",
       headings: [],
       created_at: 80085
+      title: "Academic Support",
     },
     {
-      title: "Advising",
+      id: "Advising",
       page_category_id: "Advising",
       headings: [],
       created_at: 80085
+      title: "Advising",
     },
   ]
 
   const router = useRouter();
-  const { q } = router.query;
+  const { q } = router.query as { q: string };
   return (
     <Container>
       <Grid2 container spacing={2}>
@@ -47,7 +50,7 @@ export default function Search() {
         </Grid2>
         <Grid2 xs={6}>
           <Stack direction={'column'} spacing={2}>
-            <SearchBar query={q} />
+            <SearchBar initialQuery={q} />
             <i>{results.length} results</i>
             {results.map((result, i) => (
               <SearchResult result={result} key={i} />
@@ -79,7 +82,7 @@ function SearchResult(props: { result: Page }) {
   const { result} = props;
   return (
     <Box>
-      <a href="#">{result.title}</a>
+      <a href="#">{result.id}</a>
       <p>{result.page_category_id}</p>
     </Box>
   )
