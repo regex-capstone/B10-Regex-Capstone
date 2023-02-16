@@ -34,6 +34,7 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
       pageData: JSON.stringify(pageData),
       revisionData: JSON.stringify(revisionData)
     }
+    // TODO: Revalidation
   }
 }
 
