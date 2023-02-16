@@ -16,7 +16,7 @@ export default function Search() {
         tfidf.addDocument(testStrings[i]);
     }
 
-    tfidf.tfidfs('fox', function(i, measure) {
+    tfidf.tfidfs('fox and dog', function(i, measure) {
         console.log('document #' + i + ' is ' + measure);
     });
 }
