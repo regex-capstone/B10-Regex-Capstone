@@ -1,8 +1,8 @@
 import NetworkRequest from "../NetworkRequest";
 
-const GetPagesRequest: NetworkRequest = {
+const GetPageRequest: NetworkRequest = {
   url: 'http://localhost:3000/api/page',
   method: 'GET',
 }
 
-export default GetPagesRequest
+export default GetPageRequest
