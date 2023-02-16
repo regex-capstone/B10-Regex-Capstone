@@ -94,6 +94,9 @@ function Content(props: { page: PageData, revision: Revision }) {
   const { page, revision } = props;
 
   // TODO: Figure out formatting of page content
+  console.log("Page: ", page);
+  console.log("Revision: ", revision);
+
   return (
     <Container>
       <h1>{page.title}</h1>

@@ -9,7 +9,8 @@ const ApiEndpoint: API = {
     },
 
     async getPage(p_id: string) {
-        return (await IsaacAPI.getPages({ id: p_id })) as Page;
+        const pages: Page[] = (await IsaacAPI.getPages({ id: p_id })) as Page[];
+        return pages[0];
     },
 
     async addNewPage(p: Page) {
