@@ -32,7 +32,7 @@ export default function Search() {
   ]
 
   const router = useRouter();
-  const { q } = router.query;
+  const { q } = router.query as { q: string };
   return (
     <Container>
       <Grid2 container spacing={2}>
@@ -44,7 +44,7 @@ export default function Search() {
         </Grid2>
         <Grid2 xs={6}>
           <Stack direction={'column'} spacing={2}>
-            <SearchBar query={q} />
+            <SearchBar initialQuery={q} />
             <i>{results.length} results</i>
             {results.map((result, i) => (
               <SearchResult result={result} key={i} />

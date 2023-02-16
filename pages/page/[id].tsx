@@ -60,7 +60,7 @@ export default function Page(props: PageProps) {
         </Grid2>
         <Grid2 xs={6}>
           <Stack direction={'column'} spacing={2}>
-            <SearchBar query={query} />
+            <SearchBar initialQuery={query} />
             <Content page={pageData} revision={revisionData} />
           </Stack>
         </Grid2>
