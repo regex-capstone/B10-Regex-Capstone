@@ -1,34 +1,53 @@
-import { Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
+import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import API from "@/isaac/api/APIInterface";
+import { Category } from "@/isaac/models";
+import { Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
+import { GetStaticPropsResult } from "next";
+import Link from "next/link";
+import { useState } from "react";
+import SearchBar from "@/client/SearchBar";
+
+const api: API = ApiEndpoint
+
+export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
+  const categories: Category[] = await api.getAllCategories()
+  return {
+    props: {
+      // NextJS requires props to be serializable
+      categories: JSON.stringify(categories.map(c => c.name))
+    }
+    // TODO: Revalidation
+  }
+}
+
+interface IndexProps {
+  categories: string
+}
 
 /* (root)/ */
-export default function Index() {
-  const categories = [
-    "Academic Planning",
-    "Academic Support",
-    "Advising",
-    "Career Planning",
-    "Financial Aid",
-    "Financial Planning",
-    "Health & Wellness",
-    "Housing",
-  ]
+export default function Index(props: IndexProps) {
+  const categories: string[] = JSON.parse(props.categories) as string[]
 
   return (
     <Container>
-      <Stack spacing={2}>
-        <Container sx={{
-          textAlign: "center",
-        }}>
+      <Stack spacing={2} direction="column">
+        <Stack
+          spacing={2}
+          direction="column"
+          sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <h1>ISAAC</h1>
           <p>Informatics Student Advising Automation Complex</p>
-          <Stack direction="row" spacing={2} sx={{
-            justifyContent: "center",
+          <Box sx={{
+            flexGrow: 1,
           }}>
-            <TextField />
-            <Button variant="contained">Search</Button>
-          </Stack>
-        </Container>
+            <SearchBar />
+          </Box>
+        </Stack>
         <Divider />
         <Container>
           <Grid2 container>
