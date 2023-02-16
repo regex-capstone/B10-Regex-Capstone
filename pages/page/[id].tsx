@@ -48,12 +48,6 @@ export default function Page(props: PageProps) {
   const pageData: PageData = JSON.parse(props.pageData) as PageData;
   const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
   const query = "";
-  const page: PageData = {
-    title: "Academic Planning",
-    headings: [],
-    created_at: 80085,
-    page_category_id: "Academic Planning"
-  }
   
   return (
     <Container>
@@ -76,21 +70,15 @@ export default function Page(props: PageProps) {
 }
 
 function ContentTable(props: { page: PageData }) {
-  // TODO: Get headings from page content
-  const headings = [
-    "Heading1",
-    "Heading2",
-    "Heading3",
-    "Heading4",
-    "Heading5",
-  ]
+  const { page } = props;
+  const headings = page.headings ?? [];
 
   return (
     <Stack direction={'column'}>
       <h3>Content</h3>
       <Stack direction={'column'} spacing={2}>
         {headings.map((heading, i) => (
-          <a href={`#${heading}`} key={i}>{heading}</a>
+          <a href={`#${heading}`} key={i}>{heading.text}</a>
         ))}
       </Stack>
     </Stack>
