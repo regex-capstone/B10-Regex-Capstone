@@ -7,11 +7,16 @@ import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, Get
 import NetworkHandler from '@/client/network/NetworkHandler'
 import GetPagesRequest from "@/client/network/requests/GetPagesRequest";
 import GetPageRequest from "@/client/network/requests/GetPageRequest";
+import API from "@/isaac/api/APIInterface";
+import ApiEndpoint from "@/isaac/api/APIEndpoint";
+
+const api: API = ApiEndpoint
 
 // TODO: Get paths from server API directly instead of fetch
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
-  const pages: PageData[] = await NetworkHandler.execute(GetPagesRequest)
-  const ids: string[] = pages.map(page => page._id)
+  const pages: PageData[] = await api.getPages()
+  const ids: string[] = pages.map(page => page.id)
+  console.log(ids);
   return {
     paths: ids.map(id => {
       return {
@@ -31,32 +36,25 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
     throw new Error("No page id provided");
   }
 
-  
-  const response: any = await NetworkHandler.execute({
-    ...GetPageRequest,
-    params: [id as string]
-  })
-  // TODO: Fix page data nested in array
-  const pageData = response.page[0]
-  const revisionData = response.revision
+  const pageData: PageData = await api.getPage(id as string)
 
   return {
     props: {
-      pageData: pageData
+      // NextJS requires props to be serializable
+      pageData: JSON.stringify(pageData)
     }
   }
 }
 
 interface PageProps {
-  pageData: PageData
+  pageData: string
 }
 
 /* (root)/page/[id] */
 export default function Page(props: PageProps) {
-  const router = useRouter();
-  const { id } = router.query;
+  const pageData: PageData = JSON.parse(props.pageData) as PageData;
   const query = "";
-  const { pageData } = props;
+
   return (
     <Container>
       <Grid2 container spacing={2}>
