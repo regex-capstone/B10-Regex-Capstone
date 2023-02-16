@@ -3,6 +3,10 @@
 
 name: npm build
 
+env:
+  MONGODB_URI: ${{ secrets.MONGODB_URI }}
+  MONGODB_DB: ${{ secrets.MONGODB_DB }}
+
 on:
   push:
     branches: [ "*" ]
