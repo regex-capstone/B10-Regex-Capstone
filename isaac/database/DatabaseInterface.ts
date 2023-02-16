@@ -7,7 +7,7 @@ export default interface Database {
     addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
     addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
-    // search(options?: any): Promise<Page[]>,
+    // @TODO: search(options?: any): Promise<Page[]>,
 }
 
 interface SuccessDBResponse {
@@ -22,7 +22,6 @@ interface ErrorDBResponse {
     error: Error
 }
 
-// type checking functions
 export function isErrorResponse(res: any): res is ErrorDBResponse {
     return 'error' in res;
 }

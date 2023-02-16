@@ -48,7 +48,13 @@ export default function Page(props: PageProps) {
   const pageData: PageData = JSON.parse(props.pageData) as PageData;
   const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
   const query = "";
-
+  const page: PageData = {
+    title: "Academic Planning",
+    headings: [],
+    created_at: 80085,
+    page_category_id: "Academic Planning"
+  }
+  
   return (
     <Container>
       <Grid2 container spacing={2}>
