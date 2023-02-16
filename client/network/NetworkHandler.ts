@@ -3,7 +3,6 @@ import NetworkResponse from "./NetworkResponse"
 
 async function execute<T>(req: NetworkRequest): Promise<T> {
   const url = req.params ? `${req.url}/${req.params.join('/')}` : req.url
-  console.log(url);
   const res = await fetch(
     url,
     {

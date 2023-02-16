@@ -8,10 +8,10 @@ import NetworkHandler from '@/client/network/NetworkHandler'
 import GetPagesRequest from "@/client/network/requests/GetPagesRequest";
 import GetPageRequest from "@/client/network/requests/GetPageRequest";
 
+// TODO: Get paths from server API directly instead of fetch
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
   const pages: PageData[] = await NetworkHandler.execute(GetPagesRequest)
   const ids: string[] = pages.map(page => page._id)
-  console.log(ids);
   return {
     paths: ids.map(id => {
       return {
@@ -24,6 +24,7 @@ export async function getStaticPaths(context: GetStaticPathsContext): Promise<Ge
   }
 }
 
+// TODO: Get page data from server API directly instead of fetch
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
   const { id } = context.params ?? {};
   if (!id) {
