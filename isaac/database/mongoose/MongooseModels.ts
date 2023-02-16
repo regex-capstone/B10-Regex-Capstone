@@ -7,14 +7,18 @@ const MongooseModels = {
             type: String,
             required: [true, 'Title is missing...'] 
         },
-        created_at: { 
-            type: Date, 
-            required: [true, 'Creation date is missing...']
+        headings: {
+            type: String,
+            required: [true, 'Heading is missing...']
         },
         page_category_id: { 
             type: mongoose.Schema.Types.ObjectId, 
             required: [true, 'Category reference is missing...'],
             ref: 'Category' 
+        },
+        created_at: { 
+            type: Date, 
+            required: [true, 'Creation date is missing...']
         }
     }, { strict: true }),
 
@@ -23,14 +27,14 @@ const MongooseModels = {
             type: String,
             required: [true, 'Content is missing...'] 
         },
-        created_at: {
-            type: Date,
-            required: [true, 'Creation date is missing...'] 
-        },
         rev_page_id: { 
             type: mongoose.Schema.Types.ObjectId, 
             required: [true, 'Page reference is missing...'],
             ref: 'Page' 
+        },
+        created_at: {
+            type: Date,
+            required: [true, 'Creation date is missing...'] 
         }
     }, { strict: true }),
 

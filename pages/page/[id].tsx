@@ -11,7 +11,9 @@ export default function Page() {
   const query = "";
   const page: PageData = {
     title: "Academic Planning",
-    page_category_id: "Academic Planning",
+    headings: [],
+    created_at: 80085,
+    page_category_id: "Academic Planning"
   }
   return (
     <Container>

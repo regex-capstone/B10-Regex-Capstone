@@ -1,7 +1,14 @@
-import Revision from './Revision';
-
 export default interface Page {
     title: string;
     page_category_id: string;
-    created_at?: number;
+    created_at: number;
+    headings: Heading[];
 }
+
+interface Heading {
+    text: string;
+    level: number;
+    slug: string;   // 150 characters max for slug
+}
+
+

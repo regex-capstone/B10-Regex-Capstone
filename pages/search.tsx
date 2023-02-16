@@ -17,14 +17,20 @@ export default function Search() {
     {
       title: "Academic Planning",
       page_category_id: "Academic Planning",
+      headings: [],
+      created_at: 80085
     },
     {
       title: "Academic Support",
       page_category_id: "Academic Support",
+      headings: [],
+      created_at: 80085
     },
     {
       title: "Advising",
       page_category_id: "Advising",
+      headings: [],
+      created_at: 80085
     },
   ]
 
