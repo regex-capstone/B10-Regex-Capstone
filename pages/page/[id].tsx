@@ -4,11 +4,12 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import { useRouter } from "next/router";
 import { Page as PageData } from "@/isaac/models";
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
-import { execute } from '@/client/network/NetworkHandler'
-import GetPages from "@/client/network/requests/GetPages";
+import NetworkHandler from '@/client/network/NetworkHandler'
+import GetPagesRequest from "@/client/network/requests/GetPagesRequest";
+import GetPageRequest from "@/client/network/requests/GetPageRequest";
 
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
-  const pages: PageData[] = await execute<PageData[]>(GetPages)
+  const pages: PageData[] = await NetworkHandler.execute(GetPagesRequest)
   const ids: string[] = pages.map(page => page._id)
   console.log(ids);
   return {
@@ -25,11 +26,19 @@ export async function getStaticPaths(context: GetStaticPathsContext): Promise<Ge
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
   const { id } = context.params ?? {};
-  // TODO: Fetch data of page id
-  const pageData: PageData = {
-    _id: `Example Page ${id}`,
-    page_category_id: "Example"
+  if (!id) {
+    throw new Error("No page id provided");
   }
+
+  
+  const response: any = await NetworkHandler.execute({
+    ...GetPageRequest,
+    params: [id as string]
+  })
+  // TODO: Fix page data nested in array
+  const pageData = response.page[0]
+  const revisionData = response.revision
+
   return {
     props: {
       pageData: pageData
@@ -93,7 +102,7 @@ function Content(props: { page: PageData }) {
   // TODO: Get content from page data
   return (
     <Container>
-      <h1>{page._id}</h1>
+      <h1>{page.title}</h1>
       <hr />
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad  , quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
       <h2>Heading 2</h2>
