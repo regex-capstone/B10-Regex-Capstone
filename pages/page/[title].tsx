@@ -54,7 +54,6 @@ export default function Page(props: PageProps) {
     <>
       <Head>
         <title>{pageData.title} | ISAAC</title>
-        <meta name="og:title" content={pageData.title} />
       </Head>
       <Container>
         <Grid2 container spacing={2}>
@@ -94,8 +93,6 @@ function ContentTable(props: { page: PageData }) {
 
 function Content(props: { page: PageData, revision: Revision }) {
   const { page, revision } = props;
-
-  // TODO: Figure out formatting of page content
 
   return (
     <Container>
