@@ -1,0 +1,12 @@
+name: 'Create env file'
+
+on:
+  push:
+    branches: [ "main" ]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
