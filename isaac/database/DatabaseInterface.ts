@@ -6,8 +6,7 @@ export default interface Database {
     getLatestCategories(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
     addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
-    // @TODO: search(options?: any): Promise<Page[]>,
+    addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {

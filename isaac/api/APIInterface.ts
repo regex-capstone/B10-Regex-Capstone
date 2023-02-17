@@ -1,5 +1,5 @@
 import type { Page, Revision, Category } from '@/isaac/models';
-import { PageOptions, RevisionOptions } from '../ISAACOptions';
+import { PageOptions, RevisionOptions, SearchOptions } from '../ISAACOptions';
 
 export default interface API {
     // pages 
@@ -18,5 +18,5 @@ export default interface API {
     getCategory(c_id: string): Promise<Category>,
     addNewCategory(c: Category): Promise<string>
 
-    // search(options: SearchOptions): Promise<Page[]>,
+    search(q: string): Promise<Page[]>,
 }

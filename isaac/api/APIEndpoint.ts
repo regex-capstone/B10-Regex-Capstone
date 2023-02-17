@@ -1,4 +1,5 @@
 import type { Page, Revision, Category } from '../models/index';
+import natural from "natural";
 import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
 
@@ -70,6 +71,29 @@ const ApiEndpoint: API = {
             ...c,
             created_at: Date.now()
         })) as string;
+    },
+
+    // search
+    async search(q: string) {
+        let pages = (await IsaacAPI.getPages({})) as Page[];
+
+        let tfidf = new natural.TfIdf;  //init
+        let indexed = [] as Page[];
+        let query = q;
+
+        for(let i = 0; i < pages.length; i++) {
+            tfidf.addDocument(pages[i].title);  //TODO: more elegant way to tokenize doc and add to TF-IDF algo
+        }
+
+        // classify each document using given query
+        tfidf.tfidfs(query, function(i, measure) {
+            console.log("document " + i + " is " + measure);
+            if(measure > 0) {     // if document has no matches, omit it from results
+                indexed.push(pages[i]);
+            }
+        });
+
+        return indexed;
     }
 }
 

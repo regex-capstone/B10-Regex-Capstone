@@ -1,7 +1,7 @@
 import type { Page, Revision, Category } from './models/index';
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions } from './ISAACOptions';
+import { CategoryOptions, PageOptions, RevisionOptions ,SearchOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 
 const database: Database = MongooseDatabase;
@@ -103,5 +103,5 @@ export default {
     getCategories: getCategories,
     addNewPage: addNewPage,
     addNewRevision: addNewRevision,
-    addNewCategory: addNewCategory
+    addNewCategory: addNewCategory,
 };
