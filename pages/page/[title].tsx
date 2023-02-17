@@ -32,8 +32,8 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
   return {
     props: {
       // NextJS requires props to be serializable
-      pageData: JSON.stringify(pageData),
-      revisionData: JSON.stringify(revisionData)
+      pageData: JSON.stringify(pageData ?? {}),
+      revisionData: JSON.stringify(revisionData ?? {})
     }
     // TODO: Revalidation
   }
