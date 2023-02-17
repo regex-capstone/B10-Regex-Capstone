@@ -1,21 +1,17 @@
 import type { Page, Revision, Category } from './models/index';
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions } from './ISAACOptions';
+import { CategoryOptions, PageOptions, RevisionOptions, BaseOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 
 const database: Database = MongooseDatabase;
 
 async function getPages(options: PageOptions) {
-    const id = options.id;
+    let query = cleanQuery(options);
 
     let response;
 
-    if (id) {
-        response = (await database.getLatestPages({ _id: id }));
-    } else {
-        response = (await database.getLatestPages({}));
-    }
+    response = (await database.getLatestPages(query));
 
     if (isErrorResponse(response)) throw response.error;
 
@@ -25,16 +21,11 @@ async function getPages(options: PageOptions) {
 }
 
 async function getRevisions(options: RevisionOptions) {
-    const parentId = options.parent_id;
-    const id = options.id;
+    let query = cleanQuery(options);
 
     let response;
 
-    if (parentId) {
-        response = (await database.getLatestRevisions({ rev_page_id: parentId }));
-    } else {
-        response = (await database.getLatestRevisions({ _id: id }));
-    }
+    response = (await database.getLatestRevisions(query));
 
     if (isErrorResponse(response)) throw response.error;
 
@@ -44,15 +35,11 @@ async function getRevisions(options: RevisionOptions) {
 }
 
 async function getCategories(options: CategoryOptions) {
-    const id = options.id;
+    let query = cleanQuery(options);
 
     let response;
 
-    if (id) {
-        response = (await database.getLatestCategories({ _id: id }));
-    } else {
-        response = (await database.getLatestCategories({}));
-    }
+    response = (await database.getLatestCategories(query));
 
     if (isErrorResponse(response)) throw response.error;
 
@@ -62,6 +49,10 @@ async function getCategories(options: CategoryOptions) {
 }
 
 async function addNewPage(p: Page) {
+    const doesPageExists = (await getPages({ title: p.title })) as Page[];
+
+    if (doesPageExists.length > 0) throw new Error('Page with same title already exists.');
+
     const response = (await database.addPage(p));
 
     if (isErrorResponse(response)) throw response.error;
@@ -105,3 +96,25 @@ export default {
     addNewRevision: addNewRevision,
     addNewCategory: addNewCategory
 };
+
+function cleanQuery(options: BaseOptions) {
+    const id = options.id;
+
+    let query = {}
+
+    // Because MongoDB uses '_id' instead of just 'id', we need to do change
+    // the property here.
+    if (id) {
+        delete options.id;
+
+        query = {
+            _id: id
+        }
+    }
+
+    return {
+        ...query,
+        ...options
+    }
+}
+
