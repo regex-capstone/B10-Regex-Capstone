@@ -5,6 +5,7 @@ import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, Get
 import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
+import Head from "next/head";
 
 const api: API = ApiEndpoint
 
@@ -48,24 +49,30 @@ export default function Page(props: PageProps) {
   const pageData: PageData = JSON.parse(props.pageData) as PageData;
   const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
   const query = "";
-  
+
   return (
-    <Container>
-      <Grid2 container spacing={2}>
-        <Grid2 xs={3}>
-          <Stack direction={'column'} spacing={2}>
-            <h1>ISAAC</h1>
-            <ContentTable page={pageData} />
-          </Stack>
+    <>
+      <Head>
+        <title>{pageData.title} | ISAAC</title>
+        <meta name="og:title" content={pageData.title} />
+      </Head>
+      <Container>
+        <Grid2 container spacing={2}>
+          <Grid2 xs={3}>
+            <Stack direction={'column'} spacing={2}>
+              <h1>ISAAC</h1>
+              <ContentTable page={pageData} />
+            </Stack>
+          </Grid2>
+          <Grid2 xs={6}>
+            <Stack direction={'column'} spacing={2}>
+              <SearchBar initialQuery={query} />
+              <Content page={pageData} revision={revisionData} />
+            </Stack>
+          </Grid2>
         </Grid2>
-        <Grid2 xs={6}>
-          <Stack direction={'column'} spacing={2}>
-            <SearchBar initialQuery={query} />
-            <Content page={pageData} revision={revisionData} />
-          </Stack>
-        </Grid2>
-      </Grid2>
-    </Container>
+      </Container>
+    </>
   )
 }
 
@@ -93,7 +100,7 @@ function Content(props: { page: PageData, revision: Revision }) {
   return (
     <Container>
       <h1>{page.title}</h1>
-      <hr/>
+      <hr />
       <p>{revision.content}</p>
     </Container>
   )
