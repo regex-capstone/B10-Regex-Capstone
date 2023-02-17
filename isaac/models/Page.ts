@@ -1,5 +1,5 @@
 export default interface Page {
-    id: string;
+    id?: string;
     title: string;
     page_category_id: string;
     created_at: number;
