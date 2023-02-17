@@ -8,14 +8,14 @@ import { Revision, Page as PageData } from "@/isaac/models";
 
 const api: API = ApiEndpoint
 
-export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const pages: PageData[] = await api.getPages()
-  const ids: string[] = pages.map(page => page.id)
   return {
-    paths: ids.map(id => {
+    paths: pages.map(page => {
       return {
         params: {
-          id: id
+          id: page.id,
+          title: page.title
         }
       }
     }),
