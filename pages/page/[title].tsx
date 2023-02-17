@@ -5,17 +5,18 @@ import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, Get
 import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
+import Head from "next/head";
 
 const api: API = ApiEndpoint
 
-export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const pages: PageData[] = await api.getPages()
-  const ids: string[] = pages.map(page => page.id ? page.id : "")
   return {
-    paths: ids.map(id => {
+    paths: pages.map(page => {
       return {
         params: {
-          id: id
+          id: page.id,
+          title: page.title
         }
       }
     }),
@@ -31,8 +32,8 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
   return {
     props: {
       // NextJS requires props to be serializable
-      pageData: JSON.stringify(pageData),
-      revisionData: JSON.stringify(revisionData)
+      pageData: JSON.stringify(pageData ?? {}),
+      revisionData: JSON.stringify(revisionData ?? {})
     }
     // TODO: Revalidation
   }
@@ -48,49 +49,43 @@ export default function Page(props: PageProps) {
   const pageData: PageData = JSON.parse(props.pageData) as PageData;
   const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
   const query = "";
-  const page: PageData = {
-    title: "Academic Planning",
-    headings: [],
-    created_at: 80085,
-    page_category_id: "Academic Planning"
-  }
-  
+
   return (
-    <Container>
-      <Grid2 container spacing={2}>
-        <Grid2 xs={3}>
-          <Stack direction={'column'} spacing={2}>
-            <h1>ISAAC</h1>
-            <ContentTable page={pageData} />
-          </Stack>
+    <>
+      <Head>
+        <title>{pageData.title} | ISAAC</title>
+        <meta name="og:title" content={pageData.title} />
+      </Head>
+      <Container>
+        <Grid2 container spacing={2}>
+          <Grid2 xs={3}>
+            <Stack direction={'column'} spacing={2}>
+              <h1>ISAAC</h1>
+              <ContentTable page={pageData} />
+            </Stack>
+          </Grid2>
+          <Grid2 xs={6}>
+            <Stack direction={'column'} spacing={2}>
+              <SearchBar initialQuery={query} />
+              <Content page={pageData} revision={revisionData} />
+            </Stack>
+          </Grid2>
         </Grid2>
-        <Grid2 xs={6}>
-          <Stack direction={'column'} spacing={2}>
-            <SearchBar initialQuery={query} />
-            <Content page={pageData} revision={revisionData} />
-          </Stack>
-        </Grid2>
-      </Grid2>
-    </Container>
+      </Container>
+    </>
   )
 }
 
 function ContentTable(props: { page: PageData }) {
-  // TODO: Get headings from page content
-  const headings = [
-    "Heading1",
-    "Heading2",
-    "Heading3",
-    "Heading4",
-    "Heading5",
-  ]
+  const { page } = props;
+  const headings = page.headings ?? [];
 
   return (
     <Stack direction={'column'}>
       <h3>Content</h3>
       <Stack direction={'column'} spacing={2}>
         {headings.map((heading, i) => (
-          <a href={`#${heading}`} key={i}>{heading}</a>
+          <a href={`#${heading}`} key={i}>{heading.text}</a>
         ))}
       </Stack>
     </Stack>
@@ -105,7 +100,7 @@ function Content(props: { page: PageData, revision: Revision }) {
   return (
     <Container>
       <h1>{page.title}</h1>
-      <hr/>
+      <hr />
       <p>{revision.content}</p>
     </Container>
   )
