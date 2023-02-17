@@ -18,22 +18,22 @@ export default function Search() {
       id: "Academic Planning",
       page_category_id: "Academic Planning",
       headings: [],
-      created_at: 80085
-      title: "Academic Planning",
+      created_at: 80085,
+      title: "Academic Planning"
     },
     {
       id: "Academic Support",
       page_category_id: "Academic Support",
       headings: [],
-      created_at: 80085
-      title: "Academic Support",
+      created_at: 80085,
+      title: "Academic Support"
     },
     {
       id: "Advising",
       page_category_id: "Advising",
       headings: [],
-      created_at: 80085
-      title: "Advising",
+      created_at: 80085,
+      title: "Advising"
     },
   ]
 

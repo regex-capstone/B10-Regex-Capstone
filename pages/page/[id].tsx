@@ -10,7 +10,7 @@ const api: API = ApiEndpoint
 
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
   const pages: PageData[] = await api.getPages()
-  const ids: string[] = pages.map(page => page.id)
+  const ids: string[] = pages.map(page => page.id ? page.id : "")
   return {
     paths: ids.map(id => {
       return {
