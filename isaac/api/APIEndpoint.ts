@@ -75,13 +75,14 @@ const ApiEndpoint: API = {
 
     // search
     async search(q: string) {
-        let pages = (await IsaacAPI.getPages({})) as Page[];
+        let pages = (await IsaacAPI.getPages({})) as Page[];    //TODO: more efficient IsaacAPI endpoint to not have to get all pages?
 
         let tfidf = new natural.TfIdf;  //init
         let indexed = [] as Page[];
         let query = q;
 
         for(let i = 0; i < pages.length; i++) {
+            console.log(pages[i].title)
             tfidf.addDocument(pages[i].title);  //TODO: more elegant way to tokenize doc and add to TF-IDF algo
         }
 
@@ -91,6 +92,7 @@ const ApiEndpoint: API = {
             if(measure > 0) {     // if document has no matches, omit it from results
                 indexed.push(pages[i]);
             }
+            //TODO: sort by highest to lowest
         });
 
         return indexed;

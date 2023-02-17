@@ -1,40 +1,37 @@
+import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import API from "@/isaac/api/APIInterface";
 import { useRouter } from 'next/router';
 import { Box, Button, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
+import { GetServerSidePropsResult } from "next";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page } from '@/isaac/models';
 import SearchBar from '@/client/SearchBar';
 
+
+const api: API = ApiEndpoint
+
+interface SearchProps {
+  results: Page[]
+}
+
+export async function getServerSideProps(context: any): Promise<GetServerSidePropsResult<SearchProps>> {
+  const results: Page[] = await api.search(context.query.q);
+  return {
+    props: {
+      results: results
+    }
+  }
+}
+
 /* (root)/search */
-export default function Search() {
+export default function Search(props: SearchProps) {
+  const results: Page[] = props.results;
+
   const filters: string[] = [
     "Academic Planning",
     "Academic Support",
     "Advising",
     "Career Planning",
-  ]
-
-  const results: Page[] = [
-    {
-      id: "Academic Planning",
-      page_category_id: "Academic Planning",
-      headings: [],
-      created_at: 80085
-      title: "Academic Planning",
-    },
-    {
-      id: "Academic Support",
-      page_category_id: "Academic Support",
-      headings: [],
-      created_at: 80085
-      title: "Academic Support",
-    },
-    {
-      id: "Advising",
-      page_category_id: "Advising",
-      headings: [],
-      created_at: 80085
-      title: "Advising",
-    },
   ]
 
   const router = useRouter();

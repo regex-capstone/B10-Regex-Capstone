@@ -49,6 +49,7 @@ export default function Page(props: PageProps) {
   const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
   const query = "";
   const page: PageData = {
+    id: "aaa",
     title: "Academic Planning",
     headings: [],
     created_at: 80085,
