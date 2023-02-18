@@ -6,16 +6,18 @@ import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
-
-const api: API = ApiEndpoint
+import ReactMarkdown from "react-markdown";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+  const api: API = ApiEndpoint
   const pages: PageData[] = await api.getPages()
+
+  console.log(pages);
+
   return {
     paths: pages.map(page => {
       return {
         params: {
-          id: page.id,
           title: page.title
         }
       }
@@ -25,9 +27,10 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-  const { id } = context.params ?? {};
-  const pageData: PageData = await api.getPage(id as string)
-  const revisionData: Revision = await api.getRecentPageRevision(id as string)
+  const api: API = ApiEndpoint
+  const { title } = context.params ?? {};
+  const pageData: PageData = await api.getPageByTitle(title as string)
+  const revisionData: Revision = await api.getRecentPageRevision(pageData.id as string)
 
   return {
     props: {
@@ -53,8 +56,7 @@ export default function Page(props: PageProps) {
   return (
     <>
       <Head>
-        <title>{pageData.title} | ISAAC</title>
-        <meta name="og:title" content={pageData.title} />
+        <title>{`${pageData.title} | ISAAC`}</title>
       </Head>
       <Container>
         <Grid2 container spacing={2}>
@@ -95,13 +97,11 @@ function ContentTable(props: { page: PageData }) {
 function Content(props: { page: PageData, revision: Revision }) {
   const { page, revision } = props;
 
-  // TODO: Figure out formatting of page content
-
   return (
     <Container>
-      <h1>{page.title}</h1>
-      <hr />
-      <p>{revision.content}</p>
+      <ReactMarkdown>
+        {revision.content}
+      </ReactMarkdown>
     </Container>
   )
 }
