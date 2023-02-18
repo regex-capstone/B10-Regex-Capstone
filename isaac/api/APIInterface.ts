@@ -5,6 +5,7 @@ export default interface API {
     // pages 
     getPages(): Promise<Page[]>,
     getPage(p_id: string): Promise<Page>,
+    getPageByTitle(title: string): Promise<Page>,
     addNewPage(p: Page): Promise<string>,
 
     // revisions
