@@ -6,13 +6,14 @@ import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
+import ReactMarkdown from "react-markdown";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
   const pages: PageData[] = await api.getPages()
 
   console.log(pages);
-  
+
   return {
     paths: pages.map(page => {
       return {
@@ -99,9 +100,9 @@ function Content(props: { page: PageData, revision: Revision }) {
 
   return (
     <Container>
-      <h1>{page.title}</h1>
-      <hr />
-      <p>{revision.content ?? "No content."}</p>
+      <ReactMarkdown>
+        {revision.content}
+      </ReactMarkdown>
     </Container>
   )
 }
