@@ -29,7 +29,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
   const api: API = ApiEndpoint
   const { title } = context.params ?? {};
-  console.log("Title: ", title);
   const pageData: PageData = await api.getPageByTitle(title as string)
   const revisionData: Revision = await api.getRecentPageRevision(pageData.id as string)
 
