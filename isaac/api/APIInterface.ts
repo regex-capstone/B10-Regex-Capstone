@@ -1,5 +1,5 @@
 import type { Page, Revision, Category } from '@/isaac/models';
-import { PageOptions, RevisionOptions, SearchOptions } from '../ISAACOptions';
+import { PageOptions, RevisionOptions } from '../ISAACOptions';
 
 export default interface API {
     // pages 
