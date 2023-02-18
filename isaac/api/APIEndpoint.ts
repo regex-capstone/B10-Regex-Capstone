@@ -13,6 +13,11 @@ const ApiEndpoint: API = {
         return pages[0];
     },
 
+    async getPageByTitle(title: string) {
+        const pages: Page[] = (await IsaacAPI.getPages({ title: title })) as Page[];
+        return pages[0];
+    },
+
     async addNewPage(p: Page) {
         const createdAt = Date.now();
 
