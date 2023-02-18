@@ -8,8 +8,8 @@ const MongooseModels = {
             required: [true, 'Title is missing...'] 
         },
         headings: {
-            type: String,
-            required: [true, 'Heading is missing...']
+            type: Array, 
+            "default": []
         },
         page_category_id: { 
             type: mongoose.Schema.Types.ObjectId, 

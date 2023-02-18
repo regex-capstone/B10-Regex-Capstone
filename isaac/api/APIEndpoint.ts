@@ -14,6 +14,11 @@ const ApiEndpoint: API = {
         return pages[0];
     },
 
+    async getPageByTitle(title: string) {
+        const pages: Page[] = (await IsaacAPI.getPages({ title: title })) as Page[];
+        return pages[0];
+    },
+
     async addNewPage(p: Page) {
         const createdAt = Date.now();
 
@@ -39,11 +44,11 @@ const ApiEndpoint: API = {
 
     // revisions
     async getRecentPageRevision(p_id: string) {
-        return (await IsaacAPI.getRevisions({ parent_id: p_id, single: true })) as Revision;
+        return (await IsaacAPI.getRevisions({ rev_page_id: p_id, single: true })) as Revision;
     },
 
     async getAllPageRevisions(p_id: string) {
-        return (await IsaacAPI.getRevisions({ parent_id: p_id })) as Revision[];
+        return (await IsaacAPI.getRevisions({ rev_page_id: p_id })) as Revision[];
     },
 
     async getRevision(r_id: string) {

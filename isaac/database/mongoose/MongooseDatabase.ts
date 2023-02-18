@@ -18,9 +18,21 @@ try {
 const MongooseDatabase: Database = {
     getLatestPages: async (query: Object) => {
         try {
-            const pages: Page[] = await MongooseModels.Page
+            const data = await MongooseModels.Page
                 .find(query)
                 .sort({ created_at: -1 });
+
+            const pages = data.map((raw) => {
+                const page: Page = {
+                    id: raw._id,
+                    title: raw.title,
+                    page_category_id: raw.page_category_id,
+                    created_at: raw.created_at,
+                    headings: raw.headings ?? []
+                };
+
+                return page;
+            });
     
             return {
                 success: true,
@@ -35,9 +47,20 @@ const MongooseDatabase: Database = {
 
     getLatestRevisions: async (query: Object) => {
         try {
-            const revs: Revision[] = await MongooseModels.Revision
+            const data = await MongooseModels.Revision
                 .find(query)
                 .sort({ created_at: -1 });
+
+            const revs = data.map((raw) => {
+                const rev: Revision = {
+                    id: raw._id,
+                    content: raw.content,
+                    created_at: raw.created_at,
+                    rev_page_id: raw.rev_page_id
+                };
+
+                return rev;
+            });
     
             return {
                 success: true,
@@ -52,9 +75,19 @@ const MongooseDatabase: Database = {
 
     getLatestCategories: async (query: Object) => {
         try {
-            const cats: Category[] = await MongooseModels.Category
+            const data = await MongooseModels.Category
                 .find(query)
                 .sort({ created_at: -1 });
+
+            const cats = data.map((raw) => {
+                const cat: Category = {
+                    id: raw._id,
+                    name: raw.name,
+                    created_at: raw.created_at
+                };
+
+                return cat;
+            });
     
             return {
                 success: true,

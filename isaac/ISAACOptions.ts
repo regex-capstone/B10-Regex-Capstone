@@ -1,25 +1,21 @@
-export interface PageOptions {
+export interface BaseOptions {
     id?: string
+}
+
+export interface PageOptions extends BaseOptions {
+    title?: string,
     single?: boolean
 }
 
-export interface RevisionOptions {
-    parent_id?: string,
-    id?: string,
+export interface RevisionOptions extends BaseOptions {
+    rev_page_id?: string,
     single?: boolean
 }
 
-export interface CategoryOptions {
-    id?: string,
+export interface CategoryOptions extends BaseOptions {
     single?: string
 }
 
-export interface SearchOptions {
-    query?: string,
-    categories?: string[],
-}
-
-export interface MetricsOptions {
-    id: string,
-    type: string,
+export interface MetricsOptions extends BaseOptions {
+    type?: string,
 }
