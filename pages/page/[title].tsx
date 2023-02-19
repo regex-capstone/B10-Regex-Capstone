@@ -10,7 +10,7 @@ import Head from "next/head";
 const api: API = ApiEndpoint
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const pages: PageData[] = await api.getPages()
+  const pages: PageData[] = await api.getAllPages()
   return {
     paths: pages.map(page => {
       return {
@@ -26,8 +26,8 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
   const { id } = context.params ?? {};
-  const pageData: PageData = await api.getPage(id as string)
-  const revisionData: Revision = await api.getRecentPageRevision(id as string)
+  const pageData: PageData = await api.getPageById(id as string)
+  const revisionData: Revision = await api.getRecentPageRevisionById(id as string)
 
   return {
     props: {

@@ -4,6 +4,7 @@ export interface BaseOptions {
 
 export interface PageOptions extends BaseOptions {
     title?: string,
+    page_category_id?: string,
     single?: boolean
 }
 
@@ -13,7 +14,8 @@ export interface RevisionOptions extends BaseOptions {
 }
 
 export interface CategoryOptions extends BaseOptions {
-    single?: string
+    name?: string,
+    single?: boolean
 }
 
 export interface MetricsOptions extends BaseOptions {
