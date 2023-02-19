@@ -15,13 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'GET':
-                const page: Page = await api.getPage(p_id);
+                const page: Page = await api.getPageById(p_id);
 
                 if (!page) {
                     throw new Error('Page not found.');
                 }
 
-                const revs: Revision[] = await api.getAllPageRevisions(p_id);
+                const revs: Revision[] = await api.getAllPageRevisionsById(p_id);
 
                 if (!revs) {
                     throw new Error('Page has no revision content.');

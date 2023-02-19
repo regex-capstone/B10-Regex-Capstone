@@ -10,10 +10,8 @@ import ReactMarkdown from "react-markdown";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
-  const pages: PageData[] = await api.getPages()
-
-  console.log(pages);
-
+  const pages: PageData[] = await api.getAllPages()
+  
   return {
     paths: pages.map(page => {
       return {
@@ -30,7 +28,7 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
   const api: API = ApiEndpoint
   const { title } = context.params ?? {};
   const pageData: PageData = await api.getPageByTitle(title as string)
-  const revisionData: Revision = await api.getRecentPageRevision(pageData.id as string)
+  const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
   return {
     props: {

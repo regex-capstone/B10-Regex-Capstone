@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'GET':
-                const category: Category = await api.getCategory(c_id);
+                const category: Category = await api.getCategoryById(c_id);
 
                 if (!category) {
                     throw new Error('Category not found.');
