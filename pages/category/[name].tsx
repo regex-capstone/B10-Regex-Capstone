@@ -7,6 +7,7 @@ import Head from "next/head"
 import { Box, Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import Link from "next/link"
+import Logo from "@/client/Logo"
 
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
   const api: API = APIEndpoint
@@ -51,9 +52,7 @@ export default function Directory(props: CategoryProps) {
       <Container>
         <Grid2 container spacing={2}>
           <Grid2 xs={3}>
-            <Stack direction={'column'} spacing={2}>
-              <h1>ISAAC</h1>
-            </Stack>
+            <Logo />
           </Grid2>
           <Grid2 xs={6}>
             <Stack direction={'column'} spacing={2}>

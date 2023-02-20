@@ -7,6 +7,7 @@ import { GetStaticPropsResult } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import SearchBar from "@/client/SearchBar";
+import Logo from "@/client/Logo";
 
 const api: API = ApiEndpoint
 
@@ -16,9 +17,9 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>
   return {
     props: {
       // NextJS requires props to be serializable
-      categories: JSON.stringify(categories.map(c => c.name))
-    }
-    // TODO: Revalidation
+      categories: JSON.stringify(categories)
+    },
+    revalidate: 60,
   }
 }
 
@@ -28,7 +29,7 @@ interface IndexProps {
 
 /* (root)/ */
 export default function Index(props: IndexProps) {
-  const categories: string[] = JSON.parse(props.categories) as string[]
+  const categories: Category[] = JSON.parse(props.categories) as Category[]
 
   return (
     <Container>
@@ -41,7 +42,7 @@ export default function Index(props: IndexProps) {
             alignItems: 'center',
           }}
         >
-          <h1>ISAAC</h1>
+          <Logo />
           <p>Informatics Student Advising Automation Complex</p>
           <Box sx={{
             flexGrow: 1,
@@ -54,7 +55,7 @@ export default function Index(props: IndexProps) {
           <Grid2 container>
             {categories.map((category, i) => (
               <Grid2 key={i} xs={6}>
-                <a href="#">{category}</a>
+                <Link href={`/category/${category.name}`}>{category.name}</Link> 
               </Grid2>
             ))}
           </Grid2>
