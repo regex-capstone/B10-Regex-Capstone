@@ -12,6 +12,7 @@ const api: API = ApiEndpoint
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
   const categories: Category[] = await api.getAllCategories()
+
   return {
     props: {
       // NextJS requires props to be serializable
