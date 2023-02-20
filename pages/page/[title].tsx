@@ -12,8 +12,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
   const pages: PageData[] = await api.getPages()
 
-  console.log(pages);
-
   return {
     paths: pages.map(page => {
       return {
