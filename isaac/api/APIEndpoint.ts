@@ -83,24 +83,26 @@ const ApiEndpoint: API = {
         let pages = (await IsaacAPI.getPages({})) as Page[];    //TODO: more efficient IsaacAPI endpoint to not have to get all pages?
 
         let tfidf = new natural.TfIdf;  //init
-        let indexed = [] as Page[];
+        let sorted = [] as Page[];
+        let indexed = [] as Array<any>;
         let query = q;
 
         for(let i = 0; i < pages.length; i++) {
-            console.log(pages[i].title)
             tfidf.addDocument(pages[i].title);  //TODO: more elegant way to tokenize doc and add to TF-IDF algo
         }
 
         // classify each document using given query
         tfidf.tfidfs(query, function(i, measure) {
-            console.log("document " + i + " is " + measure);
             if(measure > 0) {     // if document has no matches, omit it from results
-                indexed.push(pages[i]);
+                indexed.push({page: pages[i], rating: measure});
             }
-            //TODO: sort by highest to lowest
         });
 
-        return indexed;
+        // sort objects by highest to lowest measure, then map to Page[]
+        indexed.sort((a, b) => b.rating - a.rating);
+        sorted = indexed.map(i => i.page);
+
+        return sorted;
     }
 }
 
