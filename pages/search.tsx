@@ -30,11 +30,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 /* (root)/search */
 export default function Search(props: SearchProps) {
   const results: Page[] = props.results;
-  const categories: string[] = JSON.parse(JSON.stringify(props.categories.map(c => c.name))) as string[];
-  const [filter, setFilter] = useState([]);
-  let filteredResults: Page[] = results;
+  const categories: Category[] = props.categories;
+  let [catFilter, setFilter] = useState([] as string[]);
+  let [filteredResults, setFilteredResults] = useState(results);
 
-
+  useEffect(() => {   // need to run every time filter changes
+    if(catFilter.length != 0) {
+      console.log("change!");
+      setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id)));
+    } else { // if no filters applied
+      setFilteredResults(results) //set filteredResults to all results
+    }
+  }, [catFilter, results]);
 
   const router = useRouter();
   const { q } = router.query as { q: string };
@@ -44,7 +51,11 @@ export default function Search(props: SearchProps) {
         <Grid2 xs={3}>
           <Stack direction={'column'} spacing={2}>
             <h1>ISAAC</h1>
-            <Filters categories={categories}/>
+            <Filters 
+              categories={categories}
+              setFilter={setFilter}
+              currFilter={catFilter}
+            />
           </Stack>
         </Grid2>
         <Grid2 xs={6}>
@@ -61,24 +72,35 @@ export default function Search(props: SearchProps) {
   )
 }
 
-function Filters(props: { categories: string[] }) {
-  const { categories } = props;
+function Filters(props: { categories: Category[], setFilter: Function, currFilter: string[] }) {
+  const { categories, setFilter, currFilter } = props;
+
+  // onChange function to update filter list
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>, category: Category) => {
+    if(event.target.checked){   // need to toggle based on if box is checked or unchecked
+      let newFilter = currFilter.concat(category.id as string);
+      setFilter(newFilter);
+    } else {
+      setFilter(currFilter.filter(i => i !== category.id as string));
+    }
+  }
+
   return (
     <Box>
       <h3>Filters</h3>
       <Stack direction={'column'} spacing={2}>
         <FormGroup>
           {categories.map((category, i) => (
-            <FormControlLabel key={i} control={<Checkbox />} label={category}/>
+            <FormControlLabel 
+              key={i}
+              control={<Checkbox onChange={(e) => handleFilter(e, category)}/>} // handle when this changes
+              label={JSON.parse(JSON.stringify(category.name as string))} // pull names from category
+            />
           ))}
         </FormGroup>
       </Stack>
     </Box>
   )
-}
-
-function FilterResults() {
-
 }
 
 function SearchResult(props: { result: Page }) {
