@@ -5,18 +5,20 @@ import IsaacAPI from "../ISAAC";
 
 const ApiEndpoint: API = {
     // pages
-    async getPages() {
+    async getAllPages() {
         return (await IsaacAPI.getPages({})) as Page[];
     },
 
-    async getPage(p_id: string) {
-        const pages: Page[] = (await IsaacAPI.getPages({ id: p_id })) as Page[];
-        return pages[0];
+    async getPagesByCategoryId(c_id: string) {
+        return (await IsaacAPI.getPages({ page_category_id: c_id })) as Page[];
     },
 
-    async getPageByTitle(title: string) {
-        const pages: Page[] = (await IsaacAPI.getPages({ title: title })) as Page[];
-        return pages[0];
+    async getPageById(p_id: string) {
+        return (await IsaacAPI.getPages({ id: p_id, single: true })) as Page;
+    },
+
+    async getPageByTitle(p_title: string) {
+        return (await IsaacAPI.getPages({ title: p_title, single: true })) as Page;
     },
 
     async addNewPage(p: Page) {
@@ -43,15 +45,15 @@ const ApiEndpoint: API = {
     },
 
     // revisions
-    async getRecentPageRevision(p_id: string) {
+    async getRecentPageRevisionById(p_id: string) {
         return (await IsaacAPI.getRevisions({ rev_page_id: p_id, single: true })) as Revision;
     },
 
-    async getAllPageRevisions(p_id: string) {
+    async getAllPageRevisionsById(p_id: string) {
         return (await IsaacAPI.getRevisions({ rev_page_id: p_id })) as Revision[];
     },
 
-    async getRevision(r_id: string) {
+    async getRevisionById(r_id: string) {
         return (await IsaacAPI.getRevisions({ id: r_id, single: true })) as Revision;
     },
 
@@ -67,8 +69,12 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.getCategories({})) as Category[];
     },
 
-    async getCategory(c_id: string) {
-        return (await IsaacAPI.getCategories({ id: c_id })) as Category;
+    async getCategoryById(c_id: string) {
+        return (await IsaacAPI.getCategories({ id: c_id, single: true })) as Category;
+    },
+
+    async getCategoryByName(c_name: string) {
+        return (await IsaacAPI.getCategories({ name: c_name, single: true })) as Category;
     },
 
     async addNewCategory(c: Category) {

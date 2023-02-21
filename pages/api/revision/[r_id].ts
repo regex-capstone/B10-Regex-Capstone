@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'GET':
-                const rev: Revision = await api.getRevision(r_id);
+                const rev: Revision = await api.getRevisionById(r_id);
 
                 if (!rev) {
                     throw new Error('Revision not found.');

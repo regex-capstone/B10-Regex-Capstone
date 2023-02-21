@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'GET':
-                const allPages = await api.getPages();
+                const allPages = await api.getAllPages();
                 res.status(200).json(allPages)
                 break
             case 'POST':

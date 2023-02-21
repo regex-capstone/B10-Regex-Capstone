@@ -7,13 +7,11 @@ import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
+import Logo from "@/client/Logo";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
-  const pages: PageData[] = await api.getPages()
-
-  console.log(pages);
-
+  const pages: PageData[] = await api.getAllPages()
   return {
     paths: pages.map(page => {
       return {
@@ -30,7 +28,7 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
   const api: API = ApiEndpoint
   const { title } = context.params ?? {};
   const pageData: PageData = await api.getPageByTitle(title as string)
-  const revisionData: Revision = await api.getRecentPageRevision(pageData.id as string)
+  const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
   return {
     props: {
@@ -61,7 +59,7 @@ export default function Page(props: PageProps) {
         <Grid2 container spacing={2}>
           <Grid2 xs={3}>
             <Stack direction={'column'} spacing={2}>
-              <h1>ISAAC</h1>
+              <Logo />
               <ContentTable page={pageData} />
             </Stack>
           </Grid2>
