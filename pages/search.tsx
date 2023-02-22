@@ -17,12 +17,21 @@ interface SearchProps {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
-  const results: Page[] = await api.search(context.query.q as string);
-  const categories: Category[] = await api.getAllCategories()
+  const results: Page[] = await api.search(context.query.q as string)
+  const categories: Category[] = (await api.getAllCategories())
   return {
     props: {
-      results: results,
-      categories: categories
+      results: results.map(result => ({
+        ...result,
+        id: JSON.parse(JSON.stringify(result.id)),
+        page_category_id: result.page_category_id.toString(),
+        created_at: JSON.parse(JSON.stringify(result.created_at))
+      })),
+      categories: categories.map(category => ({
+        ...category,
+        id: JSON.parse(JSON.stringify(category.id)),
+        created_at: JSON.parse(JSON.stringify(category.created_at))
+      })),
     }
   }
 }
@@ -37,7 +46,7 @@ export default function Search(props: SearchProps) {
   useEffect(() => {   // need to run every time filter changes
     if(catFilter.length != 0) {
       console.log("change!");
-      setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id)));
+      setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id as string)));
     } else { // if no filters applied
       setFilteredResults(results) //set filteredResults to all results
     }
