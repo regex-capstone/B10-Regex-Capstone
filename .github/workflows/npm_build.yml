@@ -6,6 +6,7 @@ name: npm build
 env:
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGODB_DB: ${{ secrets.MONGODB_DB }}
+  AUTH_SECRET: ${ secrets.AUTH_SECRET }}
 
 on:
   push:
