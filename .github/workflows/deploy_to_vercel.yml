@@ -4,6 +4,7 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGODB_DB: ${{ secrets.MONGODB_DB }}
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
 
 on:
   push:
