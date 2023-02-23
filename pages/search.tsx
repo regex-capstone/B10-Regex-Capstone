@@ -24,8 +24,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
       results: results.map(result => ({
         ...result,
         id: JSON.parse(JSON.stringify(result.id)),
-        page_category_id: result.page_category_id.toString(),
-        created_at: JSON.parse(JSON.stringify(result.created_at))
+        page_category_id: JSON.parse(JSON.stringify(result.page_category_id)),
+        created_at: JSON.parse(JSON.stringify(result.created_at)),
+        headings: result.headings as Array<any>
       })),
       categories: categories.map(category => ({
         ...category,
