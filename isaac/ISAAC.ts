@@ -1,7 +1,8 @@
 import type { Page, Revision, Category } from './models/index';
+import type { Metrics, Metric } from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions, BaseOptions } from './ISAACOptions';
+import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 
 const database: Database = MongooseDatabase;
@@ -88,13 +89,52 @@ async function addNewCategory(c: Category) {
     return resultCatId;
 }
 
+async function addAnalytic(m: Metric, options: MetricsOptions) {
+    let query = cleanQuery(options);
+
+    const response = (await database.addAnalytic(m, query));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const resultMetricId = response.payload;
+
+    if (!resultMetricId) throw new Error('Error adding new analytic.');
+
+    return resultMetricId;
+}
+
+async function getAnalytics(options: MetricsOptions) {
+    let query = cleanQuery(options);
+
+    const response = (await database.getAnalytics(query));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as Metrics[];
+
+    return options.single ? payload[0] : payload;
+}
+
+async function getAllAnalytics(options: MetricsOptions) {
+    const response = (await database.getAnalytics({ }));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as Metrics[];
+
+    return options.single ? payload[0] : payload;
+}
+
 export default {
     getPages: getPages,
     getRevisions: getRevisions,
     getCategories: getCategories,
     addNewPage: addNewPage,
     addNewRevision: addNewRevision,
-    addNewCategory: addNewCategory
+    addNewCategory: addNewCategory,
+    addAnalytic: addAnalytic,
+    getAnalytics: getAnalytics,
+    getAllAnalytics: getAllAnalytics
 };
 
 function cleanQuery(options: BaseOptions) {

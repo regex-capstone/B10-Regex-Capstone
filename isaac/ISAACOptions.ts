@@ -19,5 +19,5 @@ export interface CategoryOptions extends BaseOptions {
 }
 
 export interface MetricsOptions extends BaseOptions {
-    type?: string,
+    single?: boolean
 }

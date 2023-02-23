@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Page, Revision, Category } from '../../models';
+import { Metrics } from '../../analytics/model';
 
 const MongooseModels = {
     Page: new mongoose.Schema({
@@ -47,11 +48,23 @@ const MongooseModels = {
             type: Date,
             required: [true, 'Creation date is missing...'] 
         }
+    }, { strict: true }),
+
+    Metrics: new mongoose.Schema({
+        id: {
+            type: String,
+            required: [true, 'Page reference ID is missing...']
+        },
+        metrics: {
+            type: Array,
+            default: []
+        }
     }, { strict: true })
 }
 
 export default {
     Page: mongoose.models.Page || mongoose.model<Page>('Page', MongooseModels.Page),
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', MongooseModels.Revision),
-    Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category)
+    Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category),
+    Metrics: mongoose.models.Metrics || mongoose.model<Metrics>('Metrics', MongooseModels.Metrics)
 }

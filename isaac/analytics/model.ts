@@ -1,11 +1,11 @@
 
 export interface Metrics {
     id?: string;
-    entries: Metric;
+    metrics: Metric;
 }
 
 export interface Metric {
-    timestamp: Date;
+    timestamp: number;
     major: string;
     standing: string;
 }
