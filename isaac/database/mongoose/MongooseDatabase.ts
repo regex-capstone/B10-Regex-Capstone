@@ -1,16 +1,10 @@
- import type { Page, Revision, Category } from '../../models/index';
+import type { Page, Revision, Category } from '../../models/index';
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
 
-async function init() {
-    console.log('Initializing Mongoose connection to MongoDB...');
-    return await connectToDatabase();
-}
-
 try {
-    const databaseConnection = await init();
-    console.log(databaseConnection ? 'Mongoose database initialized' : 'Mongoose database failed to initialize');
+    await connectToDatabase();
 } catch (err) {
     throw err;
 }
