@@ -17,8 +17,6 @@ jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
-      - name: Create .env file based on Github Secrets
-        uses: ozaytsev86/create-env-file-action@v1
       - uses: actions/checkout@v2
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
