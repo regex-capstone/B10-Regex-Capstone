@@ -4,10 +4,9 @@ import { Category } from "@/isaac/models";
 import { Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPropsResult } from "next";
-import Link from "next/link";
-import { useState } from "react";
 import SearchBar from "@/client/SearchBar";
 import Logo from "@/client/Logo";
+import Link from "next/link";
 
 const api: API = ApiEndpoint
 
