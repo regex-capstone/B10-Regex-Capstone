@@ -13,7 +13,6 @@ export default function App({ Component, pageProps }: AppProps<any>) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <SessionProvider session={session}>
-        <HeaderBar />
         <Component {...pageProps} />
       </SessionProvider>
     </ThemeProvider>
