@@ -1,4 +1,4 @@
-import { ComponentAuthOptions } from '../isaac/auth/next-auth/AuthOptions';
+import { ComponentAuthOptions } from '../isaac/auth/deprecated/AuthOptions';
 
 declare module "react" {
     interface ComponentClass {

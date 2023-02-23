@@ -1,7 +1,6 @@
 export default interface User {
     role: UserRole,
-    givenName: string,
-    title: string
+    name: string
 }
 
 export enum UserRole {

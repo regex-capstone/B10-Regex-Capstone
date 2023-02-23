@@ -17,7 +17,7 @@ export default function HeaderBar() {
                     <Box>
                         {
                             session ? (
-                                <h1>Welcome, {session.user.givenName}</h1>
+                                <h1>Welcome, {session.user.name}</h1>
                             ) : <></>
                         }
                     </Box>

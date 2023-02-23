@@ -3,8 +3,8 @@ import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import { SessionProvider, useSession } from 'next-auth/react';
 import HeaderBar from '@/client/HeaderBar';
 import LoadingSpinner from '@/client/LoadingSpinner';
-import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { UserRole } from '@/isaac/models/User';
+import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 
 
 // application theme, left intentionally empty (default)
