@@ -34,15 +34,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - name: 'Create env file'
-      run: |
-        touch .env
-        echo MONGODB_URI=${{ secrets.MONGODB_URI }} >> .env
-        echo MONGODB_DB=${{ secrets.MONGODB_DB }} >> .env
-        echo NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} >> .env
-        echo AUTH_SECRET=${{ secrets.AUTH_SECRET }} >> .env
-        echo GOOGLE_ID=${{ secrets.GOOGLE_ID }} >> .env
-        echo GOOGLE_SECRET=${{ secrets.GOOGLE_SECRET }} >> .env
-        cat .env
     - run: npm run build --if-present
 #    - run: npm test
