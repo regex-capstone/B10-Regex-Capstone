@@ -8,6 +8,7 @@ import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
+import { Box } from "@mui/material";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
@@ -67,6 +68,15 @@ export default function Page(props: PageProps) {
             <Stack direction={'column'} spacing={2}>
               <SearchBar initialQuery={query} />
               <Content page={pageData} revision={revisionData} />
+            </Stack>
+          </Grid2>
+          <Grid2 xs={3} sx={{
+            marginTop: 13,
+          }}>
+            <h3>Admin Tools</h3>
+            <Stack direction={'column'} spacing={2}>
+              <a href={`/edit`}>Edit Page</a>
+              <a href={'/analytics'}>Page Analytics</a>
             </Stack>
           </Grid2>
         </Grid2>
