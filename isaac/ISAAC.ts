@@ -1,5 +1,5 @@
 import type { Page, Revision, Category } from './models/index';
-import type { Metrics, Metric } from './analytics/model'
+import type { Metric } from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
 import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions } from './ISAACOptions';
@@ -89,10 +89,8 @@ async function addNewCategory(c: Category) {
     return resultCatId;
 }
 
-async function addAnalytic(m: Metric, options: MetricsOptions) {
-    let query = cleanQuery(options);
-
-    const response = (await database.addAnalytic(m, query));
+async function addAnalytic(m: Metric) {
+    const response = (await database.addAnalytic(m));
 
     if (isErrorResponse(response)) throw response.error;
 
@@ -110,19 +108,19 @@ async function getAnalytics(options: MetricsOptions) {
 
     if (isErrorResponse(response)) throw response.error;
 
-    const payload = response.payload as Metrics[];
+    const payload = response.payload as Metric[];
 
     return options.single ? payload[0] : payload;
 }
 
-async function getAllAnalytics(options: MetricsOptions) {
+async function getAllAnalytics() {
     const response = (await database.getAnalytics({ }));
 
     if (isErrorResponse(response)) throw response.error;
 
-    const payload = response.payload as Metrics[];
+    const payload = response.payload as Metric[];
 
-    return options.single ? payload[0] : payload;
+    return payload;
 }
 
 export default {

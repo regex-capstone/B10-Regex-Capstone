@@ -1,11 +1,6 @@
-
-export interface Metrics {
-    id?: string;
-    metrics: Metric;
-}
-
 export interface Metric {
     timestamp: number;
     major: string;
-    standing: string;
+    standing: string,
+    met_page_id?: string;
 }

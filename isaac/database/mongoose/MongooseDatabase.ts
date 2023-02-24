@@ -1,5 +1,5 @@
  import type { Page, Revision, Category } from '../../models/index';
- import { Metrics, Metric } from '../../analytics/model'
+ import { Metric } from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
@@ -154,13 +154,15 @@ const MongooseDatabase: Database = {
 
     getAnalytics: async (query: Object) => {
         try {
-            const data = await MongooseModels.Metrics
+            const data = await MongooseModels.Metric
                 .find(query);
 
             const metrics = data.map((raw) => {
-                const metric: Metrics = {
-                    id: raw.id,
-                    metrics: raw.metrics
+                const metric: Metric = {
+                    met_page_id: raw.id,
+                    timestamp: raw.timestamp,
+                    major: raw.major,
+                    standing: raw.standing
                 };
 
                 return metric;
@@ -177,17 +179,15 @@ const MongooseDatabase: Database = {
         }
     },
 
-    addAnalytic: async (m: Metric, query: Object) => {
+    addAnalytic: async (m: Metric) => {
         try {
-            const update = await MongooseModels.Metrics.findOneAndUpdate(
-                query,
-                {$push: {"metrics": m}},
-                {safe: true, upsert: true, new: true}
-            );
+            const met = new MongooseModels.Metric(m);
+            await met.validate();
+            await met.save();
 
             return {
                 success: true,
-                payload: update._id.toString()
+                payload: met._id.toString()
             }
         } catch (err: any) {
             return {

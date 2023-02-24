@@ -1,5 +1,5 @@
 import type { Page, Revision, Category } from '../models/index';
-import type { Metric, Metrics } from '../analytics/model'
+import type { Metric } from '../analytics/model'
 
 export default interface Database {
     getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
@@ -9,7 +9,7 @@ export default interface Database {
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
     addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
     getAnalytics(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addAnalytic(metric: Metric, query: Object): Promise<SuccessDBResponse | ErrorDBResponse>
+    addAnalytic(metric: Metric): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {
@@ -18,7 +18,7 @@ interface SuccessDBResponse {
         Page | Page[] |
         Revision | Revision[] |
         Category | Category[] |
-        Metrics | Metrics[]
+        Metric | Metric[]
 }
 
 interface ErrorDBResponse {
