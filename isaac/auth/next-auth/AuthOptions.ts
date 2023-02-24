@@ -33,11 +33,12 @@ export const AuthOptions: NextAuthOptions = {
         async session({ session, token }) {
             session.accessToken = token.accessToken;
 
-            // // @TODO handle admin check
             session.user = {
                 role: UserRole.STUDENT as UserRole,
                 name: token.name as string
-            }
+            };
+
+            
 
             return session;
         },

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Page, Revision, Category } from '../../models';
+import { Page, Revision, Category, User } from '../../models';
 
 const MongooseModels = {
     Page: new mongoose.Schema({
@@ -47,11 +47,23 @@ const MongooseModels = {
             type: Date,
             required: [true, 'Creation date is missing...'] 
         }
+    }, { strict: true }),
+
+    User: new mongoose.Schema({
+        role: {
+            type: String,
+            required: [true, 'Role is missing...'],
+        },
+        name: {
+            type: String,
+            required: [true, 'Name is missing...']
+        }
     }, { strict: true })
 }
 
 export default {
     Page: mongoose.models.Page || mongoose.model<Page>('Page', MongooseModels.Page),
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', MongooseModels.Revision),
-    Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category)
+    Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category),
+    User: mongoose.models.User || mongoose.model<User>('User', MongooseModels.User)
 }

@@ -10,7 +10,7 @@ try {
 }
 
 const MongooseDatabase: Database = {
-    getLatestPages: async (query: Object) => {
+    getLatestPages: async (query: any) => {
         try {
             const data = await MongooseModels.Page
                 .find(query)
@@ -39,7 +39,7 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestRevisions: async (query: Object) => {
+    getLatestRevisions: async (query: any) => {
         try {
             const data = await MongooseModels.Revision
                 .find(query)
@@ -67,7 +67,7 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestCategories: async (query: Object) => {
+    getLatestCategories: async (query: any) => {
         try {
             const data = await MongooseModels.Category
                 .find(query)
@@ -137,6 +137,50 @@ const MongooseDatabase: Database = {
             return {
                 success: true,
                 payload: cat._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    getUser: async (query: any) => {
+        try {
+            const data = await MongooseModels.User
+                .find(query)
+                .sort({ created_at: -1 });
+
+            const user = data.map((raw) => {
+                const user = {
+                    id: raw._id,
+                    role: raw.role,
+                    name: raw.name
+                };
+
+                return user;
+            });
+    
+            return {
+                success: true,
+                payload: user
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    addNewUser: async (user: any) => {
+        try {
+            const newUser = new MongooseModels.User(user);
+            await newUser.validate();
+            await newUser.save();
+    
+            return {
+                success: true,
+                payload: newUser._id.toString()
             }
         } catch (err: any) {
             return {

@@ -14,7 +14,6 @@ export default function NotAuthorizedTest() {
  */
 NotAuthorizedTest.auth = {
     role: UserRole.ADMIN,
-    loading: <LoadingSpinner />,
     unauthorized: '/'
 };
 

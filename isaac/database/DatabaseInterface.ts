@@ -1,12 +1,15 @@
-import type { Page, Revision, Category } from '../models/index';
+import type { Page, Revision, Category, User } from '../models/index';
 
 export default interface Database {
-    getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    getLatestRevisions(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    getLatestCategories(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getLatestPages(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getLatestRevisions(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getLatestCategories(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
     addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>
+    addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
+    // only needed for the firebase auth flavor
+    getUser(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
+    addNewUser(user: any): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {
@@ -14,7 +17,8 @@ interface SuccessDBResponse {
     payload?: string |
         Page | Page[] |
         Revision | Revision[] |
-        Category | Category[]
+        Category | Category[] |
+        User 
 }
 
 interface ErrorDBResponse {

@@ -6,7 +6,6 @@ import LoadingSpinner from '@/client/LoadingSpinner';
 import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 
-
 // application theme, left intentionally empty (default)
 const theme = createTheme({})
 
@@ -49,7 +48,12 @@ function AuthLayout(
         )
     }
 
-    // ADMINs can see all pages
+    // admin access only
+    if (authProps.role === UserRole.ADMIN && user?.role !== UserRole.ADMIN) {
+        return <h1>Only admins can pass through here.</h1>
+    }
+    
+    // user must be logged in
     if (user?.role !== authProps.role && user?.role !== UserRole.ADMIN) {
         return <h1>Not authorized</h1>
     }
