@@ -1,12 +1,13 @@
 import { Metric } from '../analytics/model';
+import Analytics from '../analytics/AnalyticsInterface';
 import IsaacAPI from "../ISAAC";
 
-const AnalyticsAPI = {
+const AnalyticsAPI: Analytics = {
     async addAnalytic(m: Metric) {
         return (await IsaacAPI.addAnalytic({
             ...m,
             timestamp: Date.now()
-        }));
+        })) as string;
     },
 
     async getAnalytics(p_id: string, major: string, standing: string) {
@@ -17,3 +18,5 @@ const AnalyticsAPI = {
         return (await IsaacAPI.getAnalytics({ })) as Metric[];
     }
 }
+
+export default AnalyticsAPI
