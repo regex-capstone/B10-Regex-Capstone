@@ -1,4 +1,4 @@
-import { Button, Container } from "@mui/material";
+import { Button, Container, Stack } from "@mui/material";
 import { signIn } from "next-auth/react";
 
 export default function NotAuthorizedPage(props: { requireLogIn?: boolean, requireAdmin?: boolean } ) {
@@ -7,17 +7,48 @@ export default function NotAuthorizedPage(props: { requireLogIn?: boolean, requi
 
     if (requireLogIn) {
         return (
+            // make a centered button with @mui/material's Stack component
             <Container>
-                <Button
-                    variant="contained"
-                    onClick={() => signIn()}
-                >Sign In</Button>
+                <Stack
+                    spacing={2}
+                    direction="column"
+                    sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <h1>You must be logged in to access this resource... Please log in.</h1>
+                    <Button
+                        onClick={() => signIn()}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Log in
+                    </Button>
+                </Stack>
             </Container>
+            
         )
     } else if (requireAdmin) {
         return (
             <Container>
-                <h1>Only admins have access to this resource... Please head back to the main page.</h1>
+                <Stack
+                    spacing={2}
+                    direction="column"
+                    sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <h1>You must be an admin to access this resource... Please head back to the main page.</h1>
+                    <Button
+                        href="/"
+                        variant="contained"
+                        color="primary"
+                    >
+                        Back to main page
+                    </Button>
+                </Stack>
             </Container>
         )
     }
