@@ -1,5 +1,6 @@
 import type { Page, Revision, Category } from '@/isaac/models';
 import { PageOptions, RevisionOptions } from '../ISAACOptions';
+import { RevisionRequest } from '../models/Revision';
 
 export default interface API {
     // pages 
@@ -13,7 +14,7 @@ export default interface API {
     getRecentPageRevisionById(p_id: string): Promise<Revision>,
     getAllPageRevisionsById(p_id: string): Promise<Revision[]>,
     getRevisionById(r_id: string): Promise<Revision>,
-    addRevision(r: Revision): Promise<string>,
+    addRevision(r: RevisionRequest): Promise<string>,
 
     // categories
     getAllCategories(): Promise<Category[]>,

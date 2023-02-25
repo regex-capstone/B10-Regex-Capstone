@@ -15,8 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'POST':
                 if (!body) throw new Error('POST request has no body.');
+                if (!body.content) throw new Error('POST request has no content.');
+                if (!body.rev_page_title) throw new Error('POST request has no rev_page_id.');
 
-                const revId = await api.addRevision(body.revision);
+                const revId = await api.addRevision({
+                    content: body.content,
+                    rev_page_title: body.rev_page_title
+                });
 
                 res.status(200).json({
                     success: true,

@@ -1,16 +1,10 @@
 import SearchBar from "@/client/SearchBar";
 import { Container, Stack, Link, Button } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2'
-import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
-import API from "@/isaac/api/APIInterface";
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import { Revision, Page as PageData } from "@/isaac/models";
+import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
-import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
 import { Box } from "@mui/material";
-import { getStaticPaths } from "../../category/[name]";
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { EditorState } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 // @ts-ignore
@@ -18,6 +12,8 @@ import { stateToMarkdown } from "draft-js-export-markdown";
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic'
 import { EditorProps } from 'react-draft-wysiwyg'
+import { RevisionRequest } from "@/isaac/models/Revision";
+import { redirect } from 'next/navigation';
 // TODO: get static paths/props from the page being edited
 // getStaticPaths(something)
 // getStaticProps(something)
@@ -30,10 +26,11 @@ const Editor = dynamic<EditorProps>(
     { ssr: false }
 )
 
-interface PageProps {
-  pageData: string,
-  revisionData: string
-}
+const loadingTextArr = [
+    'Redirecting you back to the page.',
+    'Redirecting you back to the page..',
+    'Redirecting you back to the page...'
+]
 
 /* (root)/ */
 export default function Edit(props: any) {
@@ -41,6 +38,9 @@ export default function Edit(props: any) {
     // const pageData: PageData = JSON.parse(props.pageData) as PageData;
     // const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
     // const { title } = context.params ?? {};
+    const [isLoading, setLoading] = useState(false);
+    // const [loadingTextIndex, setLoadingTextIndex] = useState(0);
+    const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const router = useRouter();
     const { title } = router.query;
     const query = "";
@@ -53,106 +53,109 @@ export default function Edit(props: any) {
             <Container>
                 <Grid2 container spacing={2}>
                     <Grid2 xs={3}>
-                        <Stack direction={'column'} spacing={2}>
-                            <Logo />
-                            <Stack direction={'column'} spacing={2}>
-                              <h2>Content</h2>
-                            </Stack>
-                        </Stack>
                     </Grid2>
                     <Grid2 xs={6}>
                         <Stack direction={'column'} spacing={2}>
                             <SearchBar initialQuery={query} />
-                            <RichText />
+                            {
+                                isLoading
+                                ? <h1>{loadingText}</h1>
+                                : <RichText />
+                            }
                         </Stack>
                     </Grid2>
-                    <Grid2 xs={3} sx={{
-                        marginTop: 13,
-                    }}>
-                        <h3>Admin Tools</h3>
-                        <Stack direction={'column'} spacing={2}>
-                            <Link href={`/edit`}>Edit Page</Link>
-                            <Link href={`/analytics`}>Page Analytics</Link>
-                        </Stack>
+                    <Grid2 xs={3}>
                     </Grid2>
                 </Grid2>
             </Container>
         </>
     )
 
-    function ContentTable(props: { page: PageData }) {
-        const { page } = props;
-        const headings = page.headings ?? [];
-      
-        return (
-          <Stack direction={'column'}>
-            <h3>Content</h3>
-            <Stack direction={'column'} spacing={2}>
-              {headings.map((heading, i) => (
-                <a href={`#${heading}`} key={i}>{heading.text}</a>
-              ))}
-            </Stack>
-          </Stack>
-        )
-    }
-      
-    function Content(props: { page: PageData, revision: Revision }) {
-      const { page, revision } = props;
-    
-      return (
-        <Container>
-          <ReactMarkdown>
-            {revision.content}
-          </ReactMarkdown>
-        </Container>
-      )
-    }
-
     function RichText() {
         const [editorState, setEditorState] = useState(
             () => EditorState.createEmpty(),
         );
+        const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
+
+        useEffect(() => {
+            return () => {
+                if (textInterval) {
+                    clearInterval(textInterval);
+                }
+            }
+        }, [])
+
+        const handleSave = async () => {
+            setLoading(true);
+
+            let textIndex = 0;
+
+            setTextInterval(setInterval(() => {
+                setLoadingText(loadingTextArr[textIndex % 3]);
+                textIndex++;
+            }, 200));
+
+            const request: RevisionRequest = {
+                content: getMarkdown(editorState),
+                rev_page_title: title as string
+            }
+
+            const options = {
+                // The method is POST because we are sending data.
+                method: 'POST',
+                // Tell the server we're sending JSON.
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Body of the request is the JSON data we created above.
+                body: JSON.stringify(request),
+            }
+
+            const response = await fetch('/api/revision', options);
+            const data = await response.json();
+            // redirect to the page we just edited
+            router.push(`/page/${title}`);
+        }
 
         return (
-          <>
-            <header className="text-header">
-              Rich Text Editor Example
-            </header>
-            <Box sx={{
-              border: '1px solid black'
-            }}>
-              <Editor
-                editorState={editorState}
-                onEditorStateChange={setEditorState}
-                toolbar={{
-                  options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
-                  inline: {
-                    options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
-                  },
-                  list: {
-                    options: ['unordered, ordered']
-                  },
-                  link: {
-                    options: ['link']
-                  }
-                }}
-              />
-            </Box>
-            <Button onClick={() => {
-
-                // call the fetch function
-                console.log(getMarkdown(editorState));
-                // console.log(typeof(getMarkdown(editorState)));
-            }}>
-              Save Changes
-            </Button>
-          </>
+            <>
+                <header className="text-header">
+                    Rich Text Editor Example
+                </header>
+                <Box sx={{
+                    border: '1px solid black'
+                }}>
+                    <Editor
+                        editorState={editorState}
+                        onEditorStateChange={setEditorState}
+                        toolbar={{
+                            options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
+                            inline: {
+                                options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
+                            },
+                            list: {
+                                options: ['unordered, ordered']
+                            },
+                            link: {
+                                options: ['link']
+                            }
+                        }}
+                    />
+                </Box>
+                <Button onClick={handleSave}>
+                    {
+                        isLoading
+                        ? loadingText
+                        : 'Save Changes'
+                    }
+                </Button>
+            </>
         )
     }
 
     function getMarkdown(rawData: any) {
-      return stateToMarkdown(
-        rawData.getCurrentContent()
-      )
+        return stateToMarkdown(
+            rawData.getCurrentContent()
+        )
     }
 }
