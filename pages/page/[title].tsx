@@ -1,5 +1,5 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack } from "@mui/material";
+import { Container, Stack, Link } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import API from "@/isaac/api/APIInterface";
@@ -75,8 +75,8 @@ export default function Page(props: PageProps) {
           }}>
             <h3>Admin Tools</h3>
             <Stack direction={'column'} spacing={2}>
-              <a href={`/edit`}>Edit Page</a>
-              <a href={'/analytics'}>Page Analytics</a>
+              <Link href={'/edit'}>Edit Page</Link>
+              <Link href={'/analytics'}>Page Analytics</Link>
             </Stack>
           </Grid2>
         </Grid2>

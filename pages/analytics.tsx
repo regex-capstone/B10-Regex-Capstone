@@ -29,11 +29,6 @@ export default function Analytics(props: PageProps) {
     // TODO: get real data from api: need static paths/props
     // const pageData: PageData = JSON.parse(props.pageData) as PageData;
     // const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
-    console.log("here")
-
-    // temp dummy data
-    const pageData: PageData = {'blah': 'blah'} as PageData
-    const revisionData: Revision = {'blah': 'blah'} as Revision
 
     const query = "";
     return (
