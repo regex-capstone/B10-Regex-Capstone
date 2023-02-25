@@ -145,16 +145,20 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getUser: async (query: any) => {
+    getLatestUsers: async (query: any) => {
         try {
             const data = await MongooseModels.User
                 .find(query)
                 .sort({ created_at: -1 });
 
-            const user = data.map((raw) => {
+            const users = data.map((raw) => {
                 const user = {
                     id: raw._id,
                     role: raw.role,
+                    standing: raw.standing,
+                    major: raw.major,
+                    created_at: raw.created_at,
+                    email: raw.email,
                     name: raw.name
                 };
 
@@ -163,7 +167,7 @@ const MongooseDatabase: Database = {
     
             return {
                 success: true,
-                payload: user
+                payload: users
             };
         } catch (err: any) {
             return {

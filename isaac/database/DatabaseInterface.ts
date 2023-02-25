@@ -8,8 +8,8 @@ export default interface Database {
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
     addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
     // only needed for the firebase auth flavor
-    getUser(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addNewUser(user: any): Promise<SuccessDBResponse | ErrorDBResponse>
+    getLatestUsers(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
+    addNewUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {
@@ -18,7 +18,7 @@ interface SuccessDBResponse {
         Page | Page[] |
         Revision | Revision[] |
         Category | Category[] |
-        User 
+        User | User[]
 }
 
 interface ErrorDBResponse {

@@ -1,7 +1,7 @@
-import type { Page, Revision, Category } from './models/index';
+import type { Page, Revision, Category, User } from './models/index';
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions, BaseOptions } from './ISAACOptions';
+import { CategoryOptions, PageOptions, RevisionOptions, BaseOptions, UserOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 
 const database: Database = MongooseDatabase;
@@ -88,13 +88,40 @@ async function addNewCategory(c: Category) {
     return resultCatId;
 }
 
+// only needed for the firebase auth flavor
+async function getUsers(options: UserOptions) {
+    let response;
+
+    response = (await database.getLatestUsers(options));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as User[];
+
+    return options.single ? payload[0] : payload;
+}
+
+async function addNewUser(u: User) {
+    const response = (await database.addNewUser(u));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const resultUserId = response.payload;
+
+    if (!resultUserId) throw new Error('Error adding new user.');
+
+    return resultUserId;
+}
+
 export default {
     getPages: getPages,
     getRevisions: getRevisions,
     getCategories: getCategories,
     addNewPage: addNewPage,
     addNewRevision: addNewRevision,
-    addNewCategory: addNewCategory
+    addNewCategory: addNewCategory,
+    getUsers: getUsers,
+    addNewUser: addNewUser
 };
 
 function cleanQuery(options: BaseOptions) {

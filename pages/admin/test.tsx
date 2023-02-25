@@ -13,8 +13,7 @@ export default function NotAuthorizedTest() {
  * Set the auth options for pages using this method
  */
 NotAuthorizedTest.auth = {
-    role: UserRole.ADMIN,
-    unauthorized: '/'
+    role: UserRole.ADMIN
 };
 
 /**

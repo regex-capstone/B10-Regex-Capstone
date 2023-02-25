@@ -1,10 +1,10 @@
-// import { Component } from "react";
-// @TODO: make loading component
-
-import { Component } from "react";
 import { NextAuthOptions } from "next-auth";
-import { UserRole } from "@/isaac/models/User";
+import User from "@/isaac/models/User";
 import GoogleProvider from "../google/GoogleProvider";
+import API from "@/isaac/api/APIInterface";
+import ApiEndpoint from "@/isaac/api/APIEndpoint";
+
+const api: API = ApiEndpoint;
 
 export interface ComponentAuthOptions {
     role: string,
@@ -25,24 +25,21 @@ export const AuthOptions: NextAuthOptions = {
         // https://next-auth.js.org/configuration/callbacks
         async jwt({ token, account }) {
             if (account) {
-                token.accessToken = account.access_token
+                token.accessToken = account.access_token;
+                // persist the user data in the token for the middleware
+                token.user = await api.getUserByEmail(token.email as string);
             }
 
             return token
         },
         async session({ session, token }) {
             session.accessToken = token.accessToken;
-
-            session.user = {
-                role: UserRole.STUDENT as UserRole,
-                name: token.name as string
-            };
-
-            
+            session.user = token.user as User;
 
             return session;
         },
         async redirect({ url, baseUrl }) {
+            // @TODO: direct to the profile page?
             // Allows relative callback URLs
             if (url.startsWith("/")) return `${baseUrl}${url}`
             // Allows callback URLs on the same origin

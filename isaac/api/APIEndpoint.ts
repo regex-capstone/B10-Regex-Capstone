@@ -1,4 +1,4 @@
-import type { Page, Revision, Category } from '../models/index';
+import type { Page, Revision, Category, User } from '../models/index';
 import natural from "natural";
 import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
@@ -109,6 +109,17 @@ const ApiEndpoint: API = {
         sorted = indexed.map(i => i.page);
 
         return sorted;
+    },
+
+    async getUserByEmail(email: string) {
+        return (await IsaacAPI.getUsers({ email: email, single: true })) as User;
+    },
+
+    async addNewUser(u: User) {
+        return (await IsaacAPI.addNewUser({
+            ...u,
+            created_at: Date.now()
+        })) as string;
     }
 }
 
