@@ -9,18 +9,26 @@ import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
 import { Box } from "@mui/material";
-import { getStaticPaths } from "./category/[name]";
-import { getStaticProps } from "./category/[name]";
+import { getStaticPaths } from "../../category/[name]";
 import React, { useState, Component } from 'react';
 import { EditorState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 // @ts-ignore
 import { stateToMarkdown } from "draft-js-export-markdown";
-
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic'
+import { EditorProps } from 'react-draft-wysiwyg'
 // TODO: get static paths/props from the page being edited
 // getStaticPaths(something)
 // getStaticProps(something)
+
+/**
+ * This library does not allow for server-side rendering... To accommodate for SSR, let's consider another library.
+ */
+const Editor = dynamic<EditorProps>(
+    () => import('react-draft-wysiwyg').then((mod) => mod.Editor),
+    { ssr: false }
+)
 
 interface PageProps {
   pageData: string,
@@ -28,16 +36,19 @@ interface PageProps {
 }
 
 /* (root)/ */
-export default function Edit(props: PageProps) {
+export default function Edit(props: any) {
     // TODO: get real data from api: need static paths/props
     // const pageData: PageData = JSON.parse(props.pageData) as PageData;
     // const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
-
+    // const { title } = context.params ?? {};
+    const router = useRouter();
+    const { title } = router.query;
     const query = "";
+
     return (
         <>
             <Head>
-                <title>{`Example Edit | ISAAC`}</title>
+                <title>{`Editing ${title} | ISAAC`}</title>
             </Head>
             <Container>
                 <Grid2 container spacing={2}>
@@ -114,12 +125,24 @@ export default function Edit(props: PageProps) {
                 editorState={editorState}
                 onEditorStateChange={setEditorState}
                 toolbar={{
-                  // options: []
+                  options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
+                  inline: {
+                    options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
+                  },
+                  list: {
+                    options: ['unordered, ordered']
+                  },
+                  link: {
+                    options: ['link']
+                  }
                 }}
               />
             </Box>
             <Button onClick={() => {
-              console.log(getMarkdown(editorState));
+
+                // call the fetch function
+                console.log(getMarkdown(editorState));
+                // console.log(typeof(getMarkdown(editorState)));
             }}>
               Save Changes
             </Button>

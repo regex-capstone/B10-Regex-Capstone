@@ -75,8 +75,8 @@ export default function Page(props: PageProps) {
           }}>
             <h3>Admin Tools</h3>
             <Stack direction={'column'} spacing={2}>
-              <Link href={'/edit'}>Edit Page</Link>
-              <Link href={'/analytics'}>Page Analytics</Link>
+              <a href={`/page/${pageData.title}/edit`}>Edit Page</a>
+              <a href={`/page/${pageData.title}/analytics`}>Page Analytics</a>
             </Stack>
           </Grid2>
         </Grid2>

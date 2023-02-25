@@ -6,8 +6,8 @@ import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import { Box } from "@mui/material";
-import { getStaticPaths } from "./category/[name]";
-import { getStaticProps } from "./category/[name]";
+import { getStaticPaths } from "../../category/[name]";
+import { getStaticProps } from "../../category/[name]";
 import Link from "next/link";
 
 // TODO: get static paths/props from the page being edited
