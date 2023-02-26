@@ -55,9 +55,11 @@ export default function Edit(props: any) {
                     <Grid2 xs={3}>
                         <Stack direction={'column'} spacing={2}>
                             <Logo />
-                            <Stack direction={'column'} spacing={2}>
-                              <h2>Content</h2>
-                            </Stack>
+                            <Button href={`/page/${title}`} sx={{
+                              width: 'fit-content'
+                            }}>
+                              Back to Page
+                            </Button>
                         </Stack>
                     </Grid2>
                     <Grid2 xs={6}>
@@ -107,56 +109,51 @@ export default function Edit(props: any) {
         </Container>
       )
     }
+}
 
-    function RichText() {
-        const [editorState, setEditorState] = useState(
-            () => EditorState.createEmpty(),
-        );
+export function RichText() {
+  const [editorState, setEditorState] = useState(
+      () => EditorState.createEmpty(),
+  );
 
-        return (
-          <>
-            <header className="text-header">
-              Rich Text Editor Example
-            </header>
-            <Box sx={{
-              border: '1px solid black'
-            }}>
-              <Editor
-                editorState={editorState}
-                onEditorStateChange={setEditorState}
-                toolbar={{
-                  options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
-                  inline: {
-                    options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
-                  },
-                  list: {
-                    options: ['unordered, ordered']
-                  },
-                  link: {
-                    options: ['link']
-                  }
-                }}
-              />
-            </Box>
-            <Stack direction={'row'} spacing={1}>
-              <Button onClick={() => {
-                // call the fetch function
-                console.log(getMarkdown(editorState));
-                // console.log(typeof(getMarkdown(editorState)));
-                }}>
-                Save Changes
-              </Button>
-              <Button href={`/page/${title}`}>
-                Back to Page
-              </Button>
-            </Stack>
-          </>
-        )
-    }
+  return (
+    <>
+      <Box sx={{
+        border: '1px solid black',
+        marginY: 3
+      }}>
+        <Editor
+          editorState={editorState}
+          onEditorStateChange={setEditorState}
+          toolbar={{
+            options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
+            inline: {
+              options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
+            },
+            list: {
+              options: ['unordered, ordered']
+            },
+            link: {
+              options: ['link']
+            }
+          }}
+        />
+      </Box>
+      <Stack direction={'row'} spacing={1}>
+        <Button onClick={() => {
+          // call the fetch function
+          console.log(getMarkdown(editorState));
+          // console.log(typeof(getMarkdown(editorState)));
+          }}>
+          Save Changes
+        </Button>
+      </Stack>
+    </>
+  )
+}
 
-    function getMarkdown(rawData: any) {
-      return stateToMarkdown(
-        rawData.getCurrentContent()
-      )
-    }
+function getMarkdown(rawData: any) {
+  return stateToMarkdown(
+    rawData.getCurrentContent()
+  )
 }
