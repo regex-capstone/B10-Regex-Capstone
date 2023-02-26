@@ -1,5 +1,5 @@
  import type { Page, Revision, Category } from '../../models/index';
- import { Metric } from '../../analytics/model'
+ import Metric from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
@@ -157,10 +157,12 @@ const MongooseDatabase: Database = {
             const data = await MongooseModels.Metric
                 .find(query);
 
+            console.log(data);
+
             const metrics = data.map((raw) => {
                 const metric: Metric = {
                     met_page_id: raw.id,
-                    timestamp: raw.timestamp,
+                    created_at: raw.created_at,
                     major: raw.major,
                     standing: raw.standing
                 };

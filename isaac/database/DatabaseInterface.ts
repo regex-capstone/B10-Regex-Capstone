@@ -1,5 +1,5 @@
 import type { Page, Revision, Category } from '../models/index';
-import type { Metric } from '../analytics/model'
+import type Metric from '../analytics/model'
 
 export default interface Database {
     getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,

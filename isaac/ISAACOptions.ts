@@ -19,6 +19,7 @@ export interface CategoryOptions extends BaseOptions {
 }
 
 export interface MetricsOptions extends BaseOptions {
+    met_page_id?: string,
     major?: string,
     standing?: string,
     single?: boolean

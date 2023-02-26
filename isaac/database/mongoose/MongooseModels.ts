@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { Page, Revision, Category } from '../../models';
-import { Metric } from '../../analytics/model';
+import Metric from '../../analytics/model';
 
 const MongooseModels = {
     Page: new mongoose.Schema({
@@ -63,7 +63,7 @@ const MongooseModels = {
             type: String,
             required: [true, 'Standing is missing...']
         },
-        timestamp: {
+        created_at: {
             type: Date,
             required: [true, 'Date missing...']
         }
