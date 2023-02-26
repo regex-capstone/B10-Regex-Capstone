@@ -138,14 +138,18 @@ export default function Edit(props: any) {
                 }}
               />
             </Box>
-            <Button onClick={() => {
-
+            <Stack direction={'row'} spacing={1}>
+              <Button onClick={() => {
                 // call the fetch function
                 console.log(getMarkdown(editorState));
                 // console.log(typeof(getMarkdown(editorState)));
-            }}>
-              Save Changes
-            </Button>
+                }}>
+                Save Changes
+              </Button>
+              <Button href={`/page/${title}`}>
+                Back to Page
+              </Button>
+            </Stack>
           </>
         )
     }
