@@ -4,6 +4,10 @@ env:
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   MONGODB_URI: ${{ secrets.MONGODB_URI }}
   MONGODB_DB: ${{ secrets.MONGODB_DB }}
+  NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+  AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+  GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+  GOOGLE_SECRET: ${{ secrets.GOOGLE_SECRET }}
 
 on:
   push:

@@ -4,10 +4,10 @@ import { Category } from "@/isaac/models";
 import { Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPropsResult } from "next";
-import Link from "next/link";
-import { useState } from "react";
 import SearchBar from "@/client/SearchBar";
 import Logo from "@/client/Logo";
+import Link from "next/link";
+import HeaderBar from "@/client/HeaderBar";
 
 const api: API = ApiEndpoint
 
@@ -55,7 +55,7 @@ export default function Index(props: IndexProps) {
           <Grid2 container>
             {categories.map((category, i) => (
               <Grid2 key={i} xs={6}>
-                <Link href={`/category/${category.name}`}>{category.name}</Link> 
+                <Link href={`/category/${category.name}`}>{category.name}</Link>
               </Grid2>
             ))}
           </Grid2>
