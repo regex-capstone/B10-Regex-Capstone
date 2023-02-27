@@ -41,16 +41,16 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
     const pages: PageData[] = await api.getAllPages()
     return {
-      paths: pages.map(page => {
-        return {
-          params: {
-            title: page.title
-          }
-        }
-      }),
-      fallback: false
+        paths: pages.map(page => {
+            return {
+                params: {
+                    title: page.title
+                }
+            }
+        }),
+        fallback: false
     }
-  }
+}
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
     const api: API = ApiEndpoint;
@@ -69,8 +69,8 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
 }
 
 interface PageProps {
-  pageData: string,
-  revisionData: string
+    pageData: string,
+    revisionData: string
 }
 
 /* (root)/ */
@@ -78,50 +78,61 @@ export default function Edit(props: PageProps) {
     const pageData: PageData = JSON.parse(props.pageData) as PageData;
     const revisionData: RevisionData = JSON.parse(props.revisionData) as RevisionData;
     const [isLoading, setLoading] = useState(false);
+    const [isRendered, setRendered] = useState(false);
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const router = useRouter();
     const { title } = router.query;
     const query = "";
 
+    useEffect(() => {
+        setRendered(true);
+    }, []);
+
     return (
         <>
-            <Head>
-                <title>{`Editing ${title} | ISAAC`}</title>
-            </Head>
-            <Container>
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={3}>
-                        <Stack direction={'column'} spacing={2}>
-                            <Logo />
-                            <Button href={`/page/${title}`} sx={{
-                              width: 'fit-content'
-                            }}>
-                              Back to Page
-                            </Button>
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={6}>
-                        <Stack direction={'column'} spacing={2}>
-                            <SearchBar initialQuery={query} />
-                            {
-                                isLoading
-                                ? <h1>{loadingText}</h1>
-                                : <RichText />
-                            }
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={3}>
-                    </Grid2>
-                </Grid2>
-            </Container>
+            {
+                !isRendered
+                    ? <h1>isloading</h1>
+                    : <>
+                        <Head>
+                            <title>{`Editing ${title} | ISAAC`}</title>
+                        </Head>
+                        <Container>
+                            <Grid2 container spacing={2}>
+                                <Grid2 xs={3}>
+                                    <Stack direction={'column'} spacing={2}>
+                                        <Logo />
+                                        <Button href={`/page/${title}`} sx={{
+                                            width: 'fit-content'
+                                        }}>
+                                            Back to Page
+                                        </Button>
+                                    </Stack>
+                                </Grid2>
+                                <Grid2 xs={6}>
+                                    <Stack direction={'column'} spacing={2}>
+                                        <SearchBar initialQuery={query} />
+                                        {
+                                            isLoading
+                                                ? <h1>{loadingText}</h1>
+                                                : <RichText />
+                                        }
+                                    </Stack>
+                                </Grid2>
+                                <Grid2 xs={3}>
+                                </Grid2>
+                            </Grid2>
+                        </Container>
+                    </>
+            }
         </>
     )
 
     function RichText() {
         const [editorState, setEditorState] = useState(
-            revisionData.content 
-            ? EditorState.createWithContent(ContentState.createFromText(revisionData.content)) 
-            : EditorState.createEmpty()
+            revisionData.content
+                ? EditorState.createWithContent(ContentState.createFromText(revisionData.content))
+                : EditorState.createEmpty()
         );
         const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
 
@@ -193,8 +204,8 @@ export default function Edit(props: PageProps) {
                 <Button onClick={handleSave}>
                     {
                         isLoading
-                        ? loadingText
-                        : 'Save Changes'
+                            ? loadingText
+                            : 'Save Changes'
                     }
                 </Button>
             </>

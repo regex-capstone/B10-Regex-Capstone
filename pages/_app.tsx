@@ -6,10 +6,10 @@ const theme = createTheme({})
 
 /* (application root) */
 export default function App({ Component, pageProps }: AppProps<any>) {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Component {...pageProps} />
-    </ThemeProvider>
-  )
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+        </ThemeProvider>
+    )
 }
