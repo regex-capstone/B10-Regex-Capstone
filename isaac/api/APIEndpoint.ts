@@ -59,13 +59,10 @@ const ApiEndpoint: API = {
     },
 
     async addRevision(r: RevisionRequest) {
-        const pageId = (await IsaacAPI.getPages({ title: r.rev_page_title, single: true })) as Page;
-
-        if (!pageId) throw new Error('Page does not exist.');
 
         return (await IsaacAPI.addNewRevision({
             content: r.content as string,
-            rev_page_id: pageId.id as string,
+            rev_page_id: r.rev_page_id as string,
             created_at: Date.now() as number
         })) as string;
     },

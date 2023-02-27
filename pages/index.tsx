@@ -60,6 +60,15 @@ export default function Index(props: IndexProps) {
             ))}
           </Grid2>
         </Container>
+        <Divider />
+        <Container>
+          <h2>Admin Tools</h2>
+          <Stack direction={'column'}>
+            <Link href={'/page/create'}>Create Page</Link>
+            <Link href={'/'}>View Site Analytics</Link>
+            <Link href={'/'}>Edit categories</Link>
+          </Stack>
+        </Container>
       </Stack>
     </Container>
   )

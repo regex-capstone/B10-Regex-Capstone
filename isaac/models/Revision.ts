@@ -8,5 +8,5 @@ export default interface Revision {
 
 export interface RevisionRequest {
     content: string;
-    rev_page_title: string;
+    rev_page_id: string;
 }
