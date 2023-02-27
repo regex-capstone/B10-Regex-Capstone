@@ -1,5 +1,5 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack } from "@mui/material";
+import { Container, Stack, Link } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import API from "@/isaac/api/APIInterface";
@@ -8,6 +8,7 @@ import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
+import { Box } from "@mui/material";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
@@ -67,6 +68,15 @@ export default function Page(props: PageProps) {
             <Stack direction={'column'} spacing={2}>
               <SearchBar initialQuery={query} />
               <Content page={pageData} revision={revisionData} />
+            </Stack>
+          </Grid2>
+          <Grid2 xs={3} sx={{
+            marginTop: 13,
+          }}>
+            <h3>Admin Tools</h3>
+            <Stack direction={'column'} spacing={2}>
+              <a href={`/page/${pageData.title}/edit`}>Edit Page</a>
+              <a href={`/page/${pageData.title}/analytics`}>Page Analytics</a>
             </Stack>
           </Grid2>
         </Grid2>

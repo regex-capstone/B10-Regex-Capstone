@@ -2,6 +2,7 @@ import type { Page, Revision, Category } from '../models/index';
 import natural from "natural";
 import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
+import { RevisionRequest } from '../models/Revision';
 
 const ApiEndpoint: API = {
     // pages
@@ -57,10 +58,12 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.getRevisions({ id: r_id, single: true })) as Revision;
     },
 
-    async addRevision(r: Revision) {
+    async addRevision(r: RevisionRequest) {
+
         return (await IsaacAPI.addNewRevision({
-            ...r,
-            created_at: Date.now()
+            content: r.content as string,
+            rev_page_id: r.rev_page_id as string,
+            created_at: Date.now() as number
         })) as string;
     },
     

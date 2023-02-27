@@ -7,6 +7,7 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
+import Logo from "@/client/Logo";
 
 
 const api: API = ApiEndpoint
@@ -60,7 +61,7 @@ export default function Search(props: SearchProps) {
       <Grid2 container spacing={2}>
         <Grid2 xs={3}>
           <Stack direction={'column'} spacing={2}>
-            <h1>ISAAC</h1>
+            <Logo />
             <Filters 
               categories={categories}
               setFilter={setFilter}
