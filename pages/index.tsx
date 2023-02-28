@@ -8,6 +8,7 @@ import SearchBar from "@/client/SearchBar";
 import Logo from "@/client/Logo";
 import Link from "next/link";
 import HeaderBar from "@/client/HeaderBar";
+import Header from "@/client/Header";
 
 const api: API = ApiEndpoint
 
@@ -32,35 +33,38 @@ export default function Index(props: IndexProps) {
   const categories: Category[] = JSON.parse(props.categories) as Category[]
 
   return (
-    <Container>
-      <Stack spacing={2} direction="column">
-        <Stack
-          spacing={2}
-          direction="column"
-          sx={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Logo />
-          <p>Informatics Student Advising Automation Complex</p>
-          <Box sx={{
-            flexGrow: 1,
-          }}>
-            <SearchBar />
-          </Box>
+    <>
+      <Header />
+      <Container>
+        <Stack spacing={2} direction="column">
+          <Stack
+            spacing={2}
+            direction="column"
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Logo />
+            <p>Informatics Student Advising Automation Complex</p>
+            <Box sx={{
+              flexGrow: 1,
+            }}>
+              <SearchBar />
+            </Box>
+          </Stack>
+          <Divider />
+          <Container>
+            <Grid2 container>
+              {categories.map((category, i) => (
+                <Grid2 key={i} xs={6}>
+                  <Link href={`/category/${category.name}`}>{category.name}</Link>
+                </Grid2>
+              ))}
+            </Grid2>
+          </Container>
         </Stack>
-        <Divider />
-        <Container>
-          <Grid2 container>
-            {categories.map((category, i) => (
-              <Grid2 key={i} xs={6}>
-                <Link href={`/category/${category.name}`}>{category.name}</Link>
-              </Grid2>
-            ))}
-          </Grid2>
-        </Container>
-      </Stack>
-    </Container>
+      </Container>
+    </>
   )
 }

@@ -1,7 +1,6 @@
 import { AppProps } from 'next/app'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import { SessionProvider, useSession } from 'next-auth/react';
-import HeaderBar from '@/client/HeaderBar';
 import LoadingSpinner from '@/client/LoadingSpinner';
 import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
@@ -29,7 +28,7 @@ export default function App({
 
 function AuthLayout(
     props: { auth: ComponentAuthOptions } & { children: React.ReactNode }
-) { 
+) {
     const { data: session, status } = useSession();
 
     if (status === "loading") {
@@ -38,14 +37,11 @@ function AuthLayout(
 
     const authProps = props.auth;
     const user = session?.user;
-    
+
     // page is not protected
     if (!authProps) {
         return (
-            <>
-                <HeaderBar />
-                <main>{props.children}</main>
-            </>
+            <>{props.children}</>
         )
     }
 
@@ -55,9 +51,6 @@ function AuthLayout(
     }
 
     return (
-        <>
-            <HeaderBar />
-            <main>{props.children}</main>
-        </>
+        <>{props.children}</>
     )
 }

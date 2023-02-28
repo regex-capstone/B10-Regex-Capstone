@@ -8,6 +8,7 @@ import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
+import Header from "@/client/Header";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   const api: API = ApiEndpoint
@@ -55,6 +56,7 @@ export default function Page(props: PageProps) {
       <Head>
         <title>{`${pageData.title} | ISAAC`}</title>
       </Head>
+      <Header />
       <Container>
         <Grid2 container spacing={2}>
           <Grid2 xs={3}>

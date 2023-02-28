@@ -7,6 +7,7 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
+import Header from "@/client/Header";
 
 
 const api: API = ApiEndpoint
@@ -44,7 +45,7 @@ export default function Search(props: SearchProps) {
   let [filteredResults, setFilteredResults] = useState(results);
 
   useEffect(() => {   // need to run every time filter changes
-    if(catFilter.length != 0) {
+    if (catFilter.length != 0) {
       console.log("change!");
       setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id as string)));
     } else { // if no filters applied
@@ -55,29 +56,32 @@ export default function Search(props: SearchProps) {
   const router = useRouter();
   const { q } = router.query as { q: string };
   return (
-    <Container>
-      <Grid2 container spacing={2}>
-        <Grid2 xs={3}>
-          <Stack direction={'column'} spacing={2}>
-            <h1>ISAAC</h1>
-            <Filters 
-              categories={categories}
-              setFilter={setFilter}
-              currFilter={catFilter}
-            />
-          </Stack>
+    <>
+      <Header />
+      <Container>
+        <Grid2 container spacing={2}>
+          <Grid2 xs={3}>
+            <Stack direction={'column'} spacing={2}>
+              <h1>ISAAC</h1>
+              <Filters
+                categories={categories}
+                setFilter={setFilter}
+                currFilter={catFilter}
+              />
+            </Stack>
+          </Grid2>
+          <Grid2 xs={6}>
+            <Stack direction={'column'} spacing={2}>
+              <SearchBar initialQuery={q} />
+              <i>{filteredResults.length} results</i>
+              {filteredResults.map((result, i) => (
+                <SearchResult result={result} key={i} />
+              ))}
+            </Stack>
+          </Grid2>
         </Grid2>
-        <Grid2 xs={6}>
-          <Stack direction={'column'} spacing={2}>
-            <SearchBar initialQuery={q} />
-            <i>{filteredResults.length} results</i>
-            {filteredResults.map((result, i) => (
-              <SearchResult result={result} key={i} />
-            ))}
-          </Stack>
-        </Grid2>
-      </Grid2>
-    </Container>
+      </Container>
+    </>
   )
 }
 
@@ -86,7 +90,7 @@ function Filters(props: { categories: Category[], setFilter: Function, currFilte
 
   // onChange function to update filter list
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>, category: Category) => {
-    if(event.target.checked){   // need to toggle based on if box is checked or unchecked
+    if (event.target.checked) {   // need to toggle based on if box is checked or unchecked
       let newFilter = currFilter.concat(category.id as string);
       setFilter(newFilter);
     } else {
@@ -100,9 +104,9 @@ function Filters(props: { categories: Category[], setFilter: Function, currFilte
       <Stack direction={'column'} spacing={2}>
         <FormGroup>
           {categories.map((category, i) => (
-            <FormControlLabel 
+            <FormControlLabel
               key={i}
-              control={<Checkbox onChange={(e) => handleFilter(e, category)}/>} // handle when this changes
+              control={<Checkbox onChange={(e) => handleFilter(e, category)} />} // handle when this changes
               label={JSON.parse(JSON.stringify(category.name as string))} // pull names from category
             />
           ))}
