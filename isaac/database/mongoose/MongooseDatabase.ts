@@ -3,6 +3,7 @@
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
+import { UpdatePageOptions } from '@/isaac/ISAACOptions';
 
 try {
     await connectToDatabase();
@@ -23,7 +24,8 @@ const MongooseDatabase: Database = {
                     title: raw.title,
                     page_category_id: raw.page_category_id,
                     created_at: raw.created_at,
-                    headings: raw.headings ?? []
+                    headings: raw.headings ?? [],
+                    description: raw.description ?? ''
                 };
 
                 return page;
@@ -103,7 +105,7 @@ const MongooseDatabase: Database = {
 
             return {
                 success: true,
-                payload: page._id.toString()
+                payload: page
             }
         } catch (err: any) {
             return {
@@ -120,7 +122,7 @@ const MongooseDatabase: Database = {
     
             return {
                 success: true,
-                payload: rev._id.toString()
+                payload: rev
             }
         } catch (err: any) {
             return {
@@ -137,7 +139,28 @@ const MongooseDatabase: Database = {
     
             return {
                 success: true,
-                payload: cat._id.toString()
+                payload: cat
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    updatePage: async (id: string, query: UpdatePageOptions) => {
+        try {
+            let page = await MongooseModels.Page.findById(id);
+            for (const key in query) {
+                // @ts-ignore
+                page[key] = query[key] as any;
+            }
+            await page.save();
+            
+
+            return {
+                success: true,
+                payload: page
             }
         } catch (err: any) {
             return {

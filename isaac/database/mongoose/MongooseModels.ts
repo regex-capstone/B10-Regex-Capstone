@@ -20,6 +20,10 @@ const MongooseModels = {
         created_at: { 
             type: Date, 
             required: [true, 'Creation date is missing...']
+        },
+        description: {
+            type: String,
+            required: [true, 'Description is missing...']
         }
     }, { strict: true }),
 

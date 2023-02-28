@@ -8,19 +8,19 @@ export default interface API {
     getPagesByCategoryId(c_id: string): Promise<Page[]>,
     getPageById(p_id: string): Promise<Page>,
     getPageByTitle(p_title: string): Promise<Page>,
-    addNewPage(p: PageRequest): Promise<string>,
+    addNewPage(p: PageRequest): Promise<Page>,
 
     // revisions
     getRecentPageRevisionById(p_id: string): Promise<Revision>,
     getAllPageRevisionsById(p_id: string): Promise<Revision[]>,
     getRevisionById(r_id: string): Promise<Revision>,
-    addRevision(r: RevisionRequest): Promise<string>,
+    addRevision(r: RevisionRequest): Promise<Revision>,
 
     // categories
     getAllCategories(): Promise<Category[]>,
     getCategoryById(c_id: string): Promise<Category>,
     getCategoryByName(c_name: string): Promise<Category>,
-    addNewCategory(c: Category): Promise<string>
+    addNewCategory(c: Category): Promise<Category>
 
     search(q: string): Promise<Page[]>,
 }
