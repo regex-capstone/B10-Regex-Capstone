@@ -9,10 +9,11 @@ export default function Logo() {
     }}>
       <Box sx={{
         color: Theme.COLOR.TEXT_DARK,
-        fontSize: '4rem',
+        fontSize: '2rem',
         display: 'flex',
         alignItems: 'center',
         textAlign: 'center',
+        padding: '1rem',
         letterSpacing: '1rem',
       }}>
         <b>ISAAC</b>
