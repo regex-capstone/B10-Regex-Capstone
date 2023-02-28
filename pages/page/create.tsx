@@ -10,7 +10,7 @@ import API from "@/isaac/api/APIInterface";
 import { Category as CategoryData, Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import { useState } from "react";
 
-export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
+export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<CreatePageProps>> {
     const api: API = ApiEndpoint;
     const categories: CategoryData[] = await api.getAllCategories();
 
