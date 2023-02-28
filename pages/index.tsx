@@ -9,6 +9,7 @@ import Logo from "@/client/Logo";
 import Link from "next/link";
 import HeaderBar from "@/client/HeaderBar";
 import Header from "@/client/Header";
+import Theme from "@/client/Theme";
 
 const api: API = ApiEndpoint
 
@@ -35,7 +36,9 @@ export default function Index(props: IndexProps) {
   return (
     <>
       <Header />
-      <Container>
+      <Container sx={{
+        paddingTop: '2rem',
+      }}>
         <Stack spacing={2} direction="column">
           <Stack
             spacing={2}
@@ -46,7 +49,12 @@ export default function Index(props: IndexProps) {
             }}
           >
             <Logo />
-            <p>Informatics Student Advising Automation Complex</p>
+            <Box sx={{
+              textAlign: 'center',
+              letterSpacing: '0.15rem',
+            }}>
+              <p>Informatics Student Advising Automation Complex</p>
+            </Box>
             <Box sx={{
               flexGrow: 1,
             }}>
@@ -58,7 +66,12 @@ export default function Index(props: IndexProps) {
             <Grid2 container>
               {categories.map((category, i) => (
                 <Grid2 key={i} xs={6}>
-                  <Link href={`/category/${category.name}`}>{category.name}</Link>
+                  <Link href={`/category/${category.name}`} style={{
+                    textDecoration: 'none',
+                    color: Theme.COLOR.TEXT_DARK,
+                  }}>
+                    <b>{category.name}</b>
+                  </Link>
                 </Grid2>
               ))}
             </Grid2>
