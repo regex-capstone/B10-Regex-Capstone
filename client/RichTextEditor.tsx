@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
-import { ContentState, EditorState } from "draft-js";
 import dynamic from "next/dynamic";
 import { EditorProps } from "react-draft-wysiwyg";
-import { RevisionRequest } from "@/isaac/models/Revision";
 import { Box, Button } from "@mui/material";
 // @ts-ignore
 import { stateToMarkdown } from 'draft-js-export-markdown';
 import { useRouter } from "next/router";
+import { PageRequest } from "@/isaac/models/Page";
+import { ContentState, EditorState } from "draft-js";
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 /**
  * This library does not allow for server-side rendering... To accommodate for SSR, let's consider another library.
@@ -19,25 +20,28 @@ const Editor = dynamic<EditorProps>(
 )
 
 interface RichTextEditorProps {
-    pageData: PageData;
-    revisionData: RevisionData;
+    pageData?: PageData;
+    revisionData?: RevisionData;
+    title?: string;
+    categoryId?: string;
 }
 
 const loadingTextArr = [
-    'Redirecting you back to the page.',
-    'Redirecting you back to the page..',
-    'Redirecting you back to the page...'
+    'Redirecting you.',
+    'Redirecting you..',
+    'Redirecting you...'
 ]
 
 export default function RichTextEditor(props: RichTextEditorProps) {
-    const { pageData, revisionData } = props;
+    const { pageData, revisionData, categoryId, title } = props;
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const [loading, setLoading] = useState(false);
     const [editorState, setEditorState] = useState(
-        revisionData.content
+        revisionData
             ? EditorState.createWithContent(ContentState.createFromText(revisionData.content))
             : EditorState.createEmpty()
     );
+
     const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
 
     const router = useRouter();
@@ -60,26 +64,54 @@ export default function RichTextEditor(props: RichTextEditorProps) {
             textIndex++;
         }, 200));
 
-        const request: RevisionRequest = {
-            content: getMarkdown(editorState),
-            rev_page_id: pageData.id as string
-        }
+        try {
+            let request;
+            let redirectTitle;
 
-        const options = {
-            // The method is POST because we are sending data.
-            method: 'POST',
-            // Tell the server we're sending JSON.
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // Body of the request is the JSON data we created above.
-            body: JSON.stringify(request),
-        }
+            if (!pageData) {
+                const pageRequest: PageRequest = {
+                    title: title as string,
+                    page_category_id: categoryId as string
+                }
+                
+                const pageOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(pageRequest),
+                }
+    
+                const pagePayload = await (await fetch('/api/page', pageOptions)).json();
 
-        const response = await fetch('/api/revision', options);
-        const data = await response.json();
-        // redirect to the page we just edited
-        router.push(`/page/${pageData.title}`);
+                request = {
+                    content: getMarkdown(editorState),
+                    rev_page_id: pagePayload.page_id as string
+                }
+
+                redirectTitle = title;
+            } else {
+                request = {
+                    content: getMarkdown(editorState),
+                    rev_page_id: pageData.id as string
+                }
+
+                redirectTitle = pageData.title;
+            }
+    
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            }
+    
+            await fetch('/api/revision', options);
+            router.push(`/page/${redirectTitle}`);
+        } catch (err) {
+            console.error(err); // @TODO: handle toast notifications
+        }   
     }
 
     return (
@@ -89,7 +121,11 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                     ? <h1>{loadingText}</h1>
                     : <>
                         <header className="text-header">
-                            Editing "{pageData.title}"...
+                            { 
+                                (pageData) 
+                                ? <p>Editing {pageData.title}...</p>
+                                : <p>Create a new page...</p>
+                            }
                         </header>
                         <Box sx={{
                             border: '1px solid black'

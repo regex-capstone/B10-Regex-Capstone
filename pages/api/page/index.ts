@@ -18,8 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break
             case 'POST':
                 if (!body) throw new Error('POST request has no body.');
+                if (!body.title) throw new Error('POST request has no title.');
+                if (!body.page_category_id) throw new Error('POST request has no page_category_id.');
     
-                const pageId = await api.addNewPage(body.page);
+                const pageId = await api.addNewPage({
+                    title: body.title,
+                    page_category_id: body.page_category_id
+                });
                 
                 res.status(200).json({
                     success: true,

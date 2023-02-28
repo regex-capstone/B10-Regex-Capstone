@@ -1,27 +1,15 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack, Link, Button } from "@mui/material";
+import { Container, Stack, Button } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
 import Logo from "@/client/Logo";
-import { Box } from "@mui/material";
-import React, { useState, Component, useEffect } from 'react';
-import { ContentState, EditorState } from 'draft-js';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-// @ts-ignore
-import { stateToMarkdown } from "draft-js-export-markdown";
-import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic'
-import { EditorProps } from 'react-draft-wysiwyg'
-import { RevisionRequest } from "@/isaac/models/Revision";
+import React, { useEffect, useState } from 'react';
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import LoadingSpinner from "@/client/LoadingSpinner";
 import RichTextEditor from "@/client/RichTextEditor";
-// TODO: get static paths/props from the page being edited
-// getStaticPaths(something)
-// getStaticProps(something)
 
 // @TODO: double check this with Alan to optimize the pre-rendering
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
