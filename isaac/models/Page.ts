@@ -3,7 +3,12 @@ export default interface Page {
     title: string;
     page_category_id: string;
     created_at: number;
-    headings: Heading[];
+    headings: Heading[];    // @TODO handle headings
+}
+
+export interface PageRequest {
+    title: string;
+    page_category_id: string;
 }
 
 interface Heading {

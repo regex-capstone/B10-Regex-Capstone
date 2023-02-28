@@ -1,4 +1,5 @@
-import type { Page, Revision, Category } from '../../models/index';
+ import type { Page, Revision, Category } from '../../models/index';
+ import Metric from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
@@ -137,6 +138,52 @@ const MongooseDatabase: Database = {
             return {
                 success: true,
                 payload: cat._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    getAnalytics: async (query: Object) => {
+        try {
+            const data = await MongooseModels.Metric
+                .find(query);
+
+            console.log(data);
+
+            const metrics = data.map((raw) => {
+                const metric: Metric = {
+                    met_page_id: raw.id,
+                    created_at: raw.created_at,
+                    major: raw.major,
+                    standing: raw.standing
+                };
+
+                return metric;
+            });
+    
+            return {
+                success: true,
+                payload: metrics
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    addAnalytic: async (m: Metric) => {
+        try {
+            const met = new MongooseModels.Metric(m);
+            await met.validate();
+            await met.save();
+
+            return {
+                success: true,
+                payload: met._id.toString()
             }
         } catch (err: any) {
             return {

@@ -8,6 +8,7 @@ import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
 import Header from "@/client/Header";
+import Logo from "@/client/Logo";
 
 
 const api: API = ApiEndpoint
@@ -25,8 +26,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
       results: results.map(result => ({
         ...result,
         id: JSON.parse(JSON.stringify(result.id)),
-        page_category_id: result.page_category_id.toString(),
-        created_at: JSON.parse(JSON.stringify(result.created_at))
+        page_category_id: JSON.parse(JSON.stringify(result.page_category_id)),
+        created_at: JSON.parse(JSON.stringify(result.created_at)),
+        headings: result.headings as Array<any>
       })),
       categories: categories.map(category => ({
         ...category,
@@ -62,7 +64,7 @@ export default function Search(props: SearchProps) {
         <Grid2 container spacing={2}>
           <Grid2 xs={3}>
             <Stack direction={'column'} spacing={2}>
-              <h1>ISAAC</h1>
+              <Logo />
               <Filters
                 categories={categories}
                 setFilter={setFilter}

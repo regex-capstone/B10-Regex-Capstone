@@ -1,7 +1,3 @@
-// import { Component } from "react";
-// @TODO: make loading component
-
-import { Component } from "react";
 import { NextAuthOptions } from "next-auth";
 import { UserRole } from "@/isaac/models/User";
 import GoogleProvider from "../google/GoogleProvider";
