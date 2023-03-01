@@ -119,7 +119,7 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.addNewUser({
             ...u,
             created_at: Date.now()
-        })) as string;
+        })) as User;
     },
 
     async updateUser(u: User) {

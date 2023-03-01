@@ -151,6 +151,8 @@ const MongooseDatabase: Database = {
                 .find(query)
                 .sort({ created_at: -1 });
 
+                console.log(data);
+
             const users = data.map((raw) => {
                 const user = {
                     id: raw._id,
@@ -181,7 +183,7 @@ const MongooseDatabase: Database = {
     
             return {
                 success: true,
-                payload: newUser._id.toString()
+                payload: newUser
             }
         } catch (err: any) {
             return {

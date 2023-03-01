@@ -6,11 +6,15 @@ import { useSession } from "next-auth/react";
 import { UserMajor, UserStanding } from "@/isaac/models/User";
 import { useState } from "react";
 import User from '../isaac/models/User';
+import LoadingSpinner from "@/client/LoadingSpinner";
+import { useRouter } from "next/router";
 
 export default function ProfilePage() {
     const { data: session } = useSession();
     const [standing, setStanding] = useState((session) ? session.user.standing : UserStanding.UNKNOWN);
     const [major, setMajor] = useState((session) ? session.user.major : UserMajor.UNKNOWN);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const handleStandingChange = (e: any) => {
         setStanding(e.target.value);
@@ -21,23 +25,35 @@ export default function ProfilePage() {
     }
 
     const handleSave = async () => {
-        if (session) {
-            const userRequest: User = {
-                ...session.user,
-                standing: standing,
-                major: major
+        try {
+            if (session) {
+                setLoading(true);
+
+                const userRequest: User = {
+                    ...session.user,
+                    standing: standing,
+                    major: major
+                }
+    
+                if (userRequest !== session.user) {
+                    const userOptions = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(userRequest),
+                    }
+        
+                    const pagePayload = await (await fetch('/api/user', userOptions)).json();
+        
+                    session.user = userRequest;
+                }
+
+                setLoading(false);
+                router.push('/');
             }
-
-
-            const userOptions = {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userRequest),
-            }
-
-            const pagePayload = await (await fetch('/api/user', userOptions)).json();
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -78,7 +94,8 @@ export default function ProfilePage() {
 
                                         {
                                             Object.keys(UserStanding).map(s => {
-                                                return <MenuItem value={(UserStanding as any)[s]}>{s}</MenuItem>
+                                                const value = (UserStanding as any)[s];
+                                                return <MenuItem key={value} value={value}>{s}</MenuItem>
                                             })
                                         }
                                     </Select>
@@ -93,7 +110,8 @@ export default function ProfilePage() {
                                     >
                                         {
                                             Object.keys(UserMajor).map(s => {
-                                                return <MenuItem value={(UserMajor as any)[s]}>{s}</MenuItem>
+                                                const value = (UserMajor as any)[s];
+                                                return <MenuItem key={value} value={value}>{s}</MenuItem>
                                             })
                                         }
                                     </Select>
@@ -103,15 +121,20 @@ export default function ProfilePage() {
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Button sx={{
-                                    width: "fit-content"
-                                }} onClick={handleSave}>Save Changes</Button>
-                                <Button sx={{
-                                    width: "fit-content"
-                                }}>
-                                    <Link href="/">Return to Home Page</Link>
-                                </Button>
-
+                                <Stack direction={'row'} spacing={2}>
+                                    {
+                                        loading
+                                        ? <p>Saving...</p>
+                                        : <Button sx={{
+                                            width: "fit-content"
+                                        }} onClick={handleSave}>Save Changes</Button>
+                                    }
+                                    <Button sx={{
+                                        width: "fit-content"
+                                    }}>
+                                        <Link href="/">Return to Home Page</Link>
+                                    </Button>
+                                </Stack>
                             </Stack>
                         </Stack>
                     </Grid2>

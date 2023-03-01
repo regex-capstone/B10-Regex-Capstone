@@ -1,8 +1,9 @@
 import { NextAuthOptions } from "next-auth";
-import User from "@/isaac/models/User";
+import User, { UserMajor, UserRole } from "@/isaac/models/User";
 import GoogleProvider from "../google/GoogleProvider";
 import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import { UserStanding } from '../../models/User';
 
 const api: API = ApiEndpoint;
 
@@ -25,26 +26,44 @@ export const AuthOptions: NextAuthOptions = {
         // https://next-auth.js.org/configuration/callbacks
         async jwt({ token, account }) {
             if (account) {
-                token.accessToken = account.access_token;
+                const accessToken = account.access_token;
+                const name = token.name as string;
+                const email = token.email as string;
+                
                 // persist the user data in the token for the middleware
-                token.user = await api.getUserByEmail(token.email as string);
+                let user: User = await api.getUserByEmail(email);
+
+                if (!user) {
+                    // @TODO: handle this better
+                    // @TODO: handle admin side
+                    const newUser = await api.addNewUser({
+                        name: name,
+                        email: email,
+                        role: UserRole.STUDENT,
+                        standing: UserStanding.UNKNOWN,
+                        major: UserMajor.UNKNOWN,
+                    });
+
+                    if (!newUser) throw new Error('Error adding new user.');
+
+                    user = newUser;
+                }
+
+                token.user = user;
+                token.accessToken = accessToken;
             }
 
             return token
         },
         async session({ session, token }) {
             session.accessToken = token.accessToken;
-            session.user = token.user as User;
             session.picture = token.picture ?? '';
+            session.user = token.user as User;;
 
             return session;
         },
         async redirect({ url, baseUrl }) {
-            // // Allows relative callback URLs
-            // if (url.startsWith("/")) return `${baseUrl}${url}`
-            // // Allows callback URLs on the same origin
-            // else if (new URL(url).origin === baseUrl) return url
-            return '/profile';
+            return '/redirect';
         }
     }
 }

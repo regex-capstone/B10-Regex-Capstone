@@ -51,6 +51,10 @@ const MongooseModels = {
     }, { strict: true }),
 
     User: new mongoose.Schema({
+        email: {
+            type: String,
+            required: [true, 'Email is missing...'],
+        },
         role: {
             type: String,
             required: [true, 'Role is missing...'],

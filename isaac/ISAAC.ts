@@ -106,11 +106,11 @@ async function addNewUser(u: User) {
 
     if (isErrorResponse(response)) throw response.error;
 
-    const resultUserId = response.payload;
+    const resultUser = response.payload;
 
-    if (!resultUserId) throw new Error('Error adding new user.');
+    if (!resultUser) throw new Error('Error adding new user.');
 
-    return resultUserId;
+    return resultUser;
 }
 
 async function updateUser(u: User) {
