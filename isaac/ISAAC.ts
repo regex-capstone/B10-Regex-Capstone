@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 import type { Page, Revision, Category } from './models/index';
 import type Metric from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
 import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions } from './ISAACOptions';
+=======
+import type { Page, Revision, Category, User } from './models/index';
+import type Database from './database/DatabaseInterface';
+import MongooseDatabase from './database/mongoose/MongooseDatabase';
+import { CategoryOptions, PageOptions, RevisionOptions, BaseOptions, UserOptions } from './ISAACOptions';
+>>>>>>> profile
 import { isErrorResponse } from './database/DatabaseInterface';
 
 const database: Database = MongooseDatabase;
@@ -137,17 +144,58 @@ async function getAllAnalytics() {
     return payload;
 }
 
+// only needed for the firebase auth flavor
+async function getUsers(options: UserOptions) {
+    let response;
+
+    response = (await database.getLatestUsers(options));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as User[];
+
+    return options.single ? payload[0] : payload;
+}
+
+async function addNewUser(u: User) {
+    const response = (await database.addNewUser(u));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const resultUser = response.payload;
+
+    if (!resultUser) throw new Error('Error adding new user.');
+
+    return resultUser;
+}
+
+async function updateUser(u: User) {
+    const response = (await database.updateUser(u));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const resultUserId = response.payload;
+
+    // @TODO more robust error handling
+    if (!resultUserId) throw new Error('Error updating user.');
+
+    return resultUserId;
+}
+
 export default {
     getPages: getPages,
     getRevisions: getRevisions,
+    getUsers: getUsers,
+    getAnalytics: getAnalytics,
+    getAllAnalytics: getAllAnalytics,
     getCategories: getCategories,
     addNewPage: addNewPage,
     addNewRevision: addNewRevision,
     addNewCategory: addNewCategory,
     addAnalytic: addAnalytic,
-    getAnalytics: getAnalytics,
-    getAllAnalytics: getAllAnalytics,
-    updatePage: updatePage
+    addNewUser: addNewUser,
+    updatePage: updatePage,
+    updateUser: updateUser
 };
 
 function cleanQuery(options: BaseOptions) {

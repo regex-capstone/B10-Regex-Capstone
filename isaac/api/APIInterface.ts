@@ -1,4 +1,4 @@
-import type { Page, Revision, Category } from '@/isaac/models';
+import type { Page, Revision, Category, User } from '@/isaac/models';
 import { PageRequest } from '../models/Page';
 import { RevisionRequest } from '../models/Revision';
 
@@ -21,6 +21,11 @@ export default interface API {
     getCategoryById(c_id: string): Promise<Category>,
     getCategoryByName(c_name: string): Promise<Category>,
     addNewCategory(c: Category): Promise<Category>
+
+    // only needed for the firebase auth flavor
+    getUserByEmail(email: string): Promise<User>,
+    addNewUser(u: User): Promise<User>,
+    updateUser(u: User): Promise<string>,
 
     search(q: string): Promise<Page[]>,
 }
