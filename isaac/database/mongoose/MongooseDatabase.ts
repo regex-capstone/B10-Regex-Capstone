@@ -18,11 +18,11 @@ const MongooseDatabase: Database = {
 
             const pages = data.map((raw) => {
                 const page: Page = {
-                    id: raw._id,
-                    title: raw.title,
-                    page_category_id: raw.page_category_id,
-                    created_at: raw.created_at,
-                    headings: raw.headings ?? []
+                    id: raw._doc._id,
+                    title: raw._doc.title,
+                    page_category_id: raw._doc.page_category_id,
+                    created_at: raw._doc.created_at,
+                    headings: raw._doc.headings ?? []
                 };
 
                 return page;
@@ -47,10 +47,10 @@ const MongooseDatabase: Database = {
 
             const revs = data.map((raw) => {
                 const rev: Revision = {
-                    id: raw._id,
-                    content: raw.content,
-                    created_at: raw.created_at,
-                    rev_page_id: raw.rev_page_id
+                    id: raw._doc._id,
+                    content: raw._doc.content,
+                    created_at: raw._doc.created_at,
+                    rev_page_id: raw._doc.rev_page_id
                 };
 
                 return rev;
@@ -75,9 +75,9 @@ const MongooseDatabase: Database = {
 
             const cats = data.map((raw) => {
                 const cat: Category = {
-                    id: raw._id,
-                    name: raw.name,
-                    created_at: raw.created_at
+                    id: raw._doc._id,
+                    name: raw._doc.name,
+                    created_at: raw._doc.created_at
                 };
 
                 return cat;
@@ -157,11 +157,8 @@ const MongooseDatabase: Database = {
                     role: raw.role,
                     standing: raw.standing,
                     major: raw.major,
-                    created_at: raw.created_at,
-                    email: raw.email,
                     name: raw.name
                 };
-
                 return user;
             });
     
@@ -191,7 +188,25 @@ const MongooseDatabase: Database = {
                 error: err
             }
         }
-    }
+    },
+
+    updateUser: async (user: any) => {
+        try {
+            const userId = user.id;
+            delete user.id;
+            
+            const updatedUser = await MongooseModels.User.findByIdAndUpdate(userId, user, { new: true });
+            
+            return {
+                success: true,
+                payload: updatedUser
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
 };
 
 export default MongooseDatabase;

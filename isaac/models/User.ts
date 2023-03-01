@@ -3,9 +3,9 @@ export default interface User {
     role: UserRole,
     standing: UserStanding,
     major: UserMajor,
-    created_at: number,
+    created_at?: number,
     name: string,
-    email: string
+    email?: string
 }
 
 export enum UserRole {
@@ -27,8 +27,8 @@ export enum UserStanding {
 
 export enum UserMajor {
     UNKNOWN = 'unknown',
-    COMPUTER_SCIENCE = 'computer science',
-    COMPUTER_ENGINEERING = 'computer engineering',
-    INFORMATICS = 'informatics',
+    IN_MAJOR = 'in-major',
+    PROSPECTIVE = 'prospective',
+    MINOR = 'minor',
     OTHER = 'other'
 }

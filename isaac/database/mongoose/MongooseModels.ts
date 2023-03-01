@@ -1,3 +1,4 @@
+import { UserStanding } from '@/isaac/models/User';
 import mongoose from 'mongoose';
 import { Page, Revision, Category, User } from '../../models';
 
@@ -57,6 +58,14 @@ const MongooseModels = {
         name: {
             type: String,
             required: [true, 'Name is missing...']
+        },
+        standing: {
+            type: String,
+            required: [true, 'Standing is missing...']
+        },
+        major: {
+            type: String,
+            required: [true, 'Major is missing...']
         }
     }, { strict: true })
 }

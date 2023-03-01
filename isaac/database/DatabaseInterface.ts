@@ -9,7 +9,8 @@ export default interface Database {
     addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
     // only needed for the firebase auth flavor
     getLatestUsers(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addNewUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>
+    addNewUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>,
+    updateUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {

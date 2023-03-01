@@ -35,16 +35,16 @@ export const AuthOptions: NextAuthOptions = {
         async session({ session, token }) {
             session.accessToken = token.accessToken;
             session.user = token.user as User;
+            session.picture = token.picture ?? '';
 
             return session;
         },
         async redirect({ url, baseUrl }) {
-            // @TODO: direct to the profile page?
-            // Allows relative callback URLs
-            if (url.startsWith("/")) return `${baseUrl}${url}`
-            // Allows callback URLs on the same origin
-            else if (new URL(url).origin === baseUrl) return url
-            return baseUrl
+            // // Allows relative callback URLs
+            // if (url.startsWith("/")) return `${baseUrl}${url}`
+            // // Allows callback URLs on the same origin
+            // else if (new URL(url).origin === baseUrl) return url
+            return '/profile';
         }
     }
 }

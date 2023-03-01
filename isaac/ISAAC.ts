@@ -113,6 +113,19 @@ async function addNewUser(u: User) {
     return resultUserId;
 }
 
+async function updateUser(u: User) {
+    const response = (await database.updateUser(u));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const resultUserId = response.payload;
+
+    // @TODO more robust error handling
+    if (!resultUserId) throw new Error('Error updating user.');
+
+    return resultUserId;
+}
+
 export default {
     getPages: getPages,
     getRevisions: getRevisions,
@@ -121,7 +134,8 @@ export default {
     addNewRevision: addNewRevision,
     addNewCategory: addNewCategory,
     getUsers: getUsers,
-    addNewUser: addNewUser
+    addNewUser: addNewUser,
+    updateUser: updateUser
 };
 
 function cleanQuery(options: BaseOptions) {

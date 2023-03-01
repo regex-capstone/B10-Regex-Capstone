@@ -24,6 +24,7 @@ export default interface API {
     // only needed for the firebase auth flavor
     getUserByEmail(email: string): Promise<User>,
     addNewUser(u: User): Promise<string>,
+    updateUser(u: User): Promise<string>,
 
     search(q: string): Promise<Page[]>,
 }
