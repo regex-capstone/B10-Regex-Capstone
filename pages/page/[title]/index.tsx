@@ -4,6 +4,9 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import AnalyticsAPI from '@/isaac/analytics/AnalyticsEndpoints';
+import type Analytics from '../../../isaac/analytics/AnalyticsInterface';
+import Metric from '@/isaac/analytics/model'
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
@@ -31,6 +34,11 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
   const pageData: PageData = await api.getPageByTitle(title as string)
   const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
+  // take analytic
+  const analyticsApi: Analytics = AnalyticsAPI;
+  const newAnalytic = analyticsApi.addAnalytic({met_page_id: pageData.id, major: "Informatics", standing: "Freshman"} as Metric);
+  //TODO: add session data, check if session exists before sending analytic
+
   return {
     props: {
       // NextJS requires props to be serializable
@@ -50,6 +58,7 @@ interface PageProps {
 export default function Page(props: PageProps) {
   const pageData: PageData = JSON.parse(props.pageData) as PageData;
   const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
+
   const query = "";
   return (
     <>
