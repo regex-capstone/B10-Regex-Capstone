@@ -1,4 +1,4 @@
-import type { Page, Revision, Category } from '../models/index';
+import type { Page, Revision, Category, User } from '../models/index';
 import natural from "natural";
 import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
@@ -105,6 +105,23 @@ const ApiEndpoint: API = {
     async search(q: string) {
         //TODO: more efficient IsaacAPI endpoint to not have to get all pages?
         return search(q, (await IsaacAPI.getPages({})) as Page[]);
+    },
+
+    async getUserByEmail(email: string) {
+        return (await IsaacAPI.getUsers({ email: email, single: true })) as User;
+    },
+
+    async addNewUser(u: User) {
+        return (await IsaacAPI.addNewUser({
+            ...u,
+            created_at: Date.now()
+        })) as User;
+    },
+
+    async updateUser(u: User) {
+        return (await IsaacAPI.updateUser({
+            ...u
+        })) as string;
     }
 }
 

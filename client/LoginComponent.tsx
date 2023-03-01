@@ -3,7 +3,7 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 
 export default function LoginComponent() {
     const { data: session } = useSession();
-
+    
     if (session) {
         return (
             <>
@@ -20,14 +20,6 @@ export default function LoginComponent() {
 
     return (
         <>
-            <Button
-                variant="contained"
-                onClick={() => signIn()}
-                sx={{
-                    flexGrow: 1
-                }}
-            >Sign In</Button>
-            
         </>
     )
 }

@@ -12,7 +12,7 @@ try {
 }
 
 const MongooseDatabase: Database = {
-    getLatestPages: async (query: Object) => {
+    getLatestPages: async (query: any) => {
         try {
             const data = await MongooseModels.Page
                 .find(query)
@@ -42,7 +42,7 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestRevisions: async (query: Object) => {
+    getLatestRevisions: async (query: any) => {
         try {
             const data = await MongooseModels.Revision
                 .find(query)
@@ -50,10 +50,10 @@ const MongooseDatabase: Database = {
 
             const revs = data.map((raw) => {
                 const rev: Revision = {
-                    id: raw._id,
-                    content: raw.content,
-                    created_at: raw.created_at,
-                    rev_page_id: raw.rev_page_id
+                    id: raw._doc._id,
+                    content: raw._doc.content,
+                    created_at: raw._doc.created_at,
+                    rev_page_id: raw._doc.rev_page_id
                 };
 
                 return rev;
@@ -70,7 +70,7 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestCategories: async (query: Object) => {
+    getLatestCategories: async (query: any) => {
         try {
             const data = await MongooseModels.Category
                 .find(query)
@@ -78,9 +78,9 @@ const MongooseDatabase: Database = {
 
             const cats = data.map((raw) => {
                 const cat: Category = {
-                    id: raw._id,
-                    name: raw.name,
-                    created_at: raw.created_at
+                    id: raw._doc._id,
+                    name: raw._doc.name,
+                    created_at: raw._doc.created_at
                 };
 
                 return cat;
@@ -213,7 +213,72 @@ const MongooseDatabase: Database = {
                 error: err
             }
         }
-    }
+    },
+
+    getLatestUsers: async (query: any) => {
+        try {
+            const data = await MongooseModels.User
+                .find(query)
+                .sort({ created_at: -1 });
+
+                console.log(data);
+
+            const users = data.map((raw) => {
+                const user = {
+                    id: raw._id,
+                    role: raw.role,
+                    standing: raw.standing,
+                    major: raw.major,
+                    name: raw.name
+                };
+                return user;
+            });
+    
+            return {
+                success: true,
+                payload: users
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    addNewUser: async (user: any) => {
+        try {
+            const newUser = new MongooseModels.User(user);
+            await newUser.validate();
+            await newUser.save();
+    
+            return {
+                success: true,
+                payload: newUser
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    updateUser: async (user: any) => {
+        try {
+            const userId = user.id;
+            delete user.id;
+            
+            const updatedUser = await MongooseModels.User.findByIdAndUpdate(userId, user, { new: true });
+            
+            return {
+                success: true,
+                payload: updatedUser
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
 };
 
 export default MongooseDatabase;

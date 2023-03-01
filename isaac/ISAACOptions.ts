@@ -1,11 +1,11 @@
 export interface BaseOptions {
-    id?: string
+    id?: string,
+    single?: boolean
 }
 
 export interface PageOptions extends BaseOptions {
     title?: string,
-    page_category_id?: string,
-    single?: boolean
+    page_category_id?: string
 }
 
 export interface UpdatePageOptions extends BaseOptions {
@@ -13,13 +13,11 @@ export interface UpdatePageOptions extends BaseOptions {
 }
 
 export interface RevisionOptions extends BaseOptions {
-    rev_page_id?: string,
-    single?: boolean
+    rev_page_id?: string
 }
 
 export interface CategoryOptions extends BaseOptions {
-    name?: string,
-    single?: boolean
+    name?: string
 }
 
 export interface MetricsOptions extends BaseOptions {
@@ -27,4 +25,9 @@ export interface MetricsOptions extends BaseOptions {
     major?: string,
     standing?: string,
     single?: boolean
+}
+
+// only needed for the firebase auth flavor
+export interface UserOptions extends BaseOptions {
+    email?: string
 }
