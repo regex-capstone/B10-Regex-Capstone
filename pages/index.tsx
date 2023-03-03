@@ -56,7 +56,9 @@ export default function Index(props: IndexProps) {
               <p>Informatics Student Advising Automation Complex</p>
             </Box>
             <Box sx={{
-              flexGrow: 1,
+              minWidth: "60%",
+              width: "40rem",
+              maxWidth: "100%"
             }}>
               <SearchBar />
             </Box>

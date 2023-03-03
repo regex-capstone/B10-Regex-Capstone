@@ -24,8 +24,7 @@ export default function SearchBar(props: SearchBarProps) {
     <Stack direction="row" sx={{
       paddingTop: 2,
       paddingBottom: 2,
-      alignItems: 'stretch',
-      justifyContent: 'start',
+      justifyContent: 'center',
     }}>
       <SearchField value={query} onChange={(e) => setQuery(e.target.value)} />
       <Link href={`/search?q=${query}`} passHref style={{
@@ -58,6 +57,7 @@ function SearchField(props: { value: string, onChange: (e: any) => void }) {
       value={props.value}
       onChange={props.onChange}
       sx={{
+        flexGrow: 1,
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
             borderColor: Theme.COLOR.TEXT_DARK,
