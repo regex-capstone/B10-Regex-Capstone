@@ -30,7 +30,7 @@ const ApiEndpoint: API = {
         const page: Page = await IsaacAPI.addNewPage({
             title: p.title,
             page_category_id: p.page_category_id,
-            description: '',
+            description: '<add description here>',
             headings: [],
             created_at: createdAt
         });

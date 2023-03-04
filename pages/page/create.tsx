@@ -17,8 +17,7 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
     return {
         props: {
             categoryData: JSON.stringify(categories ?? {})
-        },
-        revalidate: 10
+        }
     }
 }
 
