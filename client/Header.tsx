@@ -1,6 +1,7 @@
 import { Container, Box, Button, Typography } from '@mui/material';
 import Theme from '@/client/Theme';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Header() {
   const { data: session } = useSession()
@@ -24,7 +25,12 @@ export default function Header() {
         paddingRight: '0.5rem',
       }}>
         <Typography fontSize={'1rem'}>
-          <b>{session?.user.name.toUpperCase() ?? 'GUEST'}</b>
+          <Link href="/profile" style={{
+            textDecoration: 'none',
+            color: Theme.COLOR.TEXT_LIGHT,
+          }}>
+            <b>{session?.user.name.toUpperCase() ?? 'GUEST'}</b>
+          </Link>
         </Typography>
       </Box>
       <Button variant="text" sx={{

@@ -1,7 +1,7 @@
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { Category } from "@/isaac/models";
-import { Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Container, Divider, Paper, Stack, TextField, Typography } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPropsResult } from "next";
 import SearchBar from "@/client/SearchBar";
@@ -36,6 +36,8 @@ export default function Index(props: IndexProps) {
   return (
     <>
       <Header />
+      {/* TODO: Add auth for admin tools */}
+      <AdminTools />
       <Container sx={{
         paddingTop: '2rem',
       }}>
@@ -81,5 +83,37 @@ export default function Index(props: IndexProps) {
         </Stack>
       </Container>
     </>
+  )
+}
+
+function AdminTools() {
+  return (
+    <Card sx={{
+      position: 'fixed',
+      bottom: '10%',
+      right: -5,
+      paddingRight: 5,
+    }}>
+      <CardContent>
+        <Stack spacing={2} direction="column">
+          <b>Admin Tools</b>
+          <Link href="/page/create" passHref style={{
+            textDecoration: 'none',
+          }}>
+            <Button variant="contained">Create Page</Button>
+          </Link>
+          <Link href="/#" passHref style={{
+            textDecoration: 'none',
+          }}>
+            <Button variant="contained">Analytics</Button>
+          </Link>
+          <Link href="/#" passHref style={{
+            textDecoration: 'none',
+          }}>
+            <Button variant="contained">Categories</Button>
+          </Link>
+        </Stack>
+      </CardContent>
+    </Card>
   )
 }
