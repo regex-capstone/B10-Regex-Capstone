@@ -8,6 +8,8 @@ import SearchBar from "@/client/SearchBar";
 import Logo from "@/client/Logo";
 import Link from "next/link";
 import HeaderBar from "@/client/HeaderBar";
+import Header from "@/client/Header";
+import Theme from "@/client/Theme";
 
 const api: API = ApiEndpoint
 
@@ -32,44 +34,52 @@ export default function Index(props: IndexProps) {
   const categories: Category[] = JSON.parse(props.categories) as Category[]
 
   return (
-    <Container>
-      <Stack spacing={2} direction="column">
-        <Stack
-          spacing={2}
-          direction="column"
-          sx={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Logo />
-          <p>Informatics Student Advising Automation Complex</p>
-          <Box sx={{
-            flexGrow: 1,
-          }}>
-            <SearchBar />
-          </Box>
-        </Stack>
-        <Divider />
-        <Container>
-          <Grid2 container>
-            {categories.map((category, i) => (
-              <Grid2 key={i} xs={6}>
-                <Link href={`/category/${category.name}`}>{category.name}</Link>
-              </Grid2>
-            ))}
-          </Grid2>
-        </Container>
-        <Divider />
-        <Container>
-          <h2>Admin Tools</h2>
-          <Stack direction={'column'}>
-            <Link href={'/page/create'}>Create Page</Link>
-            <Link href={'/'}>View Site Analytics</Link>
-            <Link href={'/'}>Edit categories</Link>
+    <>
+      <Header />
+      <Container sx={{
+        paddingTop: '2rem',
+      }}>
+        <Stack spacing={2} direction="column">
+          <Stack
+            spacing={2}
+            direction="column"
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Logo />
+            <Box sx={{
+              textAlign: 'center',
+              letterSpacing: '0.15rem',
+            }}>
+              <p>Informatics Student Advising Automation Complex</p>
+            </Box>
+            <Box sx={{
+              minWidth: "60%",
+              width: "40rem",
+              maxWidth: "100%"
+            }}>
+              <SearchBar />
+            </Box>
           </Stack>
-        </Container>
-      </Stack>
-    </Container>
+          <Divider />
+          <Container>
+            <Grid2 container>
+              {categories.map((category, i) => (
+                <Grid2 key={i} xs={6}>
+                  <Link href={`/category/${category.name}`} style={{
+                    textDecoration: 'none',
+                    color: Theme.COLOR.TEXT_DARK,
+                  }}>
+                    <b>{category.name}</b>
+                  </Link>
+                </Grid2>
+              ))}
+            </Grid2>
+          </Container>
+        </Stack>
+      </Container>
+    </>
   )
 }
