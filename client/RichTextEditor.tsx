@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { PageRequest } from "@/isaac/models/Page";
 import { ContentState, EditorState } from "draft-js";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { RevalidateTypes } from "@/pages/api/revalidate";
 
 /**
  * This library does not allow for server-side rendering... To accommodate for SSR, let's consider another library.
@@ -65,6 +66,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
         }, 200));
 
         try {
+            const revalidationToken = process.env.NEXT_PUBLIC_REVALIDATION_TOKEN;
             let request;
             let redirectTitle;
 
@@ -108,6 +110,17 @@ export default function RichTextEditor(props: RichTextEditorProps) {
             }
     
             await fetch('/api/revision', options);
+
+
+            const revalidationOptions = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }
+
+            const result = await fetch(`/api/revalidate?secret=${revalidationToken}&slug=${redirectTitle}&type=${RevalidateTypes.PAGE}`, revalidationOptions);
+            console.log(result);
             router.push(`/page/${redirectTitle}`);
         } catch (err) {
             console.error(err); // @TODO: handle toast notifications
