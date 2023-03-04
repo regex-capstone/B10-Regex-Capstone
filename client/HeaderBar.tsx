@@ -9,7 +9,6 @@ import { useSession } from 'next-auth/react';
 export default function HeaderBar() {
     const { data: session } = useSession();
 
-
     return (
         <AppBar position="static">
             <Container maxWidth="xl">

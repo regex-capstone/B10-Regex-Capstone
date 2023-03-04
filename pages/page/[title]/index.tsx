@@ -12,39 +12,38 @@ import Header from "@/client/Header";
 import { Box } from "@mui/material";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const api: API = ApiEndpoint
-  const pages: PageData[] = await api.getAllPages()
-  return {
-    paths: pages.map(page => {
-      return {
-        params: {
-          title: page.title
-        }
-      }
-    }),
-    fallback: false
-  }
+    const api: API = ApiEndpoint
+    const pages: PageData[] = await api.getAllPages()
+    return {
+        paths: pages.map(page => {
+            return {
+                params: {
+                    title: page.title
+                }
+            }
+        }),
+        fallback: false
+    }
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-  const api: API = ApiEndpoint
-  const { title } = context.params ?? {};
-  const pageData: PageData = await api.getPageByTitle(title as string)
-  const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
+    const api: API = ApiEndpoint
+    const { title } = context.params ?? {};
+    const pageData: PageData = await api.getPageByTitle(title as string)
+    const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
-  return {
-    props: {
-      // NextJS requires props to be serializable
-      pageData: JSON.stringify(pageData ?? {}),
-      revisionData: JSON.stringify(revisionData ?? {})
-    },
-    revalidate: 10,
-  }
+    return {
+        props: {
+            // NextJS requires props to be serializable
+            pageData: JSON.stringify(pageData ?? {}),
+            revisionData: JSON.stringify(revisionData ?? {})
+        }
+    }
 }
 
 interface PageProps {
-  pageData: string,
-  revisionData: string
+    pageData: string,
+    revisionData: string
 }
 
 /* (root)/page/[id] */
@@ -88,29 +87,29 @@ export default function Page(props: PageProps) {
 }
 
 function ContentTable(props: { page: PageData }) {
-  const { page } = props;
-  const headings = page.headings ?? [];
+    const { page } = props;
+    const headings = page.headings ?? [];
 
-  return (
-    <Stack direction={'column'}>
-      <h3>Content</h3>
-      <Stack direction={'column'} spacing={2}>
-        {headings.map((heading, i) => (
-          <a href={`#${heading}`} key={i}>{heading.text}</a>
-        ))}
-      </Stack>
-    </Stack>
-  )
+    return (
+        <Stack direction={'column'}>
+            <h3>Content</h3>
+            <Stack direction={'column'} spacing={2}>
+                {headings.map((heading, i) => (
+                    <a href={`#${heading}`} key={i}>{heading.text}</a>
+                ))}
+            </Stack>
+        </Stack>
+    )
 }
 
 function Content(props: { page: PageData, revision: Revision }) {
-  const { page, revision } = props;
+    const { page, revision } = props;
 
-  return (
-    <Container>
-      <ReactMarkdown>
-        {revision.content}
-      </ReactMarkdown>
-    </Container>
-  )
+    return (
+        <Container>
+            <ReactMarkdown>
+                {revision.content}
+            </ReactMarkdown>
+        </Container>
+    )
 }

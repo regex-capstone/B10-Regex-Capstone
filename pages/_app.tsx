@@ -4,7 +4,7 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import LoadingSpinner from '@/client/LoadingSpinner';
 import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
-
+import NotAuthorizedPage from '@/client/NotAuthorizedPage';
 
 // application theme, left intentionally empty (default)
 const theme = createTheme({})
@@ -35,19 +35,17 @@ function AuthLayout(
         return <LoadingSpinner />
     }
 
+    // user is not logged in
+    if (!session) {
+        return <NotAuthorizedPage requireLogIn={true} /> as JSX.Element;
+    }
+
     const authProps = props.auth;
     const user = session?.user;
 
-    // page is not protected
-    if (!authProps) {
-        return (
-            <>{props.children}</>
-        )
-    }
-
-    // ADMINs can see all pages
-    if (user?.role !== authProps.role && user?.role !== UserRole.ADMIN) {
-        return <h1>Not authorized</h1>
+    // admin access only
+    if (authProps && authProps.role === UserRole.ADMIN && user?.role !== UserRole.ADMIN) {
+        return <NotAuthorizedPage requireAdmin={true} />
     }
 
     return (

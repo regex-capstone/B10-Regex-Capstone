@@ -1,9 +1,10 @@
-import type { Page, Revision, Category } from '../models/index';
+import type { Page, Revision, Category, User } from '../models/index';
 import natural from "natural";
 import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
 import { RevisionRequest } from '../models/Revision';
 import { PageRequest } from '../models/Page';
+import { search } from '../search/NaturalProvider';
 
 const ApiEndpoint: API = {
     // pages
@@ -26,26 +27,25 @@ const ApiEndpoint: API = {
     async addNewPage(p: PageRequest) {
         const createdAt = Date.now();
 
-        // add a new page
-        const pageId: string = await IsaacAPI.addNewPage({
+        const page: Page = await IsaacAPI.addNewPage({
             title: p.title,
             page_category_id: p.page_category_id,
+            description: '',
             headings: [],
             created_at: createdAt
-        }) as string;
+        });
 
-        if (!pageId) throw new Error('Error adding new page.');
+        if (!page) throw new Error('Error adding new page.');
 
-        // start the page's first revision
-        const revId: string = await IsaacAPI.addNewRevision({
+        const rev: Revision = await IsaacAPI.addNewRevision({
             created_at: createdAt,
             content: '<add content here>',
-            rev_page_id: pageId
-        }) as string;
+            rev_page_id: page.id as string
+        });
 
-        if (!revId) throw new Error('Error adding new revision.');
+        if (!rev) throw new Error('Error adding new revision.');
 
-        return pageId;
+        return page;
     },
 
     // revisions
@@ -62,13 +62,25 @@ const ApiEndpoint: API = {
     },
 
     async addRevision(r: RevisionRequest) {
-        return (await IsaacAPI.addNewRevision({
+        const rev = (await IsaacAPI.addNewRevision({
             content: r.content as string,
             rev_page_id: r.rev_page_id as string,
             created_at: Date.now() as number
-        })) as string;
+        })) as Revision;
+
+        if (!rev) throw new Error('Error adding new revision.');
+
+        // parse for page description
+        // @TODO: make this better
+
+        const page = (await IsaacAPI.updatePage(
+            rev.rev_page_id,
+            { description: rev.content.substring(0, 150) }
+        ));
+
+        return rev;
     },
-    
+
     // categories
     async getAllCategories() {
         return (await IsaacAPI.getCategories({})) as Category[];
@@ -86,34 +98,30 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.addNewCategory({
             ...c,
             created_at: Date.now()
-        })) as string;
+        })) as Category;
     },
 
     // search
     async search(q: string) {
-        let pages = (await IsaacAPI.getPages({})) as Page[];    //TODO: more efficient IsaacAPI endpoint to not have to get all pages?
+        //TODO: more efficient IsaacAPI endpoint to not have to get all pages?
+        return search(q, (await IsaacAPI.getPages({})) as Page[]);
+    },
 
-        let tfidf = new natural.TfIdf;  //init
-        let sorted = [] as Page[];
-        let indexed = [] as Array<any>;
-        let query = q;
+    async getUserByEmail(email: string) {
+        return (await IsaacAPI.getUsers({ email: email, single: true })) as User;
+    },
 
-        for(let i = 0; i < pages.length; i++) {
-            tfidf.addDocument(pages[i].title);  //TODO: more elegant way to tokenize doc and add to TF-IDF algo
-        }
+    async addNewUser(u: User) {
+        return (await IsaacAPI.addNewUser({
+            ...u,
+            created_at: Date.now()
+        })) as User;
+    },
 
-        // classify each document using given query
-        tfidf.tfidfs(query, function(i, measure) {
-            if(measure > 0) {     // if document has no matches, omit it from results
-                indexed.push({page: pages[i], rating: measure});
-            }
-        });
-
-        // sort objects by highest to lowest measure, then map to Page[]
-        indexed.sort((a, b) => b.rating - a.rating);
-        sorted = indexed.map(i => i.page);
-
-        return sorted;
+    async updateUser(u: User) {
+        return (await IsaacAPI.updateUser({
+            ...u
+        })) as string;
     }
 }
 
