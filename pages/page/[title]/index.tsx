@@ -1,14 +1,13 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack, Link } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
-import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import API from "@/isaac/api/APIInterface";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
-import { Box } from "@mui/material";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint

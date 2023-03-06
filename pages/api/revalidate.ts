@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 validated = true;
                 break;
             default:
-                await res.revalidate(`/${type}/${slug}`);
+                await res.revalidate(`/${type}`);
                 validated = true;
                 break;
 

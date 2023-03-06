@@ -112,13 +112,12 @@ export default function RichTextEditor(props: RichTextEditorProps) {
     
             await fetch('/api/revision', options);
 
-
             const revalidationOptions = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                method: 'GET'
             }
+
+            await fetch(`/api/revalidate?secret=${revalidationToken}&type=${RevalidateTypes.PAGE}&slug=${redirectTitle}`, revalidationOptions);
+            
             router.push(`/page/${redirectTitle}`);
         } catch (err) {
             console.error(err); // @TODO: handle toast notifications
