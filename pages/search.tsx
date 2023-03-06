@@ -7,6 +7,7 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
+import Header from "@/client/Header";
 import Logo from "@/client/Logo";
 
 
@@ -45,7 +46,7 @@ export default function Search(props: SearchProps) {
     const categories: Category[] = props.categories;
     let [catFilter, setFilter] = useState([] as string[]);
     let [filteredResults, setFilteredResults] = useState(results);
-
+    
     useEffect(() => {   // need to run every time filter changes
         if (catFilter.length != 0) {
             console.log("change!");
@@ -86,7 +87,6 @@ export default function Search(props: SearchProps) {
 
 function Filters(props: { categories: Category[], setFilter: Function, currFilter: string[] }) {
     const { categories, setFilter, currFilter } = props;
-
     // onChange function to update filter list
     const handleFilter = (event: React.ChangeEvent<HTMLInputElement>, category: Category) => {
         if (event.target.checked) {   // need to toggle based on if box is checked or unchecked
