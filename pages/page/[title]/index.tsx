@@ -9,53 +9,50 @@ import Header from "@/client/Header";
 import usePage from '@/client/hooks/usePage';
 import LoadingSpinner from "@/client/LoadingSpinner";
 import { useRouter } from "next/router";
+import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import API from "@/isaac/api/APIInterface";
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 
-// export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-//     const api: API = ApiEndpoint
-//     const pages: PageData[] = await api.getAllPages()
-//     return {
-//         paths: pages.map(page => {
-//             return {
-//                 params: {
-//                     title: page.title
-//                 }
-//             }
-//         }),
-//         fallback: false
-//     }
-// }
+export async function getStaticPaths(): Promise<GetStaticPathsResult> {
+    const api: API = ApiEndpoint
+    const pages: PageData[] = await api.getAllPages()
+    return {
+        paths: pages.map(page => {
+            return {
+                params: {
+                    title: page.title
+                }
+            }
+        }),
+        fallback: 'blocking'
+    }
+}
 
-// export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-//     const api: API = ApiEndpoint
-//     const { title } = context.params ?? {};
-//     const pageData: PageData = await api.getPageByTitle(title as string)
-//     const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
+export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
+    const api: API = ApiEndpoint
+    const { title } = context.params ?? {};
+    const pageData: PageData = await api.getPageByTitle(title as string)
+    const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
-//     return {
-//         props: {
-//             // NextJS requires props to be serializable
-//             pageData: JSON.stringify(pageData ?? {}),
-//             revisionData: JSON.stringify(revisionData ?? {})
-//         },
-//         revalidate: 10
-//     }
-// }
+    return {
+        props: {
+            // NextJS requires props to be serializable
+            pageData: JSON.stringify(pageData ?? {}),
+            revisionData: JSON.stringify(revisionData ?? {})
+        },
+        revalidate: 10
+    }
+}
 
-// interface PageProps {
-//     pageData: string,
-//     revisionData: string
-// }
+interface PageProps {
+    pageData: string,
+    revisionData: string
+}
 
 /* (root)/page/[id] */
-export default function Page() {
-    const router = useRouter();
-    const { data, error, isLoading } = usePage(router.query.title as string);
-
-    if (isLoading) return <LoadingSpinner />
-    if (error) return <div>{error.message}</div>
-
-    const pageData = data.page;
-    const revisionData = data.revision;
+export default function Page(props: PageProps) {
+    const pageData: PageData = JSON.parse(props.pageData);
+    const revisionData: Revision = JSON.parse(props.revisionData);
     const query = "";
     
     return (
