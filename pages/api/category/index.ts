@@ -18,8 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
             case 'POST':
                 if (!body) throw new Error('POST request has no body.');
+                if (!body.name) throw new Error('POST request has no name.');
     
-                const categoryId = await api.addNewCategory(body.category);
+                const categoryId = await api.addNewCategory({
+                    name: body.name
+                });
                 
                 res.status(200).json({
                     success: true,
