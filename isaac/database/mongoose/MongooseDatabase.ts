@@ -221,15 +221,14 @@ const MongooseDatabase: Database = {
                 .find(query)
                 .sort({ created_at: -1 });
 
-                console.log(data);
-
             const users = data.map((raw) => {
                 const user = {
                     id: raw._id,
                     role: raw.role,
                     standing: raw.standing,
                     major: raw.major,
-                    name: raw.name
+                    name: raw.name,
+                    email: raw.email
                 };
                 return user;
             });
