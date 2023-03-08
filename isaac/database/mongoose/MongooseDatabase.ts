@@ -169,12 +169,23 @@ const MongooseDatabase: Database = {
         }
     },
 
+    deletePage: async (id: string) => {
+        try {
+            await MongooseModels.Page.deleteOne({ _id: id })
+            return {
+                success: true
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
     getAnalytics: async (query: Object) => {
         try {
             const data = await MongooseModels.Metric
                 .find(query);
-
-            console.log(data);
 
             const metrics = data.map((raw) => {
                 const metric: Metric = {
