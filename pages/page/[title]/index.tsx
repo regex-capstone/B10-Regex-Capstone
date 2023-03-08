@@ -6,9 +6,6 @@ import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
 import Header from "@/client/Header";
-import usePage from '@/client/hooks/usePage';
-import LoadingSpinner from "@/client/LoadingSpinner";
-import { useRouter } from "next/router";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
@@ -107,7 +104,7 @@ function ContentTable(props: { page: PageData }) {
 }
 
 function Content(props: { page: PageData, revision: Revision }) {
-    const { page, revision } = props;
+    const { revision } = props;
 
     return (
         <Container>

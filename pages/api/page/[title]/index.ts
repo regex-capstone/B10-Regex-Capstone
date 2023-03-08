@@ -14,28 +14,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
-            case 'GET':
-                const page: Page = await api.getPageByTitle(title);
+        case 'GET':
+            const page: Page = await api.getPageByTitle(title);
 
-                if (!page) {
-                    throw new Error('Page not found.');
-                }
+            if (!page) {
+                throw new Error('Page not found.');
+            }
 
-                const rev: Revision = await api.getRecentPageRevisionById(page.id as string);
+            const rev: Revision = await api.getRecentPageRevisionById(page.id as string);
 
-                if (!rev) {
-                    throw new Error('Page has no revision content.');
-                }
+            if (!rev) {
+                throw new Error('Page has no revision content.');
+            }
 
-                res.status(200).json({
-                    success: true,
-                    page: page,
-                    revision: rev
-                });
-                break;
-            default:
-                res.setHeader('Allow', ['GET'])
-                res.status(405).send(`Method ${method} Not Allowed`)
+            res.status(200).json({
+                success: true,
+                page: page,
+                revision: rev
+            });
+            break;
+        default:
+            res.setHeader('Allow', ['GET'])
+            res.status(405).send(`Method ${method} Not Allowed`)
         }
     } catch (e) {
         res.status(500).json({

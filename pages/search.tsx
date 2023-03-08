@@ -1,13 +1,12 @@
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { useRouter } from 'next/router';
-import { Box, Button, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
+import { Box, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
 import { GetServerSidePropsResult, GetServerSidePropsContext } from "next";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
-import Header from "@/client/Header";
 import Logo from "@/client/Logo";
 
 
@@ -46,10 +45,9 @@ export default function Search(props: SearchProps) {
     const categories: Category[] = props.categories;
     let [catFilter, setFilter] = useState([] as string[]);
     let [filteredResults, setFilteredResults] = useState(results);
-    
+
     useEffect(() => {   // need to run every time filter changes
         if (catFilter.length != 0) {
-            console.log("change!");
             setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id as string)));
         } else { // if no filters applied
             setFilteredResults(results) //set filteredResults to all results
@@ -122,8 +120,8 @@ function SearchResult(props: { result: Page }) {
             <h1><a href={`/page/${result.title}`}>{result.title}</a></h1>
             {
                 result.description
-                ? <p>{result.description}</p>
-                : <p>No description</p>
+                    ? <p>{result.description}</p>
+                    : <p>No description</p>
             }
             <p>{result.page_category_id}</p>
         </Box>

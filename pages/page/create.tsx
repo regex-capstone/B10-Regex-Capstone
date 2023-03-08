@@ -4,13 +4,13 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Logo from "@/client/Logo";
 import Head from "next/head";
 import RichTextEditor from "@/client/RichTextEditor";
-import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { GetStaticPropsResult } from "next";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
-import { Category as CategoryData, Page as PageData, Revision as RevisionData } from '@/isaac/models';
+import { Category as CategoryData } from '@/isaac/models';
 import { useState } from "react";
 
-export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<CreatePageProps>> {
+export async function getStaticProps(): Promise<GetStaticPropsResult<CreatePageProps>> {
     const api: API = ApiEndpoint;
     const categories: CategoryData[] = await api.getAllCategories();
 
@@ -50,13 +50,13 @@ export default function CreatePage(props: CreatePageProps) {
                 </Grid2>
                 <Grid2 xs={6}>
                     <Stack direction={'column'} spacing={2}>
-                    <div>
-                        {
-                            title && categoryId
-                                ? <h1>Please enter the page content.</h1>
-                                : <h1>Please choose the dropdown options below to proceed.</h1>
-                        }
-                    </div>
+                        <div>
+                            {
+                                title && categoryId
+                                    ? <h1>Please enter the page content.</h1>
+                                    : <h1>Please choose the dropdown options below to proceed.</h1>
+                            }
+                        </div>
                         <TextField fullWidth
                             onChange={(e) => setTitle(e.target.value)}
                             label="What is the page title?"
@@ -95,8 +95,4 @@ export default function CreatePage(props: CreatePageProps) {
             </Container>
         </>
     )
-}
-
-function logTitle(title: string) {
-    console.log(title)
 }

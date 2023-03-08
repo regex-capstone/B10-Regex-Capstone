@@ -20,8 +20,7 @@ export default function RedirectComponent() {
         }
 
         router.push((isDocumented) ? '/' : '/profile');
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    });
 
     return (
         <>

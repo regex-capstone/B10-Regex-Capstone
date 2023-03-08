@@ -1,7 +1,4 @@
-import HeaderBar from '@/client/HeaderBar';
-import LoadingSpinner from '@/client/LoadingSpinner';
 import { UserRole } from '@/isaac/models/User';
-import { useSession } from 'next-auth/react';
 
 export default function NotAuthorizedTest() {
     return (

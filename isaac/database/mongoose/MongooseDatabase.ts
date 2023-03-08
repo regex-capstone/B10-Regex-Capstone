@@ -1,5 +1,5 @@
- import type { Page, Revision, Category } from '../../models/index';
- import Metric from '../../analytics/model'
+import type { Page, Revision, Category } from '../../models/index';
+import Metric from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';

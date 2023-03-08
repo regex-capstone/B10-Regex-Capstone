@@ -65,11 +65,13 @@ export default function ProfilePage() {
                 }
 
                 const postRequest = await fetch('/api/user', userOptions);
-                const postPayload = await postRequest.json();
+                await postRequest.json();
             }
             setSaving(false);
             router.push('/');
         } catch (err) {
+            /* eslint-disable */
+            // TODO: Replace with a proper error handling system
             console.error(err);
         }
     }
