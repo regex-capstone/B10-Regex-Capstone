@@ -9,6 +9,7 @@ import Header from "@/client/Header";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import Link from "next/link";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -51,7 +52,7 @@ export default function Page(props: PageProps) {
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
     const query = "";
-    
+
     return (
         <>
             <Head>
@@ -75,11 +76,7 @@ export default function Page(props: PageProps) {
                     <Grid2 xs={3} sx={{
                         marginTop: 13,
                     }}>
-                        <h3>Admin Tools</h3>
-                        <Stack direction={'column'} spacing={2}>
-                            <a href={`/page/${pageData.title}/edit`}>Edit Page</a>
-                            <a href={`/page/${pageData.title}/analytics`}>Page Analytics</a>
-                        </Stack>
+                        <AdminTools page={pageData} />
                     </Grid2>
                 </Grid2>
             </Container>
@@ -105,12 +102,24 @@ function ContentTable(props: { page: PageData }) {
 
 function Content(props: { page: PageData, revision: Revision }) {
     const { revision } = props;
-
     return (
         <Container>
             <ReactMarkdown>
                 {revision.content}
             </ReactMarkdown>
         </Container>
+    )
+}
+
+function AdminTools(props: { page: PageData }) {
+    const { page } = props;
+    return (
+        <>
+            <h3>Admin Tools</h3>
+            <Stack direction={'column'} spacing={2}>
+                <Link href={`/page/${page.title}/edit`}>Edit</Link>
+                <Link href={`/page/${page.title}/analytics`}>Analytics</Link>
+            </Stack>
+        </>
     )
 }
