@@ -10,6 +10,7 @@ export default interface API {
     getPageById(p_id: string): Promise<Page>,
     getPageByTitle(p_title: string): Promise<Page>,
     addNewPage(p: PageRequest): Promise<Page>,
+    deletePage(p_id: string): Promise<Page>
 
     // revisions
     getRecentPageRevisionById(p_id: string): Promise<Revision>,
