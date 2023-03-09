@@ -30,7 +30,7 @@ const ApiEndpoint: API = {
         const page: Page = await IsaacAPI.addNewPage({
             title: p.title,
             page_category_id: p.page_category_id,
-            description: '',
+            description: '<add description here>',
             headings: [],
             created_at: createdAt
         });
@@ -46,6 +46,10 @@ const ApiEndpoint: API = {
         if (!rev) throw new Error('Error adding new revision.');
 
         return page;
+    },
+
+    async deletePage(p_id: string) {
+        return (await IsaacAPI.deletePage(await this.getPageById(p_id))) as Page;
     },
 
     // revisions

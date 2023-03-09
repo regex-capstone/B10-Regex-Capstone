@@ -3,3 +3,7 @@ export default interface Category {
     name: string,
     created_at: number
 }
+
+export interface CategoryRequest {
+    name: string
+}

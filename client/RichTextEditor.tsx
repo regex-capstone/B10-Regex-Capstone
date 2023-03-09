@@ -5,11 +5,12 @@ import { EditorProps } from "react-draft-wysiwyg";
 import { Box, Button } from "@mui/material";
 // @ts-ignore
 import { stateToMarkdown } from 'draft-js-export-markdown';
+// @ts-ignore
+import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { useRouter } from "next/router";
 import { PageRequest } from "@/isaac/models/Page";
 import { ContentState, EditorState } from "draft-js";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { RevalidateTypes } from "@/pages/api/revalidate";
 
 /**
  * This library does not allow for server-side rendering... To accommodate for SSR, let's consider another library.
@@ -37,11 +38,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
     const { pageData, revisionData, categoryId, title } = props;
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const [loading, setLoading] = useState(false);
-    const [editorState, setEditorState] = useState(
-        revisionData
-            ? EditorState.createWithContent(ContentState.createFromText(revisionData.content))
-            : EditorState.createEmpty()
-    );
+    const [editorState, setEditorState] = useState(initializeEditorState(revisionData?.content as string));
 
     const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
 
@@ -66,7 +63,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
         }, 200));
 
         try {
-            const revalidationToken = process.env.NEXT_PUBLIC_REVALIDATION_TOKEN;
+            // const revalidationToken = process.env.NEXT_PUBLIC_REVALIDATION_TOKEN;
             let request;
             let redirectTitle;
 
@@ -75,7 +72,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                     title: title as string,
                     page_category_id: categoryId as string
                 }
-                
+
                 const pageOptions = {
                     method: 'POST',
                     headers: {
@@ -83,8 +80,9 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                     },
                     body: JSON.stringify(pageRequest),
                 }
-    
-                const pagePayload = await (await fetch('/api/page', pageOptions)).json();
+
+                const fetchPage = (await fetch('/api/page', pageOptions));
+                const pagePayload = await fetchPage.json();
 
                 request = {
                     content: getMarkdown(editorState),
@@ -100,7 +98,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
 
                 redirectTitle = pageData.title;
             }
-    
+
             const options = {
                 method: 'POST',
                 headers: {
@@ -108,72 +106,60 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                 },
                 body: JSON.stringify(request),
             }
-    
+
             await fetch('/api/revision', options);
 
+            await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/page/${redirectTitle}`);
 
-            const revalidationOptions = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }
-
-            const result = await fetch(`/api/revalidate?secret=${revalidationToken}&slug=${redirectTitle}&type=${RevalidateTypes.PAGE}`, revalidationOptions);
-            console.log(result);
             router.push(`/page/${redirectTitle}`);
         } catch (err) {
             console.error(err); // @TODO: handle toast notifications
-        }   
+        }
     }
+
+    if (loading) return <h1>{loadingText}</h1>
 
     return (
         <>
-            {
-                loading
-                    ? <h1>{loadingText}</h1>
-                    : <>
-                        <header className="text-header">
-                            { 
-                                (pageData) 
-                                ? <p>Editing {pageData.title}...</p>
-                                : <p>Create a new page...</p>
-                            }
-                        </header>
-                        <Box sx={{
-                            border: '1px solid black'
-                        }}>
-                            <Editor
-                                editorState={editorState}
-                                onEditorStateChange={setEditorState}
-                                toolbar={{
-                                    options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
-                                    inline: {
-                                        options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
-                                    },
-                                    list: {
-                                        options: ['unordered, ordered']
-                                    },
-                                    link: {
-                                        options: ['link']
-                                    }
-                                }}
-                            />
-                        </Box>
-                        <Button onClick={handleSave}>
-                            {
-                                loading
-                                    ? loadingText
-                                    : 'Save Changes'
-                            }
-                        </Button>
-                        <p>
-                            <em>
-                                This editor uses Markdown. For a guide on how to use Markdown, click <a href="https://www.markdownguide.org/cheat-sheet/">here</a>.
-                            </em>
-                        </p>
-                    </>
-            }
+            <header className="text-header">
+                {
+                    (pageData)
+                        ? <p>Editing {pageData.title}...</p>
+                        : <p>Create a new page...</p>
+                }
+            </header>
+            <Box sx={{
+                border: '1px solid black'
+            }}>
+                <Editor
+                    editorState={editorState}
+                    onEditorStateChange={setEditorState}
+                    toolbar={{
+                        options: ['inline', 'blockType', 'list', 'link', 'emoji', 'history'],
+                        inline: {
+                            options: ['bold', 'italic', 'underline', 'strikethrough', 'monospace']
+                        },
+                        list: {
+                            options: ['unordered, ordered']
+                        },
+                        link: {
+                            options: ['link']
+                        }
+                    }}
+                />
+            </Box>
+            <Button onClick={handleSave}>
+                {
+                    loading
+                        ? loadingText
+                        : 'Save Changes'
+                }
+            </Button>
+            <p>
+                <em>
+                    This editor uses Markdown. For a guide on how to use Markdown, click <a href="https://www.markdownguide.org/cheat-sheet/">here</a>.
+                </em>
+            </p>
         </>
     )
 }
@@ -182,4 +168,11 @@ function getMarkdown(rawData: any) {
     return stateToMarkdown(
         rawData.getCurrentContent()
     )
+}
+
+function initializeEditorState(content: string) {
+    const contentState = stateFromMarkdown(content ?? "");
+    return content
+        ? EditorState.createWithContent(contentState)
+        : EditorState.createEmpty()
 }

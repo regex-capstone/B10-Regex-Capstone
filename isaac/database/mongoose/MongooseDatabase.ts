@@ -1,5 +1,5 @@
- import type { Page, Revision, Category } from '../../models/index';
- import Metric from '../../analytics/model'
+import type { Page, Revision, Category } from '../../models/index';
+import Metric from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
@@ -169,12 +169,23 @@ const MongooseDatabase: Database = {
         }
     },
 
+    deletePage: async (id: string) => {
+        try {
+            await MongooseModels.Page.deleteOne({ _id: id })
+            return {
+                success: true
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
     getAnalytics: async (query: Object) => {
         try {
             const data = await MongooseModels.Metric
                 .find(query);
-
-            console.log(data);
 
             const metrics = data.map((raw) => {
                 const metric: Metric = {
@@ -221,15 +232,14 @@ const MongooseDatabase: Database = {
                 .find(query)
                 .sort({ created_at: -1 });
 
-                console.log(data);
-
             const users = data.map((raw) => {
                 const user = {
                     id: raw._id,
                     role: raw.role,
                     standing: raw.standing,
                     major: raw.major,
-                    name: raw.name
+                    name: raw.name,
+                    email: raw.email
                 };
                 return user;
             });

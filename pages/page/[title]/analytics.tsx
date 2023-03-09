@@ -1,3 +1,6 @@
+/* eslint-disable */
+// reason: file is placeholder
+
 import { Button, Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";

@@ -5,7 +5,7 @@ export default interface User {
     major: UserMajor,
     created_at?: number,
     name: string,
-    email?: string
+    email: string
 }
 
 export enum UserRole {

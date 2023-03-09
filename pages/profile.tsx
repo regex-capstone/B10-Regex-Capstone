@@ -1,61 +1,83 @@
-import Logo from "@/client/Logo";
-import { Container, Stack, Avatar, Button, Box, Select, MenuItem, Link, InputLabel, FormControl } from "@mui/material";
+import { Container, Stack, Avatar, Button, Select, MenuItem, Link, InputLabel, FormControl } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { UserMajor, UserStanding } from "@/isaac/models/User";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import User from '../isaac/models/User';
-import LoadingSpinner from "@/client/LoadingSpinner";
 import { useRouter } from "next/router";
+import useUser from "@/client/hooks/useUser";
+import LoadingSpinner from "@/client/LoadingSpinner";
 
 export default function ProfilePage() {
-    const { data: session } = useSession();
-    const [standing, setStanding] = useState((session) ? session.user.standing : UserStanding.UNKNOWN);
-    const [major, setMajor] = useState((session) ? session.user.major : UserMajor.UNKNOWN);
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const { data: session } = useSession();
+    const { data, error, isLoading } = useUser(session?.user.email as string);
+
+    const [user, setUser] = useState({} as User);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        if (data) {
+            setUser(data.user);
+            setLoading(false);
+        }
+
+        return () => setLoading(true);
+    }, [data]);
 
     const handleStandingChange = (e: any) => {
-        setStanding(e.target.value);
+        setUser((prev: User) => {
+            return {
+                ...prev,
+                standing: e.target.value
+            }
+        });
     }
 
     const handleMajorChange = (e: any) => {
-        setMajor(e.target.value);
+        setUser((prev: User) => {
+            return {
+                ...prev,
+                major: e.target.value
+            }
+        });
     }
 
     const handleSave = async () => {
         try {
-            if (session) {
-                setLoading(true);
+            setSaving(true);
 
-                const userRequest: User = {
-                    ...session.user,
-                    standing: standing,
-                    major: major
-                }
-    
-                if (userRequest !== session.user) {
-                    const userOptions = {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(userRequest),
-                    }
-        
-                    const pagePayload = await (await fetch('/api/user', userOptions)).json();
-        
-                    session.user = userRequest;
-                }
-
-                setLoading(false);
-                router.push('/');
+            const userRequest: User = {
+                ...user,
+                standing: user.standing,
+                major: user.major
             }
+
+            if (userRequest !== user) {
+                const userOptions = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userRequest),
+                }
+
+                const postRequest = await fetch('/api/user', userOptions);
+                await postRequest.json();
+            }
+            setSaving(false);
+            router.push('/');
         } catch (err) {
+            /* eslint-disable */
+            // TODO: Replace with a proper error handling system
             console.error(err);
         }
     }
+
+    if (isLoading || loading) return <LoadingSpinner />
+    if (error) return <div>{error.message}</div>
 
     return (
         <>
@@ -67,7 +89,7 @@ export default function ProfilePage() {
                 <Grid2 container spacing={2}>
                     <Grid2 xs>
                         <Stack direction={'column'} spacing={2} sx={{ width: 1 }}>
-                            <Stack direction={'row'} spacing={2} sx={{ 
+                            <Stack direction={'row'} spacing={2} sx={{
                                 width: 1,
                                 justifyContent: 'center',
                                 alignItems: 'center'
@@ -87,7 +109,7 @@ export default function ProfilePage() {
                                     <InputLabel id="class-standing-label">Class Standing</InputLabel>
                                     <Select
                                         labelId="class-standing-label"
-                                        value={standing}
+                                        value={user.standing}
                                         label="Class Standing"
                                         onChange={handleStandingChange}
                                     >
@@ -104,7 +126,7 @@ export default function ProfilePage() {
                                     <InputLabel id="major-status-label">Major Status</InputLabel>
                                     <Select
                                         labelId="major-status-label"
-                                        value={major}
+                                        value={user.major}
                                         label="Class Standing"
                                         onChange={handleMajorChange}
                                     >
@@ -123,11 +145,11 @@ export default function ProfilePage() {
                             }}>
                                 <Stack direction={'row'} spacing={2}>
                                     {
-                                        loading
-                                        ? <p>Saving...</p>
-                                        : <Button sx={{
-                                            width: "fit-content"
-                                        }} onClick={handleSave}>Save Changes</Button>
+                                        saving
+                                            ? <p>Saving...</p>
+                                            : <Button sx={{
+                                                width: "fit-content"
+                                            }} onClick={handleSave}>Save Changes</Button>
                                     }
                                     <Button sx={{
                                         width: "fit-content"
