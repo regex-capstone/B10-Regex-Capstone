@@ -40,12 +40,13 @@ export default function Search(props: SearchProps) {
     let [filteredResults, setFilteredResults] = useState(results);
 
     useEffect(() => {   // need to run every time filter changes
+        console.log('results');
         if (catFilter.length != 0) {
             setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id as string)));
         } else { // if no filters applied
             setFilteredResults(results) //set filteredResults to all results
         }
-    }, [catFilter, results]);
+    }, [catFilter]);
 
     const router = useRouter();
     const { q } = router.query as { q: string };
@@ -65,10 +66,14 @@ export default function Search(props: SearchProps) {
                 <Grid2 xs={6}>
                     <Stack direction={'column'} spacing={2}>
                         <SearchBar initialQuery={q} />
-                        <i>{ filteredResults.length } results ({ timeElapsed } seconds)</i>
-                        {filteredResults.map((result, i) => (
-                            <SearchResult result={result} key={i} />
-                        ))}
+                        <i>
+                            {filteredResults.length} results ({timeElapsed} seconds)
+                        </i>
+                        {
+                            filteredResults.map((result, i) => (
+                                <SearchResult result={result} key={i} />
+                            ))
+                        }
                     </Stack>
                 </Grid2>
             </Grid2>
@@ -93,13 +98,15 @@ function Filters(props: { categories: Category[], setFilter: Function, currFilte
             <h3>Filters</h3>
             <Stack direction={'column'} spacing={2}>
                 <FormGroup>
-                    {categories.map((category, i) => (
-                        <FormControlLabel
-                            key={i}
-                            control={<Checkbox onChange={(e) => handleFilter(e, category)} />} // handle when this changes
-                            label={JSON.parse(JSON.stringify(category.name as string))} // pull names from category
-                        />
-                    ))}
+                    {
+                        categories.map((category, i) => (
+                            <FormControlLabel
+                                key={i}
+                                control={<Checkbox onChange={(e) => handleFilter(e, category)} />} // handle when this changes
+                                label={JSON.parse(JSON.stringify(category.name as string))} // pull names from category
+                            />
+                        ))
+                    }
                 </FormGroup>
             </Stack>
         </Box>
@@ -110,7 +117,9 @@ function SearchResult(props: { result: Page }) {
     const { result } = props;
     return (
         <Box>
-            <h1><a href={`/page/${result.title}`}>{result.title}</a></h1>
+            <h1>
+                <a href={`/page/${result.title}`}>{result.title}</a>
+            </h1>
             {
                 result.description
                     ? <p>{result.description}</p>
