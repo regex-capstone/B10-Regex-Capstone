@@ -49,6 +49,10 @@ const ApiEndpoint: API = {
         return page;
     },
 
+    async deletePage(p_id: string) {
+        return (await IsaacAPI.deletePage(await this.getPageById(p_id))) as Page;
+    },
+
     // revisions
     async getRecentPageRevisionById(p_id: string) {
         return (await IsaacAPI.getRevisions({ rev_page_id: p_id, single: true })) as Revision;

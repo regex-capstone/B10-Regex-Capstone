@@ -1,5 +1,5 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack } from "@mui/material";
+import { Button, Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
@@ -9,6 +9,8 @@ import Header from "@/client/Header";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -51,7 +53,7 @@ export default function Page(props: PageProps) {
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
     const query = "";
-    
+
     return (
         <>
             <Head>
@@ -75,11 +77,7 @@ export default function Page(props: PageProps) {
                     <Grid2 xs={3} sx={{
                         marginTop: 13,
                     }}>
-                        <h3>Admin Tools</h3>
-                        <Stack direction={'column'} spacing={2}>
-                            <a href={`/page/${pageData.title}/edit`}>Edit Page</a>
-                            <a href={`/page/${pageData.title}/analytics`}>Page Analytics</a>
-                        </Stack>
+                        <AdminTools page={pageData} />
                     </Grid2>
                 </Grid2>
             </Container>
@@ -105,12 +103,34 @@ function ContentTable(props: { page: PageData }) {
 
 function Content(props: { page: PageData, revision: Revision }) {
     const { revision } = props;
-
     return (
         <Container>
             <ReactMarkdown>
                 {revision.content}
             </ReactMarkdown>
         </Container>
+    )
+}
+
+function AdminTools(props: { page: PageData }) {
+    const { page } = props;
+    const router = useRouter();
+
+    const onDelete = async (title: string) => {
+        await fetch(`/api/page/${title}`, {
+            method: 'DELETE'
+        })
+        router.push('/')
+    }   
+
+    return (
+        <>
+            <h3>Admin Tools</h3>
+            <Stack direction={'column'} spacing={2}>
+                <Link href={`/page/${page.title}/edit`}>Edit</Link>
+                <Link href={`/page/${page.title}/analytics`}>Analytics</Link>
+                <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
+            </Stack>
+        </>
     )
 }

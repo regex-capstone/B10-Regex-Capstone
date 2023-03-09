@@ -9,40 +9,27 @@ import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
 import Logo from "@/client/Logo";
 
-
-const api: API = ApiEndpoint
-
-interface SearchProps {
-    results: Page[],
-    categories: Category[]
-}
-
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
-    const results: Page[] = await api.search(context.query.q as string)
+    const api: API = ApiEndpoint
+    const results: Page[] = await api.search((context.query.q ?? "") as string)
     const categories: Category[] = (await api.getAllCategories())
-
     return {
         props: {
-            results: results.map(result => ({
-                ...result,
-                id: JSON.parse(JSON.stringify(result.id)),
-                page_category_id: JSON.parse(JSON.stringify(result.page_category_id)),
-                created_at: JSON.parse(JSON.stringify(result.created_at)),
-                headings: result.headings as Array<any>
-            })),
-            categories: categories.map(category => ({
-                ...category,
-                id: JSON.parse(JSON.stringify(category.id)),
-                created_at: JSON.parse(JSON.stringify(category.created_at))
-            })),
+            results: JSON.stringify(results),
+            categories: JSON.stringify(categories)
         }
     }
 }
 
+interface SearchProps {
+    results: string,
+    categories: string
+}
+
 /* (root)/search */
 export default function Search(props: SearchProps) {
-    const results: Page[] = props.results;
-    const categories: Category[] = props.categories;
+    const results: Page[] = JSON.parse(props.results) as Page[];
+    const categories: Category[] = JSON.parse(props.categories) as Category[];
     let [catFilter, setFilter] = useState([] as string[]);
     let [filteredResults, setFilteredResults] = useState(results);
 

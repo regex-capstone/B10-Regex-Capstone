@@ -78,6 +78,14 @@ async function addNewRevision(r: Revision): Promise<Revision> {
     return resultRev;
 }
 
+async function deletePage(p: Page) {
+    const response = await database.deletePage(p.id as string)
+
+    if (isErrorResponse(response)) throw response.error;
+
+    return p
+}
+
 async function addNewCategory(c: Category): Promise<Category> {
     const response = (await database.addCategory(c));
 
@@ -103,7 +111,6 @@ async function updatePage(id: string, options: UpdatePageOptions): Promise<Page>
 }
 
 async function addAnalytic(m: Metric) {
-    console.log(m);
     const response = (await database.addAnalytic(m));
 
     if (isErrorResponse(response)) throw response.error;
@@ -117,7 +124,6 @@ async function addAnalytic(m: Metric) {
 
 async function getAnalytics(options: MetricsOptions) {
     let query = cleanQuery(options);
-    console.log(query);
 
     const response = (await database.getAnalytics(query));
 
@@ -203,6 +209,7 @@ export default {
     getCategories: getCategories,
     addNewPage: addNewPage,
     addNewRevision: addNewRevision,
+    deletePage: deletePage,
     addNewCategory: addNewCategory,
     addAnalytic: addAnalytic,
     addNewUser: addNewUser,

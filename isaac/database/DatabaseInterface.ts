@@ -9,8 +9,10 @@ export default interface Database {
     addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
     addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
-
+    
     updatePage(id: string, query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+    
+    deletePage(id: string): Promise<SuccessDBResponse | ErrorDBResponse>,
 
     getAnalytics(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
     addAnalytic(metric: Metric): Promise<SuccessDBResponse | ErrorDBResponse>
