@@ -107,10 +107,10 @@ function AdminTools() {
           }}>
             <Button variant="contained">Analytics</Button>
           </Link>
-          <Link href="/#" passHref style={{
+          <Link href="/category/create" passHref style={{
             textDecoration: 'none',
           }}>
-            <Button variant="contained">Categories</Button>
+            <Button variant="contained">Create Category</Button>
           </Link>
         </Stack>
       </CardContent>
