@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Metric from '../../analytics/model';
-import { Page, Revision, Category, User, SearchIndex } from '../../models';
+import { Page, Revision, Category, User } from '../../models';
 
 const MongooseModels = {
     Page: new mongoose.Schema({
@@ -114,6 +114,5 @@ export default {
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', MongooseModels.Revision),
     Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category),
     Metric: mongoose.models.Metric || mongoose.model<Metric>('Metric', MongooseModels.Metric),
-    User: mongoose.models.User || mongoose.model<User>('User', MongooseModels.User),
-    SearchIndex: mongoose.models.SearchIndex || mongoose.model<SearchIndex>('SearchIndex', MongooseModels.SearchIndex)
+    User: mongoose.models.User || mongoose.model<User>('User', MongooseModels.User)
 }

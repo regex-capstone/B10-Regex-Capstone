@@ -23,41 +23,5 @@ export const NaturalProvider: Search = {
         sortedPageResults = indexed.map(i => i.page);
 
         return sortedPageResults;
-    },
-
-    // used in v2.0
-    // search2_0: (
-    //     query: string, 
-    //     pages: Page[],
-    //     serialized: string
-    // )=> {
-    //     const instance = new TfIdf(JSON.parse(serialized));
-    //     const index: any[] = [];
-
-    //     instance.tfidfs(query, function(i, measure) {
-    //         if(measure > 0) {     
-    //             index.push({page: pages[i], rating: measure});
-    //         }
-    //     });
-
-    //     return index
-    //         .sort((a, b) => b.rating - a.rating)
-    //         .map(i => i.page);
-    // },
-
-    // addDocument: (old_serial: string, doc: string) => {
-    //     const instance = new TfIdf(JSON.parse(old_serial));
-    //     instance.addDocument(doc);
-    //     return JSON.stringify(instance);
-    // },
-
-    // refresh: (pages: Page[]) => {
-    //     const instance = new TfIdf();
-        
-    //     for (let i = 0; i < pages.length; i++) {
-    //         instance.addDocument(pages[i].title);
-    //     }
-
-    //     return JSON.stringify(instance);
-    // }
+    }
 }
