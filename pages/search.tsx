@@ -1,15 +1,18 @@
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import API from "@/isaac/api/APIInterface";
 import { useRouter } from 'next/router';
 import { Box, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
-import { GetServerSidePropsResult, GetServerSidePropsContext } from "next";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
 import Logo from "@/client/Logo";
-import { SearchResponse } from "@/isaac/search/SearchInterface";
 import { roundOff } from "@/client/utils/TimeUtils";
+import useSearch from "@/hooks/useSearch";
+import LoadingSpinner from "@/client/LoadingSpinner";
+import useCategory from "@/hooks/useCategory";
+import API from '@/isaac/api/APIInterface';
+import ApiEndpoint from '@/isaac/api/APIEndpoint';
+import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { SearchResponse } from '@/isaac/search/SearchInterface';
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
     const api: API = ApiEndpoint;
@@ -33,23 +36,38 @@ interface SearchProps {
 
 /* (root)/search */
 export default function Search(props: SearchProps) {
-    const results: Page[] = JSON.parse(props.results) as Page[];
-    const categories: Category[] = JSON.parse(props.categories) as Category[];
-    const timeElapsed: number = props.time_elapsed;
-    let [catFilter, setFilter] = useState([] as string[]);
-    let [filteredResults, setFilteredResults] = useState(results);
-
-    useEffect(() => {   // need to run every time filter changes
-        console.log('results');
-        if (catFilter.length != 0) {
-            setFilteredResults(results.filter(result => catFilter.includes(result.page_category_id as string)));
-        } else { // if no filters applied
-            setFilteredResults(results) //set filteredResults to all results
-        }
-    }, [catFilter]);
+    const [results, setResults] = useState<Page[]>(JSON.parse(props.results) as Page[]);
+    const [categories, setCategories] = useState<Category[]>(JSON.parse(props.categories) as Category[]);
+    const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
+    const [catFilter, setFilter] = useState([] as string[]);
+    const [filteredResults, setFilteredResults] = useState<Page[]>([]);
 
     const router = useRouter();
     const { q } = router.query as { q: string };
+    const { data: searchData } = useSearch(q);
+    const { data: categoryData } = useCategory();
+    const [cachedQuery, setCachedQuery] = useState(q);
+
+    useEffect(() => {
+        if (searchData && q !== cachedQuery) {
+            const freshPages = searchData.pages;
+            const timeElapsed = roundOff(searchData.time_elapsed / 1000);
+
+            setCachedQuery(q);
+            setResults(freshPages);
+            setTimeElapsed(timeElapsed);
+        }
+    }, [searchData, cachedQuery, q])
+
+    useEffect(() => {
+        if (categoryData) {
+            setCategories(categoryData);
+        }
+    }, [categoryData])
+
+    useEffect(() => { 
+        setFilteredResults(filterResults(results, catFilter));
+    }, [results, catFilter]);
     return (
         <Container>
             <Grid2 container spacing={2}>
@@ -66,14 +84,7 @@ export default function Search(props: SearchProps) {
                 <Grid2 xs={6}>
                     <Stack direction={'column'} spacing={2}>
                         <SearchBar initialQuery={q} />
-                        <i>
-                            {filteredResults.length} results ({timeElapsed} seconds)
-                        </i>
-                        {
-                            filteredResults.map((result, i) => (
-                                <SearchResult result={result} key={i} />
-                            ))
-                        }
+                        <SearchResultList results={filteredResults} timeElapsed={timeElapsed} />
                     </Stack>
                 </Grid2>
             </Grid2>
@@ -81,11 +92,39 @@ export default function Search(props: SearchProps) {
     )
 }
 
+function SearchResultList(props: { results: Page[], timeElapsed: number }) {
+    const { results, timeElapsed } = props;
+
+    if (timeElapsed == -1) {
+        return (
+            <LoadingSpinner />
+        )
+    }
+
+    return (
+        <>
+            <div>
+                {
+                    !timeElapsed
+                        ? <></>
+                        : <i>
+                            {results.length} results ({timeElapsed} seconds)
+                        </i>
+                }
+            </div>
+            {
+                results.map((result, i) => (
+                    <SearchResult result={result} key={i} />
+                ))
+            }
+        </>
+    );
+}
+
 function Filters(props: { categories: Category[], setFilter: Function, currFilter: string[] }) {
     const { categories, setFilter, currFilter } = props;
-    // onChange function to update filter list
     const handleFilter = (event: React.ChangeEvent<HTMLInputElement>, category: Category) => {
-        if (event.target.checked) {   // need to toggle based on if box is checked or unchecked
+        if (event.target.checked) {
             let newFilter = currFilter.concat(category.id as string);
             setFilter(newFilter);
         } else {
@@ -128,4 +167,10 @@ function SearchResult(props: { result: Page }) {
             <p>{result.page_category_id}</p>
         </Box>
     )
+}
+
+function filterResults(results: Page[], catFilter: string[]) {
+    return (results && catFilter.length != 0)
+        ? results.filter(result => catFilter.includes(result.page_category_id as string))
+        : results;
 }

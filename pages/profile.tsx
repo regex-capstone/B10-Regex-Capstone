@@ -6,7 +6,7 @@ import { UserMajor, UserStanding } from "@/isaac/models/User";
 import { useEffect, useState } from "react";
 import User from '../isaac/models/User';
 import { useRouter } from "next/router";
-import useUser from "@/client/hooks/useUser";
+import useUser from "@/hooks/useUser";
 import LoadingSpinner from "@/client/LoadingSpinner";
 
 export default function ProfilePage() {

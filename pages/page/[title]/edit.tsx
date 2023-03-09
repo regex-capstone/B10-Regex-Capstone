@@ -7,7 +7,7 @@ import React from 'react';
 import LoadingSpinner from "@/client/LoadingSpinner";
 import RichTextEditor from "@/client/RichTextEditor";
 import { useRouter } from "next/router";
-import usePage from "@/client/hooks/usePage";
+import usePage from "@/hooks/usePage";
 
 /* (root)/ */
 export default function Edit() {

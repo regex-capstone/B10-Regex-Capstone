@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { escapeHTML } from '../utils/EscapeUtils';
+import { escapeHTML } from '../client/utils/EscapeUtils';
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then(res => res.json())
