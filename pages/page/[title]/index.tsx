@@ -1,5 +1,5 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack } from "@mui/material";
+import { Button, Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
@@ -10,6 +10,7 @@ import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -113,12 +114,22 @@ function Content(props: { page: PageData, revision: Revision }) {
 
 function AdminTools(props: { page: PageData }) {
     const { page } = props;
+    const router = useRouter();
+
+    const onDelete = async (title: string) => {
+        await fetch(`/api/page/${title}`, {
+            method: 'DELETE'
+        })
+        router.push('/')
+    }   
+
     return (
         <>
             <h3>Admin Tools</h3>
             <Stack direction={'column'} spacing={2}>
                 <Link href={`/page/${page.title}/edit`}>Edit</Link>
                 <Link href={`/page/${page.title}/analytics`}>Analytics</Link>
+                <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
             </Stack>
         </>
     )
