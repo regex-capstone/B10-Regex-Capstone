@@ -107,9 +107,13 @@ const ApiEndpoint: API = {
     },
 
     async search(q: string) {
+        const s = performance.now();
         const pages: Page[] = await IsaacAPI.getPages({}) as Page[];
-        const searchResults = await IsaacAPI.search(q, pages);
-        return searchResults;
+        const searchPages = await IsaacAPI.search(q, pages);
+        return {
+            pages: searchPages,
+            time_elapsed: performance.now() - s
+        };
     },
 
     async getUserByEmail(email: string) {

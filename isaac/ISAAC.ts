@@ -5,8 +5,10 @@ import MongooseDatabase from './database/mongoose/MongooseDatabase';
 import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 import { NaturalProvider } from './search/natural/NaturalProvider';
+import Search from './search/SearchInterface';
 
 const database: Database = MongooseDatabase;
+const natural: Search = NaturalProvider;
 
 async function getPages(options: PageOptions): Promise<Page | Page[]> {
     let query = cleanQuery(options);
@@ -63,6 +65,8 @@ async function addNewPage(p: Page): Promise<Page> {
 
     if (!resultPage) throw new Error('Error adding new page.');
 
+    natural.setCorpusOutdated(true);
+
     return resultPage;
 }
 
@@ -82,6 +86,8 @@ async function deletePage(p: Page) {
     const response = await database.deletePage(p.id as string)
 
     if (isErrorResponse(response)) throw response.error;
+
+    natural.setCorpusOutdated(true);
 
     return p
 }
@@ -183,8 +189,10 @@ async function updateUser(u: User) {
 }
 
 async function search(q: string, pages: Page[]) {
-    const results = NaturalProvider.search(q, pages);
-    return results;
+    if (natural.isCorpusOutdated()) {
+        natural.updateCorpus(pages);
+    }
+    return natural.search(q, pages);
 }
 
 export default {

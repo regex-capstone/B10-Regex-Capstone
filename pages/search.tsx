@@ -8,28 +8,34 @@ import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
 import Logo from "@/client/Logo";
+import { SearchResponse } from "@/isaac/search/SearchInterface";
+import { roundOff } from "@/client/utils/TimeUtils";
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
-    const api: API = ApiEndpoint
-    const results: Page[] = await api.search((context.query.q ?? "") as string)
-    const categories: Category[] = (await api.getAllCategories())
+    const api: API = ApiEndpoint;
+    const searchResponse: SearchResponse = await api.search((context.query.q ?? "") as string);
+    const categories: Category[] = (await api.getAllCategories());
+    const secondsElapsed: number = roundOff(searchResponse.time_elapsed / 1000);
     return {
         props: {
-            results: JSON.stringify(results),
-            categories: JSON.stringify(categories)
+            results: JSON.stringify(searchResponse.pages),
+            categories: JSON.stringify(categories),
+            time_elapsed: secondsElapsed
         }
     }
 }
 
 interface SearchProps {
     results: string,
-    categories: string
+    categories: string,
+    time_elapsed: number
 }
 
 /* (root)/search */
 export default function Search(props: SearchProps) {
     const results: Page[] = JSON.parse(props.results) as Page[];
     const categories: Category[] = JSON.parse(props.categories) as Category[];
+    const timeElapsed: number = props.time_elapsed;
     let [catFilter, setFilter] = useState([] as string[]);
     let [filteredResults, setFilteredResults] = useState(results);
 
@@ -59,7 +65,7 @@ export default function Search(props: SearchProps) {
                 <Grid2 xs={6}>
                     <Stack direction={'column'} spacing={2}>
                         <SearchBar initialQuery={q} />
-                        <i>{filteredResults.length} results</i>
+                        <i>{ filteredResults.length } results ({ timeElapsed } seconds)</i>
                         {filteredResults.map((result, i) => (
                             <SearchResult result={result} key={i} />
                         ))}

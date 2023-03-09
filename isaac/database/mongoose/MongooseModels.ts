@@ -9,7 +9,7 @@ const MongooseModels = {
             required: [true, 'Title is missing...'] 
         },
         headings: {
-            type: Array, 
+             type: Array, 
             "default": []
         },
         page_category_id: { 
@@ -94,17 +94,6 @@ const MongooseModels = {
         major: {
             type: String,
             required: [true, 'Major is missing...']
-        }
-    }, { strict: true }),
-
-    SearchIndex: new mongoose.Schema({
-        data: {
-            type: String,
-            required: [true, 'Data is missing...']
-        },
-        created_at: {
-            type: Date,
-            required: [true, 'Creation date is missing...']
         }
     }, { strict: true })
 }
