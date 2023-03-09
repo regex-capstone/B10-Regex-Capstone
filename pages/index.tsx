@@ -9,6 +9,7 @@ import Logo from "@/client/Logo";
 import Link from "next/link";
 import Header from "@/client/Header";
 import Theme from "@/client/Theme";
+import Head from "next/head";
 
 const api: API = ApiEndpoint
 
@@ -34,6 +35,9 @@ export default function Index(props: IndexProps) {
 
     return (
         <>
+            <Head>
+                <title>ISAAC</title>
+            </Head>
             <Header />
             <AdminTools />
             <Container sx={{

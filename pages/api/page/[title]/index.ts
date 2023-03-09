@@ -13,10 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const title = query.title as string
 
     try {
+        const page: Page = await api.getPageByTitle(title);
         switch (method) {
         case 'GET':
-            const page: Page = await api.getPageByTitle(title);
-
             if (!page) {
                 throw new Error('Page not found.');
             }
@@ -33,8 +32,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 revision: rev
             });
             break;
+        case 'DELETE':
+            if (!page) {
+                throw new Error('Page not found.');
+            }
+            const deleted = await api.deletePage(page.id as string);
+            res.status(200).json({
+                success: true,
+                page: deleted
+            });
+            break;
         default:
-            res.setHeader('Allow', ['GET'])
+            res.setHeader('Allow', ['GET, DELETE'])
             res.status(405).send(`Method ${method} Not Allowed`)
         }
     } catch (e) {
