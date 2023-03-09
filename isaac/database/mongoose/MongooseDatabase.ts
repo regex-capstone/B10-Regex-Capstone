@@ -1,4 +1,4 @@
-import type { Page, Revision, Category } from '../../models/index';
+import type { Page, Revision, Category, SearchIndex } from '../../models/index';
 import Metric from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
@@ -50,10 +50,10 @@ const MongooseDatabase: Database = {
 
             const revs = data.map((raw) => {
                 const rev: Revision = {
-                    id: raw._doc._id,
-                    content: raw._doc.content,
-                    created_at: raw._doc.created_at,
-                    rev_page_id: raw._doc.rev_page_id
+                    id: raw._id,
+                    content: raw.content,
+                    created_at: raw.created_at,
+                    rev_page_id: raw.rev_page_id
                 };
 
                 return rev;
@@ -278,6 +278,49 @@ const MongooseDatabase: Database = {
             }
         }
     },
+
+    // getLatestSearchIndices: async () => {
+    //     try {
+    //         const data = await MongooseModels.SearchIndex
+    //             .find()
+    //             .sort({ created_at: -1 });
+
+    //         const indices = data.map((raw) => {
+    //             const index: SearchIndex = {
+    //                 data: raw.data,
+    //                 created_at: raw.created_at
+    //             };
+
+    //             return index;
+    //         });
+    
+    //         return {
+    //             success: true,
+    //             payload: indices
+    //         };
+    //     } catch (err: any) {
+    //         return {
+    //             error: err
+    //         }
+    //     }
+    // },
+
+    // addSearchIndex: async (s: SearchIndex) => {
+    //     try {
+    //         const index = new MongooseModels.SearchIndex(s);
+    //         await index.validate();
+    //         await index.save();
+            
+    //         return {
+    //             success: true,
+    //             payload: index
+    //         }
+    //     } catch (err: any) {
+    //         return {
+    //             error: err
+    //         }
+    //     }
+    // },
 };
 
 export default MongooseDatabase;

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import Metric from '../../analytics/model';
-import { Page, Revision, Category, User } from '../../models';
+import { Page, Revision, Category, User, SearchIndex } from '../../models';
 
 const MongooseModels = {
     Page: new mongoose.Schema({
@@ -95,6 +95,17 @@ const MongooseModels = {
             type: String,
             required: [true, 'Major is missing...']
         }
+    }, { strict: true }),
+
+    SearchIndex: new mongoose.Schema({
+        data: {
+            type: String,
+            required: [true, 'Data is missing...']
+        },
+        created_at: {
+            type: Date,
+            required: [true, 'Creation date is missing...']
+        }
     }, { strict: true })
 }
 
@@ -103,5 +114,6 @@ export default {
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', MongooseModels.Revision),
     Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category),
     Metric: mongoose.models.Metric || mongoose.model<Metric>('Metric', MongooseModels.Metric),
-    User: mongoose.models.User || mongoose.model<User>('User', MongooseModels.User)
+    User: mongoose.models.User || mongoose.model<User>('User', MongooseModels.User),
+    SearchIndex: mongoose.models.SearchIndex || mongoose.model<SearchIndex>('SearchIndex', MongooseModels.SearchIndex)
 }

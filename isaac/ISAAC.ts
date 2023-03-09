@@ -1,9 +1,10 @@
-import type { Page, Revision, Category, User } from './models/index';
+import type { Page, Revision, Category, User, SearchIndex } from './models/index';
 import type Metric from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
 import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
+import { NaturalProvider } from './search/natural/NaturalProvider';
 
 const database: Database = MongooseDatabase;
 
@@ -175,6 +176,24 @@ async function updateUser(u: User) {
     return resultUserId;
 }
 
+async function search(q: string, pages: Page[]) {
+    const results = NaturalProvider.search(q, pages);
+    return results;
+}
+
+// async function refreshSearch(created_at: number) {
+//     const pages = await getPages({}) as Page[];
+
+//     for (let i = 0; i < pages.length; i++) {
+//         NaturalProvider.addDocument(pages[i].title);
+//     }
+
+//     const response = await database.addSearchIndex({
+//         data: NaturalProvider.serialize(),
+//         created_at: created_at
+//     });
+// }
+
 export default {
     getPages: getPages,
     getRevisions: getRevisions,
@@ -188,7 +207,9 @@ export default {
     addAnalytic: addAnalytic,
     addNewUser: addNewUser,
     updatePage: updatePage,
-    updateUser: updateUser
+    updateUser: updateUser,
+    search: search
+    // refreshSearch: refreshSearch @TODO: take out
 };
 
 function cleanQuery(options: BaseOptions) {

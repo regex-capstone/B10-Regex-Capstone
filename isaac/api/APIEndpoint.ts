@@ -4,7 +4,8 @@ import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
 import { RevisionRequest } from '../models/Revision';
 import { PageRequest } from '../models/Page';
-import { search } from '../search/NaturalProvider';
+import { NaturalProvider } from '../search/natural/NaturalProvider';
+import { TfIdf } from 'natural';
 
 const ApiEndpoint: API = {
     // pages
@@ -101,10 +102,10 @@ const ApiEndpoint: API = {
         })) as Category;
     },
 
-    // search
     async search(q: string) {
-        //TODO: more efficient IsaacAPI endpoint to not have to get all pages?
-        return search(q, (await IsaacAPI.getPages({})) as Page[]);
+        const pages: Page[] = await IsaacAPI.getPages({}) as Page[];
+        const searchResults = await IsaacAPI.search(q, pages);
+        return searchResults;
     },
 
     async getUserByEmail(email: string) {
