@@ -14,7 +14,7 @@ const chartDimensions = {
     margin: { top: 30, right: 30, bottom: 30, left: 30 }
 };
 
-const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const currDate = new Date();
 
 // TODO: get static paths/props from the page being edited
 // getStaticPaths(something)
@@ -32,35 +32,42 @@ export default function Analytics(props: DashboardProps) {
         {
             major: "Informatics",
             standing: "Freshman",
-            created_at: "Wed"
+            created_at: "2023-03-09"
         },
         {
             major: "Informatics",
             standing: "Freshman",
-            created_at: "Fri"
+            created_at: "2023-03-09"
         },
         {
             major: "Computer Science",
             standing: "Freshman",
-            created_at: "Sun"
+            created_at: "2023-03-03"
         },
         {
             major: "Informatics",
             standing: "Sophomore",
-            created_at: "Sat"
+            created_at: "2023-02-23"
         },
         {
             major: "Informatics",
             standing: "Junior",
-            created_at: "Mon"
+            created_at: "2023-02-11"
+        },
+        {
+            major: "Informatics",
+            standing: "Junior",
+            created_at: "2022-02-11"
         }
     ];
 
     let standingData = [] as any[];
     let majorData = [] as any[];
+    let timeData = [] as any[];
 
-    // need to convert standing and major data into numericals
+    // need to process data into a format recharts likes
     // there is probably a more elegant way to do this...
+    // TODO: move this to its own function
     for(let i = 0; i < testData.length; i++) {
         let curr = testData[i];
 
@@ -80,7 +87,23 @@ export default function Analytics(props: DashboardProps) {
         } else {  // else we need to add a new element
             majorData.push({name: curr.major, value: 1});
         }
+
+        // now process time data
+        // this one is easy, just add an entry for the day
+        let currDay = new Date(Date.parse(curr.created_at));
+        let threshold = new Date(new Date().setDate(currDate.getDate() - 30));  // set date threshold, TODO: make this changable
+
+        if(currDay >= threshold) {
+            const l = timeData.findIndex(e => e.date === currDay.toDateString());
+
+            if(l > -1) { // if exists, add to value
+                timeData[l].value += 1;
+            } else {  // else we need to add a new element
+                timeData.push({date: currDay.toDateString(), value: 1});
+            }
+        }
     };
+    console.log(timeData);
 
     // TODO: get real data from api: need static paths/props
     // const pageData: PageData = JSON.parse(props.pageData) as PageData;
@@ -104,17 +127,20 @@ export default function Analytics(props: DashboardProps) {
                             <LineChart
                                 width={500}
                                 height={300}
-                                data={testData}
+                                data={timeData}
                             >
-                                <XAxis></XAxis>
-                                <YAxis></YAxis>
+                                <XAxis dataKey="date"></XAxis>
+                                <YAxis dataKey="value"></YAxis>
+                                <Line type="monotone" dataKey="value" stroke="#8884d8" />
                             </LineChart>
-                            <PieChart width={300} height={300}>
-                                <Pie data={standingData} nameKey="name" dataKey="value" outerRadius={100} fill="red"></Pie>
-                            </PieChart>
-                            <PieChart width={300} height={300}>
-                                <Pie data={majorData} nameKey="name" dataKey="value" outerRadius={100} fill="green"></Pie>
-                            </PieChart>
+                            <Stack direction={'row'} spacing={2}>
+                                <PieChart width={300} height={300}>
+                                    <Pie data={standingData} nameKey="name" dataKey="value" outerRadius={100} fill="red"></Pie>
+                                </PieChart>
+                                <PieChart width={300} height={300}>
+                                    <Pie data={majorData} nameKey="name" dataKey="value" outerRadius={100} fill="green"></Pie>
+                                </PieChart>
+                            </Stack>
                             <Link href={`/edit`}>
                                 <Button sx={{
                                     justifyContent: "left",
