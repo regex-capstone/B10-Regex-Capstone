@@ -13,22 +13,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
-            case 'GET':
-                const category: Category = await api.getCategoryById(c_id);
+        case 'GET':
+            const category: Category = await api.getCategoryById(c_id);
 
-                if (!category) {
-                    throw new Error('Category not found.');
-                }
+            if (!category) {
+                throw new Error('Category not found.');
+            }
 
-                res.status(200).json({
-                    success: true,
-                    category: category
-                });
+            res.status(200).json({
+                success: true,
+                category: category
+            });
                 
-                break;
-            default:
-                res.setHeader('Allow', ['GET'])
-                res.status(405).send(`Method ${method} Not Allowed`)
+            break;
+        default:
+            res.setHeader('Allow', ['GET'])
+            res.status(405).send(`Method ${method} Not Allowed`)
         }
     } catch (e) {
         res.status(500).json({

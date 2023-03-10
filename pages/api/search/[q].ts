@@ -7,29 +7,20 @@ import ApiEndpoint from '@/isaac/api/APIEndpoint';
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const method = req.method
-    const body = req.body;
+    const method = req.method;
+    const query: string = req.query.q as string;
 
     try {
         switch (method) {
-        case 'POST':
-            if (!body) throw new Error('POST request has no body.');
-            if (!body.content) throw new Error('POST request has no content.');
-            if (!body.rev_page_id) throw new Error('POST request has no rev_page_id.');
+        case 'GET':
+            if (!query) throw new Error('No query provided.');
 
-            const revId = await api.addRevision({
-                content: body.content,
-                rev_page_id: body.rev_page_id
-            });
+            const results = await api.search(query);
 
-            res.status(200).json({
-                success: true,
-                revision_id: revId
-            });
-                
+            res.status(200).json(results);
             break;
         default:
-            res.setHeader('Allow', ['POST'])
+            res.setHeader('Allow', ['GET'])
             res.status(405).end(`Method ${method} Not Allowed`)
         }
     } catch (e) {

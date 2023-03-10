@@ -1,123 +1,136 @@
 import SearchBar from "@/client/SearchBar";
-import { Container, Stack, Link } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2'
-import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
-import API from "@/isaac/api/APIInterface";
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import AnalyticsAPI from '@/isaac/analytics/AnalyticsEndpoints';
-import type Analytics from '../../../isaac/analytics/AnalyticsInterface';
-import Metric from '@/isaac/analytics/model'
+import { Button, Container, Stack } from "@mui/material";
+import Grid2 from '@mui/material/Unstable_Grid2';
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
-import { Box } from "@mui/material";
+import Header from "@/client/Header";
+import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import API from "@/isaac/api/APIInterface";
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-  const api: API = ApiEndpoint
-  const pages: PageData[] = await api.getAllPages()
-  return {
-    paths: pages.map(page => {
-      return {
-        params: {
-          title: page.title
-        }
-      }
-    }),
-    fallback: false
-  }
+    const api: API = ApiEndpoint
+    const pages: PageData[] = await api.getAllPages()
+    return {
+        paths: pages.map(page => {
+            return {
+                params: {
+                    title: page.title
+                }
+            }
+        }),
+        fallback: 'blocking'
+    }
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-  const api: API = ApiEndpoint
-  const { title } = context.params ?? {};
-  const pageData: PageData = await api.getPageByTitle(title as string)
-  const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
+    const api: API = ApiEndpoint
+    const { title } = context.params ?? {};
+    const pageData: PageData = await api.getPageByTitle(title as string)
+    const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
-  // take analytic
-  const analyticsApi: Analytics = AnalyticsAPI;
-  const newAnalytic = analyticsApi.addAnalytic({met_page_id: pageData.id, major: "Informatics", standing: "Freshman"} as Metric);
-  //TODO: add session data, check if session exists before sending analytic
-
-  return {
-    props: {
-      // NextJS requires props to be serializable
-      pageData: JSON.stringify(pageData ?? {}),
-      revisionData: JSON.stringify(revisionData ?? {})
-    },
-    revalidate: 10,
-  }
+    return {
+        props: {
+            // NextJS requires props to be serializable
+            pageData: JSON.stringify(pageData ?? {}),
+            revisionData: JSON.stringify(revisionData ?? {})
+        },
+        revalidate: 10
+    }
 }
 
 interface PageProps {
-  pageData: string,
-  revisionData: string
+    pageData: string,
+    revisionData: string
 }
 
 /* (root)/page/[id] */
 export default function Page(props: PageProps) {
-  const pageData: PageData = JSON.parse(props.pageData) as PageData;
-  const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
+    const pageData: PageData = JSON.parse(props.pageData);
+    const revisionData: Revision = JSON.parse(props.revisionData);
+    const query = "";
 
-  const query = "";
-  return (
-    <>
-      <Head>
-        <title>{`${pageData.title} | ISAAC`}</title>
-      </Head>
-      <Container>
-        <Grid2 container spacing={2}>
-          <Grid2 xs={3}>
-            <Stack direction={'column'} spacing={2}>
-              <Logo />
-              <ContentTable page={pageData} />
-            </Stack>
-          </Grid2>
-          <Grid2 xs={6}>
-            <Stack direction={'column'} spacing={2}>
-              <SearchBar initialQuery={query} />
-              <Content page={pageData} revision={revisionData} />
-            </Stack>
-          </Grid2>
-          <Grid2 xs={3} sx={{
-            marginTop: 13,
-          }}>
-            <h3>Admin Tools</h3>
-            <Stack direction={'column'} spacing={2}>
-              <a href={`/page/${pageData.title}/edit`}>Edit Page</a>
-              <a href={`/page/${pageData.title}/analytics`}>Page Analytics</a>
-            </Stack>
-          </Grid2>
-        </Grid2>
-      </Container>
-    </>
-  )
+    return (
+        <>
+            <Head>
+                <title>{`${pageData.title} | ISAAC`}</title>
+            </Head>
+            <Header />
+            <Container>
+                <Grid2 container spacing={2}>
+                    <Grid2 xs={3}>
+                        <Stack direction={'column'} spacing={2}>
+                            <Logo />
+                            <ContentTable page={pageData} />
+                        </Stack>
+                    </Grid2>
+                    <Grid2 xs={6}>
+                        <Stack direction={'column'} spacing={2}>
+                            <SearchBar initialQuery={query} />
+                            <Content page={pageData} revision={revisionData} />
+                        </Stack>
+                    </Grid2>
+                    <Grid2 xs={3} sx={{
+                        marginTop: 13,
+                    }}>
+                        <AdminTools page={pageData} />
+                    </Grid2>
+                </Grid2>
+            </Container>
+        </>
+    )
 }
 
 function ContentTable(props: { page: PageData }) {
-  const { page } = props;
-  const headings = page.headings ?? [];
+    const { page } = props;
+    const headings = page.headings ?? [];
 
-  return (
-    <Stack direction={'column'}>
-      <h3>Content</h3>
-      <Stack direction={'column'} spacing={2}>
-        {headings.map((heading, i) => (
-          <a href={`#${heading}`} key={i}>{heading.text}</a>
-        ))}
-      </Stack>
-    </Stack>
-  )
+    return (
+        <Stack direction={'column'}>
+            <h3>Content</h3>
+            <Stack direction={'column'} spacing={2}>
+                {headings.map((heading, i) => (
+                    <a href={`#${heading}`} key={i}>{heading.text}</a>
+                ))}
+            </Stack>
+        </Stack>
+    )
 }
 
 function Content(props: { page: PageData, revision: Revision }) {
-  const { page, revision } = props;
+    const { revision } = props;
+    return (
+        <Container>
+            <ReactMarkdown>
+                {revision.content}
+            </ReactMarkdown>
+        </Container>
+    )
+}
 
-  return (
-    <Container>
-      <ReactMarkdown>
-        {revision.content}
-      </ReactMarkdown>
-    </Container>
-  )
+function AdminTools(props: { page: PageData }) {
+    const { page } = props;
+    const router = useRouter();
+
+    const onDelete = async (title: string) => {
+        await fetch(`/api/page/${title}`, {
+            method: 'DELETE'
+        })
+        router.push('/')
+    }   
+
+    return (
+        <>
+            <h3>Admin Tools</h3>
+            <Stack direction={'column'} spacing={2}>
+                <Link href={`/page/${page.title}/edit`}>Edit</Link>
+                <Link href={`/page/${page.title}/analytics`}>Analytics</Link>
+                <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
+            </Stack>
+        </>
+    )
 }

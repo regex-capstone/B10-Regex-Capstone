@@ -1,3 +1,6 @@
+/* eslint-disable */
+// reason: file is placeholder
+
 import { Button, Container, Stack } from "@mui/material";
 import { useEffect } from 'react';
 import Grid2 from '@mui/material/Unstable_Grid2'

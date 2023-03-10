@@ -1,8 +1,9 @@
- import type { Page, Revision, Category } from '../../models/index';
- import Metric from '../../analytics/model'
+import type { Page, Revision, Category } from '../../models/index';
+import Metric from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
+import { UpdatePageOptions } from '@/isaac/ISAACOptions';
 
 try {
     await connectToDatabase();
@@ -11,7 +12,7 @@ try {
 }
 
 const MongooseDatabase: Database = {
-    getLatestPages: async (query: Object) => {
+    getLatestPages: async (query: any) => {
         try {
             const data = await MongooseModels.Page
                 .find(query)
@@ -23,7 +24,8 @@ const MongooseDatabase: Database = {
                     title: raw.title,
                     page_category_id: raw.page_category_id,
                     created_at: raw.created_at,
-                    headings: raw.headings ?? []
+                    headings: raw.headings ?? [],
+                    description: raw.description ?? ''
                 };
 
                 return page;
@@ -40,7 +42,7 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestRevisions: async (query: Object) => {
+    getLatestRevisions: async (query: any) => {
         try {
             const data = await MongooseModels.Revision
                 .find(query)
@@ -68,7 +70,7 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestCategories: async (query: Object) => {
+    getLatestCategories: async (query: any) => {
         try {
             const data = await MongooseModels.Category
                 .find(query)
@@ -76,9 +78,9 @@ const MongooseDatabase: Database = {
 
             const cats = data.map((raw) => {
                 const cat: Category = {
-                    id: raw._id,
-                    name: raw.name,
-                    created_at: raw.created_at
+                    id: raw._doc._id,
+                    name: raw._doc.name,
+                    created_at: raw._doc.created_at
                 };
 
                 return cat;
@@ -103,7 +105,7 @@ const MongooseDatabase: Database = {
 
             return {
                 success: true,
-                payload: page._id.toString()
+                payload: page
             }
         } catch (err: any) {
             return {
@@ -120,7 +122,7 @@ const MongooseDatabase: Database = {
     
             return {
                 success: true,
-                payload: rev._id.toString()
+                payload: rev
             }
         } catch (err: any) {
             return {
@@ -137,7 +139,41 @@ const MongooseDatabase: Database = {
     
             return {
                 success: true,
-                payload: cat._id.toString()
+                payload: cat
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    updatePage: async (id: string, query: UpdatePageOptions) => {
+        try {
+            let page = await MongooseModels.Page.findById(id);
+            for (const key in query) {
+                // @ts-ignore
+                page[key] = query[key] as any;
+            }
+            await page.save();
+            
+
+            return {
+                success: true,
+                payload: page
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    deletePage: async (id: string) => {
+        try {
+            await MongooseModels.Page.deleteOne({ _id: id })
+            return {
+                success: true
             }
         } catch (err: any) {
             return {
@@ -150,8 +186,6 @@ const MongooseDatabase: Database = {
         try {
             const data = await MongooseModels.Metric
                 .find(query);
-
-            console.log(data);
 
             const metrics = data.map((raw) => {
                 const metric: Metric = {
@@ -184,6 +218,70 @@ const MongooseDatabase: Database = {
             return {
                 success: true,
                 payload: met._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    getLatestUsers: async (query: any) => {
+        try {
+            const data = await MongooseModels.User
+                .find(query)
+                .sort({ created_at: -1 });
+
+            const users = data.map((raw) => {
+                const user = {
+                    id: raw._id,
+                    role: raw.role,
+                    standing: raw.standing,
+                    major: raw.major,
+                    name: raw.name,
+                    email: raw.email
+                };
+                return user;
+            });
+    
+            return {
+                success: true,
+                payload: users
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    addNewUser: async (user: any) => {
+        try {
+            const newUser = new MongooseModels.User(user);
+            await newUser.validate();
+            await newUser.save();
+    
+            return {
+                success: true,
+                payload: newUser
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    updateUser: async (user: any) => {
+        try {
+            const userId = user.id;
+            delete user.id;
+            
+            const updatedUser = await MongooseModels.User.findByIdAndUpdate(userId, user, { new: true });
+            
+            return {
+                success: true,
+                payload: updatedUser
             }
         } catch (err: any) {
             return {

@@ -1,75 +1,121 @@
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
 import { Category } from "@/isaac/models";
-import { Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPropsResult } from "next";
 import SearchBar from "@/client/SearchBar";
 import Logo from "@/client/Logo";
 import Link from "next/link";
-import HeaderBar from "@/client/HeaderBar";
+import Header from "@/client/Header";
+import Theme from "@/client/Theme";
+import Head from "next/head";
 
 const api: API = ApiEndpoint
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
-  const categories: Category[] = await api.getAllCategories()
+    const categories: Category[] = await api.getAllCategories()
 
-  return {
-    props: {
-      // NextJS requires props to be serializable
-      categories: JSON.stringify(categories)
-    },
-    revalidate: 60,
-  }
+    return {
+        props: {
+            // NextJS requires props to be serializable
+            categories: JSON.stringify(categories)
+        },
+        revalidate: 60,
+    }
 }
 
 interface IndexProps {
-  categories: string
+    categories: string
 }
 
 /* (root)/ */
 export default function Index(props: IndexProps) {
-  const categories: Category[] = JSON.parse(props.categories) as Category[]
+    const categories: Category[] = JSON.parse(props.categories) as Category[]
 
-  return (
-    <Container>
-      <Stack spacing={2} direction="column">
-        <Stack
-          spacing={2}
-          direction="column"
-          sx={{
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Logo />
-          <p>Informatics Student Advising Automation Complex</p>
-          <Box sx={{
-            flexGrow: 1,
-          }}>
-            <SearchBar />
-          </Box>
-        </Stack>
-        <Divider />
-        <Container>
-          <Grid2 container>
-            {categories.map((category, i) => (
-              <Grid2 key={i} xs={6}>
-                <Link href={`/category/${category.name}`}>{category.name}</Link>
-              </Grid2>
-            ))}
-          </Grid2>
-        </Container>
-        <Divider />
-        <Container>
-          <h2>Admin Tools</h2>
-          <Stack direction={'column'}>
-            <Link href={'/page/create'}>Create Page</Link>
-            <Link href={'/'}>View Site Analytics</Link>
-            <Link href={'/'}>Edit categories</Link>
-          </Stack>
-        </Container>
-      </Stack>
-    </Container>
-  )
+    return (
+        <>
+            <Head>
+                <title>ISAAC</title>
+            </Head>
+            <Header />
+            <AdminTools />
+            <Container sx={{
+                paddingTop: '2rem',
+            }}>
+                <Stack spacing={2} direction="column">
+                    <Stack
+                        spacing={2}
+                        direction="column"
+                        sx={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Logo />
+                        <Box sx={{
+                            textAlign: 'center',
+                            letterSpacing: '0.15rem',
+                        }}>
+                            <p>Informatics Student Advising Automation Complex</p>
+                        </Box>
+                        <Box sx={{
+                            minWidth: "60%",
+                            width: "40rem",
+                            maxWidth: "100%"
+                        }}>
+                            <SearchBar />
+                        </Box>
+                    </Stack>
+                    <Divider />
+                    <Container>
+                        <Grid2 container>
+                            {categories.map((category, i) => (
+                                <Grid2 key={i} xs={6}>
+                                    <Link href={`/category/${category.name}`} style={{
+                                        textDecoration: 'none',
+                                        color: Theme.COLOR.TEXT_DARK,
+                                    }}>
+                                        <b>{category.name}</b>
+                                    </Link>
+                                </Grid2>
+                            ))}
+                        </Grid2>
+                    </Container>
+                </Stack>
+            </Container>
+        </>
+    )
+}
+
+function AdminTools() {
+    return (
+        <Card sx={{
+            position: 'fixed',
+            bottom: '10%',
+            right: -5,
+            paddingRight: 5,
+        }}>
+            <CardContent>
+                <Stack spacing={2} direction="column">
+                    <b>Admin Tools</b>
+                    <Link href="/page/create" passHref style={{
+                        textDecoration: 'none',
+                    }}>
+                        <Button variant="contained">Create Page</Button>
+                    </Link>
+                    <Link href="/#" passHref style={{
+                        textDecoration: 'none',
+                    }}>
+                        <Button variant="contained">Analytics</Button>
+                    </Link>
+                    <Link href="/category/create" passHref style={{
+                        textDecoration: 'none',
+                    }}>
+                        <Button variant="contained">Create Category</Button>
+                    </Link>
+                </Stack>
+            </CardContent>
+        </Card>
+    )
 }
