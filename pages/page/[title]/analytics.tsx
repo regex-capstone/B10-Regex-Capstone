@@ -9,7 +9,7 @@ import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import { Box } from "@mui/material";
 import Link from "next/link";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts'
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Tooltip } from 'recharts'
 import { xml } from "d3";
 
 const chartDimensions = {
@@ -70,7 +70,7 @@ export default function Analytics(props: DashboardProps) {
     // populate time data with 0 using threshold
     const fillTimeArray = () => {
         let filled = [] as any[];
-        for(let i = 0; i < 30; i++) {
+        for(let i = 30; i >= 0; i--) {
             let curr = new Date(new Date().setDate(threshold.getDate() - i));
             filled.push({date: curr.toDateString(), value: 0});
         }
@@ -107,7 +107,6 @@ export default function Analytics(props: DashboardProps) {
         // now process time data
         // this one is easy, just add an entry for the day
         let currDay = new Date(Date.parse(curr.created_at));
-        console.log(currDay);
 
         if(currDay >= threshold) {
             timeData.find(x => x.date === currDay.toDateString()).value += 1;
@@ -133,22 +132,40 @@ export default function Analytics(props: DashboardProps) {
                     }}>
                         <Stack direction={'column'} spacing={2}>
                             <h1>Heading 1</h1>
-                            <LineChart
-                                width={500}
-                                height={300}
-                                data={timeData}
-                            >
-                                <XAxis dataKey="date"></XAxis>
-                                <YAxis dataKey="value"></YAxis>
-                                <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                            </LineChart>
+                            <h2>Total views: {testData.length}</h2>
+                            <h2>Page views last 30 days</h2>
+                            <ResponsiveContainer width={1000} height={300}>
+                                <LineChart
+                                    width={1000}
+                                    height={300}
+                                    data={timeData}
+                                    margin={{right: 100, top: 30, bottom: 100}}
+                                >
+                                    <XAxis dataKey="date" angle={45} textAnchor="start"></XAxis>
+                                    <YAxis></YAxis>
+                                    <Tooltip />
+                                    <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                                </LineChart>
+                            </ResponsiveContainer>
                             <Stack direction={'row'} spacing={2}>
-                                <PieChart width={300} height={300}>
-                                    <Pie data={standingData} nameKey="name" dataKey="value" outerRadius={100} fill="red"></Pie>
-                                </PieChart>
-                                <PieChart width={300} height={300}>
-                                    <Pie data={majorData} nameKey="name" dataKey="value" outerRadius={100} fill="green"></Pie>
-                                </PieChart>
+                                <Stack direction={'column'}>
+                                    <h2>Breakdown by Class Standing</h2>
+                                    <ResponsiveContainer width={300} height={300}>
+                                        <PieChart width={300} height={300}>
+                                            <Pie data={standingData} nameKey="name" dataKey="value" outerRadius={100} fill="red"></Pie>
+                                            <Tooltip />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </Stack>
+                                <Stack direction={'column'}>
+                                    <h2>Breakdown by Major</h2>
+                                    <ResponsiveContainer width={300} height={300}>
+                                        <PieChart width={300} height={300}>
+                                            <Pie data={majorData} nameKey="name" dataKey="value" outerRadius={100} fill="green"></Pie>
+                                            <Tooltip />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </Stack>
                             </Stack>
                             <Link href={`/edit`}>
                                 <Button sx={{
