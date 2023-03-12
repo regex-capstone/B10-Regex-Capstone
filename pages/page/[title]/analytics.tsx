@@ -10,6 +10,7 @@ import Head from "next/head";
 import { Box } from "@mui/material";
 import Link from "next/link";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Cell } from 'recharts'
+import { xml } from "d3";
 
 const chartDimensions = {
     width: 600,
@@ -55,7 +56,7 @@ export default function Analytics(props: DashboardProps) {
         {
             major: "Informatics",
             standing: "Junior",
-            created_at: "2023-02-11"
+            created_at: "2023-02-12"
         },
         {
             major: "Informatics",
@@ -64,9 +65,21 @@ export default function Analytics(props: DashboardProps) {
         }
     ];
 
+    const threshold = new Date(new Date().setDate(currDate.getDate() - 30));  // set date threshold, TODO: make this changable
+
+    // populate time data with 0 using threshold
+    const fillTimeArray = () => {
+        let filled = [] as any[];
+        for(let i = 0; i < 30; i++) {
+            let curr = new Date(new Date().setDate(threshold.getDate() - i));
+            filled.push({date: curr.toDateString(), value: 0});
+        }
+        return filled;
+    };
+
     let standingData = [] as any[];
     let majorData = [] as any[];
-    let timeData = [] as any[];
+    let timeData = fillTimeArray();
 
     // need to process data into a format recharts likes
     // there is probably a more elegant way to do this...
@@ -94,19 +107,12 @@ export default function Analytics(props: DashboardProps) {
         // now process time data
         // this one is easy, just add an entry for the day
         let currDay = new Date(Date.parse(curr.created_at));
-        let threshold = new Date(new Date().setDate(currDate.getDate() - 30));  // set date threshold, TODO: make this changable
+        console.log(currDay);
 
         if(currDay >= threshold) {
-            const l = timeData.findIndex(e => e.date === currDay.toDateString());
-
-            if(l > -1) { // if exists, add to value
-                timeData[l].value += 1;
-            } else {  // else we need to add a new element
-                timeData.push({date: currDay.toDateString(), value: 1});
-            }
+            timeData.find(x => x.date === currDay.toDateString()).value += 1;
         }
     };
-    console.log(timeData);
 
     // TODO: get real data from api: need static paths/props
     // const pageData: PageData = JSON.parse(props.pageData) as PageData;
