@@ -65,7 +65,7 @@ export default function Search(props: SearchProps) {
         }
     }, [categoryData])
 
-    useEffect(() => { 
+    useEffect(() => {
         setFilteredResults(filterResults(results, catFilter));
     }, [results, catFilter]);
     return (
@@ -84,7 +84,11 @@ export default function Search(props: SearchProps) {
                 <Grid2 xs={6}>
                     <Stack direction={'column'} spacing={2}>
                         <SearchBar initialQuery={q} />
-                        <SearchResultList results={filteredResults} timeElapsed={timeElapsed} />
+                        <SearchResultList
+                            results={filteredResults}
+                            timeElapsed={timeElapsed}
+                            categories={categories}
+                        />
                     </Stack>
                 </Grid2>
             </Grid2>
@@ -92,12 +96,32 @@ export default function Search(props: SearchProps) {
     )
 }
 
-function SearchResultList(props: { results: Page[], timeElapsed: number }) {
-    const { results, timeElapsed } = props;
+function SearchResultList(props: {
+    results: Page[],
+    timeElapsed: number,
+    categories: Category[]
+}) {
+    const { results, timeElapsed, categories } = props;
 
     if (timeElapsed == -1) {
         return (
             <LoadingSpinner />
+        )
+    }
+
+    const createSearchResult = (result: Page, i: number) => {
+        const category = categories.find(c => c.id === result.page_category_id);
+
+        if (!category) {
+            return <>Error</>
+        }
+
+        return (
+            <SearchResult
+                result={result}
+                category={category}
+                key={i}
+            />
         )
     }
 
@@ -113,9 +137,7 @@ function SearchResultList(props: { results: Page[], timeElapsed: number }) {
                 }
             </div>
             {
-                results.map((result, i) => (
-                    <SearchResult result={result} key={i} />
-                ))
+                results.map((result, i) => createSearchResult(result, i))
             }
         </>
     );
@@ -152,19 +174,29 @@ function Filters(props: { categories: Category[], setFilter: Function, currFilte
     )
 }
 
-function SearchResult(props: { result: Page }) {
-    const { result } = props;
+function SearchResult(props: { result: Page, category: Category }) {
+    const { result, category } = props;
     return (
-        <Box>
+        <Box
+            sx={{
+                lineHeight: 1.25
+            }}
+        >
             <h1>
                 <a href={`/page/${result.title}`}>{result.title}</a>
             </h1>
-            {
-                result.description
-                    ? <p>{result.description}</p>
-                    : <p>No description</p>
-            }
-            <p>{result.page_category_id}</p>
+            <p>
+                <em>
+                    {`${category.name}`}
+                </em>
+            </p>
+            <p>
+                {
+                    result.description
+                        ? <p>{result.description}</p>
+                        : <p>No description</p>
+                }
+            </p>
         </Box>
     )
 }
