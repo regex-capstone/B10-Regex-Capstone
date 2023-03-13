@@ -150,13 +150,7 @@ const MongooseDatabase: Database = {
 
     updatePage: async (id: string, query: UpdatePageOptions) => {
         try {
-            let page = await MongooseModels.Page.findById(id);
-            for (const key in query) {
-                // @ts-ignore
-                page[key] = query[key] as any;
-            }
-            await page.save();
-            
+            const page = await MongooseModels.Page.findByIdAndUpdate({ _id: id }, query, { new: true });
 
             return {
                 success: true,
