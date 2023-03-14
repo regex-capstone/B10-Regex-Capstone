@@ -1,24 +1,14 @@
 /* eslint-disable */
 // reason: file is placeholder
 
-import { Button, Container, Stack } from "@mui/material";
-import { useEffect } from 'react';
+import { Button, Container, Stack, Select, MenuItem } from "@mui/material";
+import { useEffect, useState } from 'react';
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
-import { Box } from "@mui/material";
 import Link from "next/link";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Tooltip } from 'recharts'
-import { xml } from "d3";
-
-const chartDimensions = {
-    width: 600,
-    height: 300,
-    margin: { top: 30, right: 30, bottom: 30, left: 30 }
-};
-
-const currDate = new Date();
 
 // TODO: get static paths/props from the page being edited
 // getStaticPaths(something)
@@ -31,6 +21,18 @@ interface DashboardProps {
 
 /* (root)/ */
 export default function Analytics(props: DashboardProps) {
+
+    const currDate = new Date();
+    const [dateRange, setDateRange] = useState(30 as number);
+    const [timeData, setTimeData] = useState([] as any[]);
+    let standingData = [] as any[];
+    let majorData = [] as any[];
+
+    // TODO: get real data from api: need static paths/props
+    // const pageData: PageData = JSON.parse(props.pageData) as PageData;
+    // const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
+
+    const query = "";
 
     const testData = [
         {
@@ -65,21 +67,35 @@ export default function Analytics(props: DashboardProps) {
         }
     ];
 
-    const threshold = new Date(new Date().setDate(currDate.getDate() - 30));  // set date threshold, TODO: make this changable
-
     // populate time data with 0 using threshold
-    const fillTimeArray = () => {
+    const fillTimeArray = (threshold: Date) => {
         let filled = [] as any[];
-        for(let i = 30; i >= 0; i--) {
+        for(let i = dateRange; i >= 0; i--) {
             let curr = new Date(new Date().setDate(threshold.getDate() - i));
             filled.push({date: curr.toDateString(), value: 0});
         }
         return filled;
     };
 
-    let standingData = [] as any[];
-    let majorData = [] as any[];
-    let timeData = fillTimeArray();
+    // effect hook to listen for changes in time threshold
+    useEffect(() => {
+        let threshold = new Date(new Date().setDate(currDate.getDate() - dateRange));  // set date threshold, TODO: make this changable
+        let newTimeData = fillTimeArray(threshold)
+
+        for(let i = 0; i < testData.length; i++) {
+            let curr = testData[i];
+
+            // now process time data
+            // this one is easy, just add an entry for the day
+            let currDay = new Date(Date.parse(curr.created_at));
+
+            if(currDay >= threshold) {
+                newTimeData.find(x => x.date === currDay.toDateString()).value += 1;
+            }
+        }
+
+        setTimeData(newTimeData);
+    }, [dateRange])
 
     // need to process data into a format recharts likes
     // there is probably a more elegant way to do this...
@@ -103,21 +119,8 @@ export default function Analytics(props: DashboardProps) {
         } else {  // else we need to add a new element
             majorData.push({name: curr.major, value: 1});
         }
-
-        // now process time data
-        // this one is easy, just add an entry for the day
-        let currDay = new Date(Date.parse(curr.created_at));
-
-        if(currDay >= threshold) {
-            timeData.find(x => x.date === currDay.toDateString()).value += 1;
-        }
     };
 
-    // TODO: get real data from api: need static paths/props
-    // const pageData: PageData = JSON.parse(props.pageData) as PageData;
-    // const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
-
-    const query = "";
     return (
         <>
             <Head>
@@ -130,42 +133,57 @@ export default function Analytics(props: DashboardProps) {
                     <Grid2 xs={10} sx={{
                         marginTop: 13
                     }}>
+                        <h1>PAGE NAME HERE</h1>
                         <Stack direction={'column'} spacing={2}>
-                            <h1>Heading 1</h1>
-                            <h2>Total views: {testData.length}</h2>
-                            <h2>Page views last 30 days</h2>
-                            <ResponsiveContainer width={1000} height={300}>
-                                <LineChart
-                                    width={1000}
-                                    height={300}
-                                    data={timeData}
-                                    margin={{right: 100, top: 30, bottom: 100}}
+                            <div id="time-chart">
+                                <h2>Total views: {testData.length}</h2>
+                                <h2>Page views last {dateRange} days</h2>
+                                <Select
+                                    value={dateRange}
+                                    label="Date Range"
+                                    onChange={(e) => setDateRange(e.target.value as any)}
                                 >
-                                    <XAxis dataKey="date" angle={45} textAnchor="start"></XAxis>
-                                    <YAxis></YAxis>
-                                    <Tooltip />
-                                    <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                                </LineChart>
-                            </ResponsiveContainer>
+                                    <MenuItem value={30}>30</MenuItem>
+                                    <MenuItem value={60}>60</MenuItem>
+                                    <MenuItem value={120}>120</MenuItem>
+                                </Select>
+                                <ResponsiveContainer width={1000} height={300}>
+                                    <LineChart
+                                        width={1000}
+                                        height={300}
+                                        data={timeData}
+                                        margin={{right: 100, top: 30, bottom: 100}}
+                                    >
+                                        <XAxis dataKey="date" angle={45} textAnchor="start"></XAxis>
+                                        <YAxis></YAxis>
+                                        <Tooltip />
+                                        <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            </div>
                             <Stack direction={'row'} spacing={2}>
-                                <Stack direction={'column'}>
-                                    <h2>Breakdown by Class Standing</h2>
-                                    <ResponsiveContainer width={300} height={300}>
-                                        <PieChart width={300} height={300}>
-                                            <Pie data={standingData} nameKey="name" dataKey="value" outerRadius={100} fill="red"></Pie>
-                                            <Tooltip />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                </Stack>
-                                <Stack direction={'column'}>
-                                    <h2>Breakdown by Major</h2>
-                                    <ResponsiveContainer width={300} height={300}>
-                                        <PieChart width={300} height={300}>
-                                            <Pie data={majorData} nameKey="name" dataKey="value" outerRadius={100} fill="green"></Pie>
-                                            <Tooltip />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                </Stack>
+                                <div id="class-standing-chart">
+                                    <Stack direction={'column'}>
+                                        <h2>Breakdown by Class Standing</h2>
+                                        <ResponsiveContainer width={300} height={300}>
+                                            <PieChart width={300} height={300}>
+                                                <Pie data={standingData} nameKey="name" dataKey="value" outerRadius={100} fill="red"></Pie>
+                                                <Tooltip />
+                                            </PieChart>
+                                        </ResponsiveContainer>
+                                    </Stack>
+                                </div>
+                                <div id="major-chart" style={{paddingLeft: 200}}>
+                                    <Stack direction={'column'}>
+                                        <h2>Breakdown by Major</h2>
+                                        <ResponsiveContainer width={300} height={300}>
+                                            <PieChart width={300} height={300}>
+                                                <Pie data={majorData} nameKey="name" dataKey="value" outerRadius={100} fill="green"></Pie>
+                                                <Tooltip />
+                                            </PieChart>
+                                        </ResponsiveContainer>
+                                    </Stack>
+                                </div>
                             </Stack>
                             <Link href={`/edit`}>
                                 <Button sx={{
