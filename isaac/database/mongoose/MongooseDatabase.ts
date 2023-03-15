@@ -196,7 +196,7 @@ const MongooseDatabase: Database = {
                 };
 
                 return metric;
-            });
+            }) ?? [];
     
             return {
                 success: true,

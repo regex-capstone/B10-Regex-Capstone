@@ -9,122 +9,75 @@ import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import Link from "next/link";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Tooltip } from 'recharts'
+import useAnalytic from "@/hooks/useAnalytic";
+import { useRouter } from "next/router";
+import LoadingSpinner from "@/client/LoadingSpinner";
 
-// TODO: get static paths/props from the page being edited
-// getStaticPaths(something)
-// getStaticProps(something)
-
-interface DashboardProps {
-  pageData: string,
-  revisionData: string
+interface Metric {
+    name: string | number;
+    value: number;
 }
 
 /* (root)/ */
-export default function Analytics(props: DashboardProps) {
+export default function Analytics() {
+    const router = useRouter();
+    const { title } = router.query;
 
-    const currDate = new Date();
+    const { data: analyticData, isLoading } = useAnalytic(title as string);
     const [dateRange, setDateRange] = useState(30 as number);
-    const [timeData, setTimeData] = useState([] as any[]);
-    let standingData = [] as any[];
-    let majorData = [] as any[];
-
-    // TODO: get real data from api: need static paths/props
-    // const pageData: PageData = JSON.parse(props.pageData) as PageData;
-    // const revisionData: Revision = JSON.parse(props.revisionData) as Revision;
+    const [standingData, setStandingData] = useState([] as Metric[]);
+    const [majorData, setMajorData] = useState([] as Metric[]);
+    const [timeData, setTimeData] = useState([] as Metric[]);
+    const [rawTimeData, setRawTimeData] = useState([] as Metric[]);
 
     const query = "";
 
-    const testData = [
-        {
-            major: "Informatics",
-            standing: "Freshman",
-            created_at: "2023-03-09"
-        },
-        {
-            major: "Informatics",
-            standing: "Freshman",
-            created_at: "2023-03-09"
-        },
-        {
-            major: "Computer Science",
-            standing: "Freshman",
-            created_at: "2023-03-03"
-        },
-        {
-            major: "Informatics",
-            standing: "Sophomore",
-            created_at: "2023-02-23"
-        },
-        {
-            major: "Informatics",
-            standing: "Junior",
-            created_at: "2023-02-12"
-        },
-        {
-            major: "Informatics",
-            standing: "Junior",
-            created_at: "2022-02-11"
-        }
-    ];
-
-    // populate time data with 0 using threshold
-    const fillTimeArray = (threshold: Date) => {
-        let filled = [] as any[];
-        for(let i = dateRange; i >= 0; i--) {
-            let curr = new Date(new Date().setDate(threshold.getDate() - i));
-            filled.push({date: curr.toDateString(), value: 0});
-        }
-        return filled;
-    };
-
-    // effect hook to listen for changes in time threshold
     useEffect(() => {
-        let threshold = new Date(new Date().setDate(currDate.getDate() - dateRange));  // set date threshold, TODO: make this changable
-        let newTimeData = fillTimeArray(threshold)
+        if (analyticData) {
+            const metrics = analyticData.metrics;
+            const tempStandingData: Metric[] = [];
+            const tempMajorData: Metric[] = [];
+            const tempTimeData: Metric[] = [];
 
-        for(let i = 0; i < testData.length; i++) {
-            let curr = testData[i];
+            for (let i = 0; i < metrics.length; i++) {
+                const focusMetric = metrics[i];
 
-            // now process time data
-            // this one is easy, just add an entry for the day
-            let currDay = new Date(Date.parse(curr.created_at));
+                processMetric(tempStandingData, focusMetric.standing);
+                processMetric(tempMajorData, focusMetric.major);
+                processMetric(tempTimeData, focusMetric.created_at);
+            }
 
-            if(currDay >= threshold) {
-                newTimeData.find(x => x.date === currDay.toDateString()).value += 1;
+            setStandingData(tempStandingData);
+            setMajorData(tempMajorData);
+            setRawTimeData(tempTimeData);
+        }
+    }, [analyticData])
+
+    useEffect(() => {
+        const tempTimeData: Metric[] = [];
+
+        fillTimeArray(tempTimeData, dateRange, new Date());
+
+        if (rawTimeData.length > 0) {
+            for (let i = 0; i < rawTimeData.length; i++) {
+                const focusTime = new Date(rawTimeData[i].name);
+                const focusDateTime = focusTime.toISOString().slice(0, 10);
+
+                processMetric(tempTimeData, focusDateTime);
             }
         }
 
-        setTimeData(newTimeData);
-    }, [dateRange])
+        setTimeData(tempTimeData);
+    }, [dateRange, rawTimeData])
 
-    // need to process data into a format recharts likes
-    // there is probably a more elegant way to do this...
-    // TODO: move this to its own function
-    for(let i = 0; i < testData.length; i++) {
-        let curr = testData[i];
-
-        // get location of element in array if it exists
-        // j is standing, k is major
-        const j = standingData.findIndex(e => e.name === curr.standing);
-        const k = majorData.findIndex(e => e.name === curr.major);
-
-        if(j > -1) { // if exists, add to value
-            standingData[j].value += 1;
-        } else {  // else we need to add a new element
-            standingData.push({name: curr.standing, value: 1});
-        }
-
-        if(k > -1) { // if exists, add to value
-            majorData[k].value += 1;
-        } else {  // else we need to add a new element
-            majorData.push({name: curr.major, value: 1});
-        }
-    };
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
         <>
             <Head>
-                <title>{`Example Analytics | ISAAC`}</title>
+                <title>{`${title} Analytics | ISAAC`}</title>
             </Head>
             <Container>
                 <Grid2 container spacing={2}>
@@ -133,10 +86,10 @@ export default function Analytics(props: DashboardProps) {
                     <Grid2 xs={10} sx={{
                         marginTop: 13
                     }}>
-                        <h1>PAGE NAME HERE</h1>
+                        <h1>{ `Page Analytics | ${title}` }</h1>
                         <Stack direction={'column'} spacing={2}>
                             <div id="time-chart">
-                                <h2>Total views: {testData.length}</h2>
+                                <h2>Total views: {rawTimeData.length}</h2>
                                 <h2>Page views last {dateRange} days</h2>
                                 <Select
                                     value={dateRange}
@@ -154,7 +107,7 @@ export default function Analytics(props: DashboardProps) {
                                         data={timeData}
                                         margin={{right: 100, top: 30, bottom: 100}}
                                     >
-                                        <XAxis dataKey="date" angle={45} textAnchor="start"></XAxis>
+                                        <XAxis dataKey="name" angle={45} textAnchor="start"></XAxis>
                                         <YAxis></YAxis>
                                         <Tooltip />
                                         <Line type="monotone" dataKey="value" stroke="#8884d8" />
@@ -202,3 +155,25 @@ export default function Analytics(props: DashboardProps) {
         </>
     )
 }
+
+const processMetric = (tempArr: Metric[], metricName: any) => {
+    const indexCheck = tempArr.findIndex(e => e.name === metricName);
+
+    if (indexCheck > -1) {
+        tempArr[indexCheck].value += 1;
+    } else {
+        tempArr.push({
+            name: metricName,
+            value: 1
+        });
+    }
+}
+
+const fillTimeArray = (timeArr: Metric[], dateRange: number, today: Date) => {
+    for (let i = dateRange; i > 0; i--) {
+        const newDate = new Date(today);
+        newDate.setDate(newDate.getDate() - i);
+        const dateName = newDate.toISOString().slice(0, 10);
+        timeArr.push({ name: dateName, value: 0 });
+    }
+};
