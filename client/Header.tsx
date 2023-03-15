@@ -4,7 +4,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 export default function Header() {
-    const { data: session } = useSession()
+    const { data: session } = useSession();
 
     return (
         <Box sx={{

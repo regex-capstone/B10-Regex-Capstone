@@ -11,6 +11,8 @@ import API from "@/isaac/api/APIInterface";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { UserRole } from "@/isaac/models/User";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -115,6 +117,11 @@ function Content(props: { page: PageData, revision: Revision }) {
 function AdminTools(props: { page: PageData }) {
     const { page } = props;
     const router = useRouter();
+    const { data: session } = useSession();
+
+    if (session?.user.role !== UserRole.ADMIN) {
+        return <></>;
+    }
 
     const onDelete = async (title: string) => {
         await fetch(`/api/page/${title}`, {

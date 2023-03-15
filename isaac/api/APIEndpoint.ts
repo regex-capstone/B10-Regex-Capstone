@@ -6,6 +6,7 @@ import { RevisionRequest } from '../models/Revision';
 import { PageRequest } from '../models/Page';
 import { NaturalProvider } from '../search/natural/NaturalProvider';
 import { TfIdf } from 'natural';
+import { marked } from 'marked';
 
 const ApiEndpoint: API = {
     // pages
@@ -75,12 +76,12 @@ const ApiEndpoint: API = {
 
         if (!rev) throw new Error('Error adding new revision.');
 
-        // parse for page description
-        // @TODO: make this better
+        const tokens = marked.lexer(rev.content);
+        const description = findParagraphs(tokens, 150);
 
         const page = (await IsaacAPI.updatePage(
-            rev.rev_page_id,
-            { description: rev.content.substring(0, 150) }
+            rev.rev_page_id.toString(),
+            { description: description }
         ));
 
         return rev;
@@ -132,6 +133,26 @@ const ApiEndpoint: API = {
             ...u
         })) as string;
     }
+}
+
+function findParagraphs(token: any, return_length: number) {
+    return findParagraphsHelper(token, 0, return_length);
+}
+
+function findParagraphsHelper(tokens: any, index: number, return_length: number): string {
+    if (tokens.length <= index) return '';
+
+    const token = tokens[index];
+
+    if (token.type == 'paragraph') {
+        let text: string = (token.text as string);
+        
+        return (text.length > return_length) 
+            ? text.substring(0, return_length - 3) + '...'
+            : text.substring(0, return_length);
+    }
+
+    return findParagraphsHelper(token.tokens, index + 1, return_length);
 }
 
 export default ApiEndpoint;
