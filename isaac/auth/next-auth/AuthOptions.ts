@@ -32,7 +32,7 @@ export const AuthOptions: NextAuthOptions = {
                 
                 // persist the user data in the token for the middleware
                 let user: User = await api.getUserByEmail(email);
-
+                
                 if (!user) {
                     // @TODO: handle this better
                     // @TODO: handle admin side

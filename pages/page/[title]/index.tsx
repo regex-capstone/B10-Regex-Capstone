@@ -8,11 +8,15 @@ import Logo from "@/client/Logo";
 import Header from "@/client/Header";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
-import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult, NextApiRequest, NextApiResponse } from 'next';
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { UserRole } from "@/isaac/models/User";
+import User, { UserRole } from "@/isaac/models/User";
+import { getServerSession } from "next-auth";
+import { AuthOptions } from "@/isaac/auth/next-auth/AuthOptions";
+import { useEffect } from "react";
+import usePageEngagement from "@/hooks/usePageEngagement";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -52,9 +56,15 @@ interface PageProps {
 
 /* (root)/page/[id] */
 export default function Page(props: PageProps) {
+    const { data: session } = useSession();
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
+    const { success, metId } = usePageEngagement(session?.user as User, pageData.id as string);
     const query = "";
+
+    useEffect(() => {
+        console.log(`page tracked: ${metId}`);
+    }, [success])
 
     return (
         <>
