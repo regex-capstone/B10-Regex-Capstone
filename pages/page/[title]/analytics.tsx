@@ -138,7 +138,7 @@ export default function Analytics() {
                                     </Stack>
                                 </div>
                             </Stack>
-                            <Link href={`/edit`}>
+                            <Link href={`/page/${title}`}>
                                 <Button sx={{
                                     justifyContent: "left",
                                     width: 126,
