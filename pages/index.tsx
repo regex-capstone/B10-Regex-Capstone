@@ -59,7 +59,7 @@ export default function Index(props: IndexProps) {
                             textAlign: 'center',
                             letterSpacing: '0.15rem',
                         }}>
-                            <p>Informatics Student Advising Automation Complex</p>
+                            <p>Informatics Student Advising Automation Cyclopedia</p>
                         </Box>
                         <Box sx={{
                             minWidth: "60%",
