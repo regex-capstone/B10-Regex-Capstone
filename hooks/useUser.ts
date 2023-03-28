@@ -5,8 +5,6 @@ import { escapeHTML } from '../client/utils/EscapeUtils';
 const fetcher = (...args: any[]) => fetch(...args).then(res => res.json())
 
 export default function useUser(email: string) {
-    const cleanedEmail = escapeHTML(email);
-
     const { data, error, isLoading } = useSWR(`/api/user`, fetcher);
 
     return {

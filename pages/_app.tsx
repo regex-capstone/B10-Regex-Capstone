@@ -35,11 +35,6 @@ function AuthLayout(
         return <LoadingSpinner />
     }
 
-    // user is not logged in
-    if (!session) {
-        return <NotAuthorizedPage requireLogIn={true} /> as JSX.Element;
-    }
-
     const authProps = props.auth;
     const user = session?.user;
 
