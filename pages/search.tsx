@@ -104,7 +104,7 @@ function SearchResult(props: { result: Page }) {
     const { result } = props;
     return (
         <Box>
-            <h1><a href={`/page/${result.title}`}>{result.title}</a></h1>
+            <h1><a href={`/p/${result.title}-${result.id}`}>{result.title}</a></h1>
             {
                 result.description
                     ? <p>{result.description}</p>

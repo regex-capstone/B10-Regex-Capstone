@@ -19,7 +19,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
         paths: pages.map(page => {
             return {
                 params: {
-                    title: page.title
+                    title: `${page.title}-${page.id}`
                 }
             }
         }),
@@ -30,7 +30,8 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
     const api: API = ApiEndpoint
     const { title } = context.params ?? {};
-    const pageData: PageData = await api.getPageByTitle(title as string)
+    const id = title?.toString().split('-').pop() ?? ""
+    const pageData: PageData = await api.getPageById(id)
     const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
     return {
