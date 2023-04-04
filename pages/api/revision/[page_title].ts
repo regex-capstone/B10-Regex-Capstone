@@ -9,12 +9,12 @@ const api: API = ApiEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
     const query = req.query
-    const r_id = query.r_id as string
+    const page_title = query.page_title as string
 
     try {
         switch (method) {
         case 'GET':
-            const rev: Revision = await api.getRevisionById(r_id);
+            const rev: Revision = await api.getRecentPageRevisionByName(page_title);
 
             if (!rev) {
                 throw new Error('Revision not found.');

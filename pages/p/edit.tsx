@@ -20,11 +20,10 @@ export default function Edit() {
         fetch(`/api/page/${page}`)
             .then(response => response.json())
             .then(data => setPageData(data))
-            .catch(() => setPageData(undefined))
-        // TODO: Somehow get the latest revision
-        // fetch(`/api/revision/some-id-here`)
-        //     .then(response => response.json())
-        //     .then(data => setRevisionData(data));
+            .catch(() => setPageData(undefined));
+        fetch(`/api/revision/${page}`)
+            .then(response => response.json())
+            .then(data => setRevisionData(data));
     }, [page]);
 
     return (

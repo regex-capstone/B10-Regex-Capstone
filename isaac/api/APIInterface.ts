@@ -16,6 +16,7 @@ export default interface API {
     getRecentPageRevisionById(p_id: string): Promise<Revision>,
     getAllPageRevisionsById(p_id: string): Promise<Revision[]>,
     getRevisionById(r_id: string): Promise<Revision>,
+    getRecentPageRevisionByName(ref_page_name: string): Promise<Revision>,
     addRevision(r: RevisionRequest): Promise<Revision>,
 
     // categories

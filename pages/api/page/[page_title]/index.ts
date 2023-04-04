@@ -3,33 +3,25 @@ import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { NextApiRequest, NextApiResponse } from 'next'
 import type API from '../../../../isaac/api/APIInterface';
 import Page from '../../../../isaac/models/Page';
-import Revision from '../../../../isaac/models/Revision';
 
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
     const query = req.query
-    const title = query.title as string
+    const page_title = query.page_title as string
 
     try {
-        const page: Page = await api.getPageByTitle(title);
+        const page: Page = await api.getPageByTitle(page_title);
         switch (method) {
         case 'GET':
             if (!page) {
                 throw new Error('Page not found.');
             }
 
-            const rev: Revision = await api.getRecentPageRevisionById(page.id as string);
-
-            if (!rev) {
-                throw new Error('Page has no revision content.');
-            }
-
             res.status(200).json({
                 success: true,
-                page: page,
-                revision: rev
+                page: page
             });
             break;
         case 'DELETE':
