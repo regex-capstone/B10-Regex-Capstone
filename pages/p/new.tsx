@@ -4,31 +4,24 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Logo from "@/client/Logo";
 import Head from "next/head";
 import RichTextEditor from "@/client/RichTextEditor";
-import { GetStaticPropsResult } from "next";
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import API from "@/isaac/api/APIInterface";
 import { Category as CategoryData } from '@/isaac/models';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<CreatePageProps>> {
-    const api: API = ApiEndpoint;
-    const categories: CategoryData[] = await api.getAllCategories();
+/*
+    Path: /p/new
 
-    return {
-        props: {
-            categoryData: JSON.stringify(categories ?? {})
-        }
-    }
-}
-
-interface CreatePageProps {
-    categoryData: string;
-}
-
-export default function CreatePage(props: CreatePageProps) {
+    This page uses CSG. It is not statically generated at build time.
+*/
+export default function CreatePage() {
     const [categoryId, setCategoryId] = useState('');
     const [title, setTitle] = useState('');
-    const categoryData = JSON.parse(props.categoryData) as CategoryData[];
+    const [categories, setCategories] = useState<CategoryData[]>([]);
+
+    useEffect(() => {
+        fetch(`/api/category`)
+            .then(res => res.json())
+            .then(data => setCategories(data))
+    }, []);
 
     return (
         <>
@@ -73,7 +66,7 @@ export default function CreatePage(props: CreatePageProps) {
                                 onChange={(e: SelectChangeEvent) => setCategoryId(e.target.value)}
                             >
                                 {
-                                    categoryData.map(cat => {
+                                    categories.map(cat => {
                                         return (
                                             <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
                                         )
