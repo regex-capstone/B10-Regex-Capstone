@@ -1,129 +1,96 @@
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import API from "@/isaac/api/APIInterface";
-import { Category } from "@/isaac/models";
-import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2'
-import { GetStaticPropsResult } from "next";
-import SearchBar from "@/client/SearchBar";
-import Logo from "@/client/Logo";
-import Link from "next/link";
-import Header from "@/client/Header";
-import Theme from "@/client/Theme";
+import { Box, Container, Stack } from "@mui/material";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
-import { UserRole } from "@/isaac/models/User";
 
-const api: API = ApiEndpoint
-
-export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
-    const categories: Category[] = await api.getAllCategories()
-
-    return {
-        props: {
-            // NextJS requires props to be serializable
-            categories: JSON.stringify(categories)
-        },
-        revalidate: 60,
-    }
-}
-
-interface IndexProps {
-    categories: string
-}
-
-/* (root)/ */
-export default function Index(props: IndexProps) {
-    const categories: Category[] = JSON.parse(props.categories) as Category[]
-
+export default function Index() {
     return (
         <>
             <Head>
                 <title>ISAAC</title>
             </Head>
             <Header />
-            <AdminTools />
-            <Container sx={{
-                paddingTop: '2rem',
+            <Box sx={{
+                width: "100%",
+                position: "absolute",
+                marginTop: "10rem",
             }}>
-                <Stack spacing={2} direction="column">
-                    <Stack
-                        spacing={2}
-                        direction="column"
-                        sx={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Logo />
-                        <Box sx={{
-                            textAlign: 'center',
-                            letterSpacing: '0.15rem',
-                        }}>
-                            <p>Informatics Student Advising Automation Cyclopedia</p>
-                        </Box>
-                        <Box sx={{
-                            minWidth: "60%",
-                            width: "40rem",
-                            maxWidth: "100%"
-                        }}>
-                            <SearchBar />
-                        </Box>
+                <Container sx={{
+                    backgroundColor: "#FCF",
+                }}>
+                    <Stack spacing={2} direction="column">
+                        <div>Thing1</div>
+                        <div>Thing2</div>
+                        <div>Thing3</div>
                     </Stack>
-                    <Divider />
-                    <Container>
-                        <Grid2 container>
-                            {categories.map((category, i) => (
-                                <Grid2 key={i} xs={6}>
-                                    <Link href={`/category/${category.name}`} style={{
-                                        textDecoration: 'none',
-                                        color: Theme.COLOR.TEXT_DARK,
-                                    }}>
-                                        <b>{category.name}</b>
-                                    </Link>
-                                </Grid2>
-                            ))}
-                        </Grid2>
-                    </Container>
-                </Stack>
-            </Container>
+                </Container>
+            </Box>
+            <Box sx={{
+                // outline: "1px solid red",
+                position: "relative",
+                zIndex: -1,
+                height: "50vh",
+                backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                filter: "blur(2px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+            }} />
+
+            <Box sx={{
+                height: "100%",
+                backgroundColor: "#FFF",
+                padding: 2,
+                margin: 0,
+                position: "relative",
+                zIndex: 1,
+            }}>
+                <Container>
+                    <Stack spacing={2} direction="column" sx={{
+                        marginTop: "-2rem"
+                    }}>
+                        <Card>
+                            card
+                        </Card>
+                        <Card>
+                            card
+                        </Card>
+                        <Card>
+                            card
+                        </Card>
+                    </Stack>
+                </Container>
+            </Box>
         </>
     )
 }
 
-function AdminTools() {
-    const { data: session } = useSession();
-
-    if (session?.user.role !== UserRole.ADMIN) {
-        return <></>;
-    }
-
+function Header() {
     return (
-        <Card sx={{
-            position: 'fixed',
-            bottom: '10%',
-            right: -5,
-            paddingRight: 5,
+        <Box sx={{
+            position: "fixed",
+            top: 0,
+            backgroundColor: "#FFF",
+            boxShadow: 5,
+            width: "100%",
+            height: "4rem",
         }}>
-            <CardContent>
-                <Stack spacing={2} direction="column">
-                    <b>Admin Tools</b>
-                    <Link href="/page/create" passHref style={{
-                        textDecoration: 'none',
-                    }}>
-                        <Button variant="contained">Create Page</Button>
-                    </Link>
-                    <Link href="/#" passHref style={{
-                        textDecoration: 'none',
-                    }}>
-                        <Button variant="contained">Analytics</Button>
-                    </Link>
-                    <Link href="/category/create" passHref style={{
-                        textDecoration: 'none',
-                    }}>
-                        <Button variant="contained">Create Category</Button>
-                    </Link>
-                </Stack>
-            </CardContent>
-        </Card>
+            Header
+        </Box>
+    )
+}
+
+function Card(props: any) {
+    return (
+        <Box sx={{
+            // outline: "1px solid red",
+            backgroundColor: "#FFF",
+            boxShadow: 5,
+            padding: 2,
+            borderRadius: 5,
+        }}>
+            {props.children}
+        </Box>
     )
 }
