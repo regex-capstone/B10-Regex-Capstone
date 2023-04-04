@@ -1,7 +1,6 @@
 import { AppProps } from 'next/app'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import { SessionProvider, useSession } from 'next-auth/react';
-import LoadingSpinner from '@/client/LoadingSpinner';
 import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import NotAuthorizedPage from '@/client/NotAuthorizedPage';
@@ -29,16 +28,7 @@ export default function App({
 function AuthLayout(
     props: { auth: ComponentAuthOptions } & { children: React.ReactNode }
 ) {
-    const { data: session, status } = useSession();
-
-    if (status === "loading") {
-        return <LoadingSpinner />
-    }
-
-    // user is not logged in
-    if (!session) {
-        return <NotAuthorizedPage requireLogIn={true} /> as JSX.Element;
-    }
+    const { data: session } = useSession();
 
     const authProps = props.auth;
     const user = session?.user;

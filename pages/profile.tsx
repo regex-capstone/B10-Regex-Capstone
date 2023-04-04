@@ -6,7 +6,7 @@ import { UserMajor, UserStanding } from "@/isaac/models/User";
 import { useEffect, useState } from "react";
 import User from '../isaac/models/User';
 import { useRouter } from "next/router";
-import useUser from "@/client/hooks/useUser";
+import useUser from "@/hooks/useUser";
 import LoadingSpinner from "@/client/LoadingSpinner";
 
 export default function ProfilePage() {
@@ -67,6 +67,7 @@ export default function ProfilePage() {
                 const postRequest = await fetch('/api/user', userOptions);
                 await postRequest.json();
             }
+            
             setSaving(false);
             router.push('/');
         } catch (err) {

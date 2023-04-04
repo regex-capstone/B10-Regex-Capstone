@@ -9,7 +9,7 @@ const MongooseModels = {
             required: [true, 'Title is missing...'] 
         },
         headings: {
-            type: Array, 
+             type: Array, 
             "default": []
         },
         page_category_id: { 

@@ -2,6 +2,7 @@ import type { Page, Revision, Category, User } from '@/isaac/models';
 import { CategoryRequest } from '../models/Category';
 import { PageRequest } from '../models/Page';
 import { RevisionRequest } from '../models/Revision';
+import { SearchResponse } from '../search/SearchInterface';
 
 export default interface API {
     // pages 
@@ -30,5 +31,5 @@ export default interface API {
     addNewUser(u: User): Promise<User>,
     updateUser(u: User): Promise<string>,
 
-    search(q: string): Promise<Page[]>,
+    search(q: string): Promise<SearchResponse>,
 }

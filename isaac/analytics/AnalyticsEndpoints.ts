@@ -11,7 +11,7 @@ const AnalyticsAPI: Analytics = {
     },
 
     async getAnalytics(p_id: string) {
-        return (await IsaacAPI.getAnalytics({ met_page_id: p_id, single: true })) as Metric[];
+        return (await IsaacAPI.getAnalytics({ met_page_id: p_id })) as Metric[];
     },
 
     async getAllAnalytics() {

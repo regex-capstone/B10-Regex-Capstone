@@ -4,9 +4,11 @@ import Theme from "./Theme"
 
 export default function Logo() {
     return (
-        <Link href="/" style={{
-            textDecoration: 'none',
-        }}>
+        <Link
+            href='/'
+            style={{
+                textDecoration: 'none',
+            }}>
             <Box sx={{
                 color: Theme.COLOR.TEXT_DARK,
                 fontSize: '2rem',

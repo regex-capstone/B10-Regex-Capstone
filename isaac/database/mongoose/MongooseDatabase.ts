@@ -50,10 +50,10 @@ const MongooseDatabase: Database = {
 
             const revs = data.map((raw) => {
                 const rev: Revision = {
-                    id: raw._doc._id,
-                    content: raw._doc.content,
-                    created_at: raw._doc.created_at,
-                    rev_page_id: raw._doc.rev_page_id
+                    id: raw._id,
+                    content: raw.content,
+                    created_at: raw.created_at,
+                    rev_page_id: raw.rev_page_id
                 };
 
                 return rev;
@@ -150,13 +150,7 @@ const MongooseDatabase: Database = {
 
     updatePage: async (id: string, query: UpdatePageOptions) => {
         try {
-            let page = await MongooseModels.Page.findById(id);
-            for (const key in query) {
-                // @ts-ignore
-                page[key] = query[key] as any;
-            }
-            await page.save();
-            
+            const page = await MongooseModels.Page.findByIdAndUpdate({ _id: id }, query, { new: true });
 
             return {
                 success: true,
@@ -196,7 +190,7 @@ const MongooseDatabase: Database = {
                 };
 
                 return metric;
-            });
+            }) ?? [];
     
             return {
                 success: true,
@@ -288,7 +282,7 @@ const MongooseDatabase: Database = {
                 error: err
             }
         }
-    },
+    }
 };
 
 export default MongooseDatabase;
