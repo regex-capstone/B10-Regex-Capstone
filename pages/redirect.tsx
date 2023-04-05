@@ -9,17 +9,19 @@ export default function RedirectComponent() {
     const router = useRouter();
 
     useEffect(() => {
-        let isDocumented: boolean = false;
-
         if (session) {
             const user = session.user;
-            isDocumented = (
-                user.standing !== UserStanding.UNKNOWN 
+            const isDocumented = (
+                user.standing !== UserStanding.UNKNOWN
                 && user.major !== UserMajor.UNKNOWN
             ) ? true : false;
-        }
 
-        router.push((isDocumented) ? '/' : '/profile');
+
+            router.push((isDocumented) ? '/' : '/profile');
+            return;
+        }
+        
+        router.push('/');
     });
 
     return (

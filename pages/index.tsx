@@ -10,6 +10,8 @@ import Link from "next/link";
 import Header from "@/client/Header";
 import Theme from "@/client/Theme";
 import Head from "next/head";
+import { useSession } from "next-auth/react";
+import { UserRole } from "@/isaac/models/User";
 
 const api: API = ApiEndpoint
 
@@ -57,7 +59,7 @@ export default function Index(props: IndexProps) {
                             textAlign: 'center',
                             letterSpacing: '0.15rem',
                         }}>
-                            <p>Informatics Student Advising Automation Complex</p>
+                            <p>Informatics Student Advising Automation Cyclopedia</p>
                         </Box>
                         <Box sx={{
                             minWidth: "60%",
@@ -89,6 +91,12 @@ export default function Index(props: IndexProps) {
 }
 
 function AdminTools() {
+    const { data: session } = useSession();
+
+    if (session?.user.role !== UserRole.ADMIN) {
+        return <></>;
+    }
+
     return (
         <Card sx={{
             position: 'fixed',
@@ -109,10 +117,10 @@ function AdminTools() {
                     }}>
                         <Button variant="contained">Analytics</Button>
                     </Link>
-                    <Link href="/#" passHref style={{
+                    <Link href="/category/create" passHref style={{
                         textDecoration: 'none',
                     }}>
-                        <Button variant="contained">Categories</Button>
+                        <Button variant="contained">Create Category</Button>
                     </Link>
                 </Stack>
             </CardContent>

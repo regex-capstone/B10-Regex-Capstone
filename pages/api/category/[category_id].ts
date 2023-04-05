@@ -9,17 +9,17 @@ const api: API = ApiEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
     const query = req.query
-    const c_id = query.c_id as string
+    const category_id = query.category_id as string
 
     try {
+        const category: Category = await api.getCategoryById(category_id);
+
+        if (!category) {
+            throw new Error('Category not found.');
+        }
+
         switch (method) {
         case 'GET':
-            const category: Category = await api.getCategoryById(c_id);
-
-            if (!category) {
-                throw new Error('Category not found.');
-            }
-
             res.status(200).json({
                 success: true,
                 category: category

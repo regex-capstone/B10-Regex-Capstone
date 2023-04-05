@@ -8,9 +8,13 @@ import Logo from "@/client/Logo";
 import Header from "@/client/Header";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
-import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next";
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import User, { UserRole } from "@/isaac/models/User";
+import { useEffect } from "react";
+import usePageEngagement from "@/client/hooks/usePageEngagement";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -51,9 +55,15 @@ interface PageProps {
 
 /* (root)/page/[id] */
 export default function Page(props: PageProps) {
+    const { data: session } = useSession();
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
+    const { success, metId } = usePageEngagement(session?.user as User, pageData.id as string);
     const query = "";
+
+    useEffect(() => {
+        console.log(`page tracked: ${metId}`);
+    }, [success])
 
     return (
         <>
@@ -116,6 +126,11 @@ function Content(props: { page: PageData, revision: Revision }) {
 function AdminTools(props: { page: PageData }) {
     const { page } = props;
     const router = useRouter();
+    const { data: session } = useSession();
+
+    if (session?.user.role !== UserRole.ADMIN) {
+        return <></>;
+    }
 
     const onDelete = async (title: string) => {
         await fetch(`/api/page/${title}`, {
@@ -128,8 +143,8 @@ function AdminTools(props: { page: PageData }) {
         <>
             <h3>Admin Tools</h3>
             <Stack direction={'column'} spacing={2}>
-                <Link href={`/page/${page.title}/edit`}>Edit</Link>
-                <Link href={`/page/${page.title}/analytics`}>Analytics</Link>
+                <Link href={`/p/edit?page=${page.title}`}>Edit</Link>
+                <Link href={`/p/analytics?page=${page.title}`}>Analytics</Link>
                 <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
             </Stack>
         </>

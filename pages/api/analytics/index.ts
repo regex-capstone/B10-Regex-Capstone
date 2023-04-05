@@ -17,8 +17,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             break
         case 'POST':
             if (!body) throw new Error('POST request has no body.');
+            if (!body.major) throw new Error('POST request has no major.');
+            if (!body.standing) throw new Error('POST request has no standing.');
+            if (!body.met_page_id) throw new Error('POST request has no met_page_id.');
 
-            const metId = await analyticsApi.addAnalytic(body);
+            const metId = await analyticsApi.addAnalytic({
+                major: body.major,
+                standing: body.standing,
+                met_page_id: body.met_page_id
+            });
 
             res.status(200).json({
                 met_id: metId

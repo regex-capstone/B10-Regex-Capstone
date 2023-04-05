@@ -67,6 +67,7 @@ export default function ProfilePage() {
                 const postRequest = await fetch('/api/user', userOptions);
                 await postRequest.json();
             }
+            
             setSaving(false);
             router.push('/');
         } catch (err) {

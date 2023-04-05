@@ -13,12 +13,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const page: Page = await api.getPageByTitle(page_title);
+
+        if (!page) {
+            throw new Error('Page not found.');
+        }
+
         switch (method) {
         case 'GET':
-            if (!page) {
-                throw new Error('Page not found.');
-            }
-
             res.status(200).json({
                 success: true,
                 page: page
