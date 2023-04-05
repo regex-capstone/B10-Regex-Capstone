@@ -13,7 +13,7 @@ export interface UpdatePageOptions extends BaseOptions {
 }
 
 export interface RevisionOptions extends BaseOptions {
-    rev_page_id?: string
+    rev_page_id?: string;
 }
 
 export interface CategoryOptions extends BaseOptions {

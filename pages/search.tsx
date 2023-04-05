@@ -6,9 +6,9 @@ import { useState, useEffect } from "react";
 import SearchBar from '@/client/SearchBar';
 import Logo from "@/client/Logo";
 import { roundOff } from "@/client/utils/TimeUtils";
-import useSearch from "@/hooks/useSearch";
+import useSearch from "@/client/hooks/useSearch";
 import LoadingSpinner from "@/client/LoadingSpinner";
-import useCategory from "@/hooks/useCategory";
+import useCategory from "@/client/hooks/useCategory";
 import API from '@/isaac/api/APIInterface';
 import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
@@ -156,9 +156,7 @@ function SearchResult(props: { result: Page }) {
     const { result } = props;
     return (
         <Box>
-            <h1>
-                <a href={`/page/${result.title}`}>{result.title}</a>
-            </h1>
+            <h1><a href={`/p/${result.title}-${result.id}`}>{result.title}</a></h1>
             {
                 result.description
                     ? <p>{result.description}</p>

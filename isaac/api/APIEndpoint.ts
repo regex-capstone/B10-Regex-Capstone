@@ -67,6 +67,11 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.getRevisions({ id: r_id, single: true })) as Revision;
     },
 
+    async getRecentPageRevisionByName(ref_page_name: string) {
+        const page = (await this.getPageByTitle(ref_page_name)) as Page;
+        return (await IsaacAPI.getRevisions({ rev_page_id: page.id, single: true })) as Revision;
+    },
+
     async addRevision(r: RevisionRequest) {
         const rev = (await IsaacAPI.addNewRevision({
             content: r.content as string,

@@ -63,7 +63,6 @@ export default function RichTextEditor(props: RichTextEditorProps) {
         }, 200));
 
         try {
-            // const revalidationToken = process.env.NEXT_PUBLIC_REVALIDATION_TOKEN;
             let request;
             let redirectTitle;
 
