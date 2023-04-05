@@ -8,15 +8,24 @@ import Logo from "@/client/Logo";
 import Header from "@/client/Header";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
+<<<<<<< HEAD:pages/page/[title]/index.tsx
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult, NextApiRequest, NextApiResponse } from 'next';
+=======
+import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
+>>>>>>> 1cfed86bbe5a573655f5d50f63aa0f368b0f64a2:pages/p/[title].tsx
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import User, { UserRole } from "@/isaac/models/User";
+<<<<<<< HEAD:pages/page/[title]/index.tsx
 import { getServerSession } from "next-auth";
 import { AuthOptions } from "@/isaac/auth/next-auth/AuthOptions";
 import { useEffect } from "react";
 import usePageEngagement from "@/hooks/usePageEngagement";
+=======
+import { useEffect } from "react";
+import usePageEngagement from "@/client/hooks/usePageEngagement";
+>>>>>>> 1cfed86bbe5a573655f5d50f63aa0f368b0f64a2:pages/p/[title].tsx
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -25,7 +34,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
         paths: pages.map(page => {
             return {
                 params: {
-                    title: page.title
+                    title: `${page.title}-${page.id}`
                 }
             }
         }),
@@ -36,7 +45,8 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
     const api: API = ApiEndpoint
     const { title } = context.params ?? {};
-    const pageData: PageData = await api.getPageByTitle(title as string)
+    const id = title?.toString().split('-').pop() ?? ""
+    const pageData: PageData = await api.getPageById(id)
     const revisionData: Revision = await api.getRecentPageRevisionById(pageData.id as string)
 
     return {
@@ -144,8 +154,8 @@ function AdminTools(props: { page: PageData }) {
         <>
             <h3>Admin Tools</h3>
             <Stack direction={'column'} spacing={2}>
-                <Link href={`/page/${page.title}/edit`}>Edit</Link>
-                <Link href={`/page/${page.title}/analytics`}>Analytics</Link>
+                <Link href={`/p/edit?page=${page.title}`}>Edit</Link>
+                <Link href={`/p/analytics?page=${page.title}`}>Analytics</Link>
                 <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
             </Stack>
         </>

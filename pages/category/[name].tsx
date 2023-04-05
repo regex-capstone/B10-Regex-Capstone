@@ -78,7 +78,7 @@ function Content(props: { name: string, pages: Page[] }) {
             <Stack direction="column" spacing={1}>
                 {pages.map((page: Page) => (
                     <Box key={page.id}>
-                        <Link href={`/page/${page.title}`}>{page.title}</Link>
+                        <Link href={`/p/${page.title}-${page.id}`}>{page.title}</Link>
                     </Box>
                 ))}
             </Stack>

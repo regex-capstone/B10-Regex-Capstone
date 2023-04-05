@@ -2,27 +2,27 @@
 import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { NextApiRequest, NextApiResponse } from 'next'
 import type API from '../../../isaac/api/APIInterface';
-import { Category } from '@/isaac/models';
+import Revision from '../../../isaac/models/Revision';
 
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
     const query = req.query
-    const c_id = query.c_id as string
+    const page_title = query.page_title as string
 
     try {
         switch (method) {
         case 'GET':
-            const category: Category = await api.getCategoryById(c_id);
+            const rev: Revision = await api.getRecentPageRevisionByName(page_title);
 
-            if (!category) {
-                throw new Error('Category not found.');
+            if (!rev) {
+                throw new Error('Revision not found.');
             }
 
             res.status(200).json({
                 success: true,
-                category: category
+                revision: rev
             });
                 
             break;
