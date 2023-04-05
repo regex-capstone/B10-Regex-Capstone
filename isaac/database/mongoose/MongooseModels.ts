@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Metric from '../../analytics/model';
+import { Metric, SearchMetric } from '../../analytics/model';
 import { Page, Revision, Category, User } from '../../models';
 
 const MongooseModels = {
@@ -74,6 +74,17 @@ const MongooseModels = {
         }
     }, { strict: true }),
 
+    SearchMetric: new mongoose.Schema({
+        query: {
+            type: String,
+            required: [true, 'Search query is missing...']
+        },
+        created_at: {
+            type: Date,
+            required: [true, 'Date missing...']
+        }
+    }, { strict: true }),
+
     User: new mongoose.Schema({
         email: {
             type: String,
@@ -103,5 +114,6 @@ export default {
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', MongooseModels.Revision),
     Category: mongoose.models.Category || mongoose.model<Category>('Category', MongooseModels.Category),
     Metric: mongoose.models.Metric || mongoose.model<Metric>('Metric', MongooseModels.Metric),
+    SearchMetric: mongoose.models.SearchMetric || mongoose.model<SearchMetric>('SearchMetric', MongooseModels.SearchMetric),
     User: mongoose.models.User || mongoose.model<User>('User', MongooseModels.User)
 }

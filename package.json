@@ -27,6 +27,7 @@
     "eslint-config-next": "13.1.6",
     "firebase-admin": "^11.5.0",
     "fs": "0.0.1-security",
+    "immutable": "^4.3.0",
     "marked": "^4.2.12",
     "mongoose": "^7.0.0",
     "natural": "^6.2.0",

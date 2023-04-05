@@ -27,6 +27,10 @@ export interface MetricsOptions extends BaseOptions {
     single?: boolean
 }
 
+export interface SearchOptions extends BaseOptions {
+    query?: string
+}
+
 // only needed for the firebase auth flavor
 export interface UserOptions extends BaseOptions {
     email?: string

@@ -1,8 +1,8 @@
 import type { Page, Revision, Category, User } from './models/index';
-import type Metric from './analytics/model'
+import type { Metric, SearchMetric} from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions } from './ISAACOptions';
+import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions, SearchOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 import { NaturalProvider } from './search/natural/NaturalProvider';
 import Search from './search/SearchInterface';
@@ -195,6 +195,31 @@ async function search(q: string, pages: Page[]) {
     return natural.search(q, pages);
 }
 
+// search analytics
+async function addSearch(s: SearchMetric) {
+    const response = (await database.addSearchMetric(s));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const resultMetricID = response.payload;
+
+    if (!resultMetricID) throw new Error('Error adding new user.');
+
+    return resultMetricID;
+}
+
+async function getSearchHistory(options: SearchOptions) {
+    let query = cleanQuery(options);
+
+    const response = (await database.getSearches(query));
+
+    if (isErrorResponse(response)) throw response.error;
+
+    const payload = response.payload as SearchMetric[];
+
+    return options.single ? payload[0] : payload;
+}
+
 export default {
     getPages: getPages,
     getRevisions: getRevisions,
@@ -210,7 +235,9 @@ export default {
     addNewUser: addNewUser,
     updatePage: updatePage,
     updateUser: updateUser,
-    search: search
+    search: search,
+    addSearch: addSearch,
+    getSearchHistory: getSearchHistory
 };
 
 function cleanQuery(options: BaseOptions) {

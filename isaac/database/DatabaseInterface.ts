@@ -1,5 +1,5 @@
 import type { Page, Revision, Category, User } from '../models/index';
-import type Metric from '../analytics/model'
+import type { Metric, SearchMetric } from '../analytics/model'
 
 export default interface Database {
     getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
@@ -20,7 +20,11 @@ export default interface Database {
     // only needed for the firebase auth flavor
     getLatestUsers(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
     addNewUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>,
-    updateUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>
+    updateUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>,
+
+    // search metrics
+    addSearchMetric(metric: SearchMetric): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getSearches(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {
@@ -30,7 +34,8 @@ interface SuccessDBResponse {
         Revision | Revision[] |
         Category | Category[] |
         Metric | Metric[] |
-        User | User[]
+        User | User[] |
+        SearchMetric | SearchMetric[]
 }
 
 interface ErrorDBResponse {

@@ -1,4 +1,4 @@
-import Metric from '../analytics/model';
+import { SearchMetric, Metric} from '../analytics/model';
 import Analytics from '../analytics/AnalyticsInterface';
 import IsaacAPI from "../ISAAC";
 
@@ -16,6 +16,17 @@ const AnalyticsAPI: Analytics = {
 
     async getAllAnalytics() {
         return (await IsaacAPI.getAnalytics({ })) as Metric[];
+    },
+
+    async addSearch(s: SearchMetric) {
+        return (await IsaacAPI.addSearch({
+            ...s,
+            created_at: Date.now()
+        })) as string;
+    },
+
+    async getSearchHistory() {
+        return (await IsaacAPI.getSearchHistory({ })) as SearchMetric[];
     }
 }
 
