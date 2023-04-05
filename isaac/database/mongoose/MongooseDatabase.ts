@@ -1,5 +1,5 @@
 import type { Page, Revision, Category } from '../../models/index';
-import Metric from '../../analytics/model'
+import { Metric, SearchMetric } from '../../analytics/model'
 import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
@@ -277,6 +277,48 @@ const MongooseDatabase: Database = {
                 success: true,
                 payload: updatedUser
             }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    addSearchMetric: async (s: SearchMetric) => {
+        try {
+            const met = new MongooseModels.SearchMetric(s);
+            await met.validate();
+            await met.save();
+
+            return {
+                success: true,
+                payload: met._id.toString()
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    getSearches: async (query: Object) => {
+        try {
+            const data = await MongooseModels.SearchMetric
+                .find(query);
+
+            const searchMetrics = data.map((raw) => {
+                const metric: SearchMetric = {
+                    query: raw.query,
+                    created_at: raw.created_at
+                };
+
+                return metric;
+            }) ?? [];
+    
+            return {
+                success: true,
+                payload: searchMetrics
+            };
         } catch (err: any) {
             return {
                 error: err
