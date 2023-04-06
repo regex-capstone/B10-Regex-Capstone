@@ -1,4 +1,6 @@
-import { Box, Container, Stack } from "@mui/material";
+import { Avatar, Box, Button, Container, Icon, IconButton, Stack } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 import Head from "next/head";
 
 export default function Index() {
@@ -74,9 +76,29 @@ function Header() {
             backgroundColor: "#FFF",
             boxShadow: 5,
             width: "100%",
-            height: "4rem",
         }}>
-            Header
+            <Stack spacing={2} direction="row" sx={{
+                display: "flex",
+                alignItems: "left",
+                justifyContent: "right",
+            }}>
+                <Stack spacing={0} direction="row" sx={{
+                    flex: 1,
+                }}>
+                    <IconButton>
+                        <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
+                    </IconButton>
+                    <IconButton>
+                        <AddIcon />
+                    </IconButton>
+                    <IconButton>
+                        <AnalyticsIcon />
+                    </IconButton>
+                </Stack>
+                <IconButton>
+                    <Avatar src="https://media.licdn.com/dms/image/D5603AQGhcM-bkkBW6w/profile-displayphoto-shrink_100_100/0/1669079083666?e=1686182400&v=beta&t=VIl10WQqHZMjTVFvJHGrOsp2m5lMlkwhrOmEp4o71Ww" />
+                </IconButton>
+            </Stack>
         </Box>
     )
 }
