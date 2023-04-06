@@ -22,7 +22,7 @@ export default function usePageEngagement(user: User, page_id: string) {
                 body: JSON.stringify(body)
             }
     
-            const request = await fetch('/api/analytic', options);
+            const request = await fetch('/api/analytics', options);
             const response = await request.json();
     
             setSuccess(true);
@@ -36,8 +36,8 @@ export default function usePageEngagement(user: User, page_id: string) {
     })
 
     return {
-        success: success,
-        metId: metId
+        success: success as boolean,
+        metId: metId as string
     }
 }
 
