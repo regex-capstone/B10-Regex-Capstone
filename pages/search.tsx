@@ -14,6 +14,9 @@ import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { SearchResponse } from '@/isaac/search/SearchInterface';
 
+/**
+ * Uses SSG to generate the search result page on the first load.
+ */
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
     const api: API = ApiEndpoint;
     const searchResponse: SearchResponse = await api.search((context.query.q ?? "") as string);
@@ -21,7 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
     const secondsElapsed: number = roundOff(searchResponse.time_elapsed / 1000);
     return {
         props: {
-            results: JSON.stringify(searchResponse.pages),
+            results: JSON.stringify(searchResponse.results),
             categories: JSON.stringify(categories),
             time_elapsed: secondsElapsed
         }
@@ -36,9 +39,12 @@ interface SearchProps {
 
 /* (root)/search */
 export default function Search(props: SearchProps) {
+    // SSG states
     const [results, setResults] = useState<Page[]>(JSON.parse(props.results) as Page[]);
     const [categories, setCategories] = useState<Category[]>(JSON.parse(props.categories) as Category[]);
     const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
+
+    //
     const [catFilter, setFilter] = useState([] as string[]);
     const [filteredResults, setFilteredResults] = useState<Page[]>([]);
 
@@ -50,7 +56,7 @@ export default function Search(props: SearchProps) {
 
     useEffect(() => {
         if (searchData && q !== cachedQuery) {
-            const freshPages = searchData.pages;
+            const freshPages = searchData.results;
             const timeElapsed = roundOff(searchData.time_elapsed / 1000);
 
             setCachedQuery(q);

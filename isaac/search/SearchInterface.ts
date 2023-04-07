@@ -9,6 +9,6 @@ export default interface Search {
 }
 
 export interface SearchResponse {
-    pages: Page[],
+    results: Page[],
     time_elapsed: number
 }
