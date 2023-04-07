@@ -52,6 +52,11 @@ export default function RichTextEditor(props: RichTextEditorProps) {
         }
     }, [])
 
+    useEffect(() => {
+        setEditorState(initializeEditorState(revisionData?.content as string));
+    }, [revisionData])
+
+
     const handleSave = async () => {
         setLoading(true);
 
@@ -170,6 +175,7 @@ function getMarkdown(rawData: any) {
 }
 
 function initializeEditorState(content: string) {
+    console.log(content);
     const contentState = stateFromMarkdown(content ?? "");
     return content
         ? EditorState.createWithContent(contentState)

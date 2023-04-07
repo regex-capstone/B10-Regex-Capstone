@@ -1,17 +1,20 @@
 import { User } from "@/isaac/models";
 import { useEffect, useState } from "react";
+import { useUser } from "./useUser";
+import { UserMajor, UserStanding } from "@/isaac/models/User";
 
-export default function usePageEngagement(user: User, page_id: string) {
+export default function usePageEngagement(page_id: string) {
     const [success, setSuccess] = useState(false);
     const [metId, setMetId] = useState('');
     const [firstLoad, setFirstLoad] = useState(true);
+    const { data: userData } = useUser();
 
     const handlePost = async () => {
         if (firstLoad) {
-            const body = {
-                major: user.major,
-                standing: user.standing,
-                met_page_id: page_id
+            let body = {
+                met_page_id: page_id,
+                major: (userData) ? userData.major : UserMajor.UNKNOWN,
+                standing: (userData) ? userData.standing : UserStanding.UNKNOWN
             }
     
             const options = {

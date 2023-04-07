@@ -17,7 +17,7 @@ export default function useSearch(query: string) {
     const { data, error, isLoading } = useSWR(`/api/search/${cleanedInput}`, fetcher, options);
 
     return {
-        data: (data) ? data as SearchResponse : {},
+        data: (data) ? data as SearchResponse : {} as SearchResponse,
         error: error,
         isLoading: isLoading
     }

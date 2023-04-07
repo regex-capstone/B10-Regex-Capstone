@@ -8,7 +8,7 @@ export default function usePage(page_title: string) {
     const { data, error, isLoading } = useSWR(`/api/page/${page_title}`, fetcher);
 
     return {
-        data: (data) ? data.page as Page : {},
+        data: (data) ? data.page as Page : {} as Page,
         error: error,
         isLoading: isLoading
     }

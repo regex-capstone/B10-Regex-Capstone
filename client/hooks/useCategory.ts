@@ -9,7 +9,7 @@ export default function useCategory() {
     const { data, error, isLoading } = useSWR(`/api/category`, fetcher);
 
     return {
-        data: (data) ? data.categories as Category[] : [],
+        data: (data) ? data.categories as Category[] : [] as Category[],
         error: error,
         isLoading: isLoading
     }

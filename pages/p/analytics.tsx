@@ -7,6 +7,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Tool
 import useAnalytics from "@/client/hooks/useAnalytics";
 import { useRouter } from "next/router";
 import LoadingSpinner from "@/client/LoadingSpinner";
+import { UserRole } from "@/isaac/models/User";
 
 interface Metric {
     name: string | number;
@@ -131,7 +132,7 @@ export default function Analytics() {
                                     </Stack>
                                 </div>
                             </Stack>
-                            <Link href={`/page/${title}`}>
+                            <Link href={`/p/${title}`}> {/* Fix the title shit after title refactor */}
                                 <Button sx={{
                                     justifyContent: "left",
                                     width: 126,
@@ -160,6 +161,11 @@ const processMetric = (tempArr: Metric[], metricName: any) => {
             value: 1
         });
     }
+}
+
+// ADMIN only
+Analytics.auth = {
+    role: UserRole.ADMIN
 }
 
 const fillTimeArray = (timeArr: Metric[], dateRange: number, today: Date) => {

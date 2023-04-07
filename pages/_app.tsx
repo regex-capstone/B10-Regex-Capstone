@@ -31,10 +31,9 @@ function AuthLayout(
     const { data: session } = useSession();
 
     const authProps = props.auth;
-    const user = session?.user;
 
     // admin access only
-    if (authProps && authProps.role === UserRole.ADMIN && user?.role !== UserRole.ADMIN) {
+    if (authProps && authProps.role === UserRole.ADMIN && !session?.isAdmin) {
         return <NotAuthorizedPage requireAdmin={true} />
     }
 

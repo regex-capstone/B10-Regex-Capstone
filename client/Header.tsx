@@ -64,7 +64,7 @@ function ProfileComponent() {
                         textDecoration: 'none',
                         color: Theme.COLOR.TEXT_LIGHT,
                     }}>
-                        <b>{session?.user.name.toUpperCase()}</b>
+                        <b>{session?.name.toUpperCase()}</b>
                     </Link>
                 </Typography>
             </Box>

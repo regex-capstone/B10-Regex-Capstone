@@ -21,7 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 throw new Error('Not authenticated.');
             }
 
-            const email: string = session.user.email;
+            const email: string | null | undefined = session.user?.email;
+            
+            if (!email) {
+                throw new Error('Not authenticated.');
+            }
 
             const user: User = await api.getUserByEmail(email);
 

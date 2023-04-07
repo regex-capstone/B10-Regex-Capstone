@@ -11,7 +11,6 @@ import Header from "@/client/Header";
 import Theme from "@/client/Theme";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-import { UserRole } from "@/isaac/models/User";
 
 const api: API = ApiEndpoint
 
@@ -93,8 +92,8 @@ export default function Index(props: IndexProps) {
 function AdminTools() {
     const { data: session } = useSession();
 
-    if (session?.user.role !== UserRole.ADMIN) {
-        return <></>;
+    if (!session || !session.isAdmin) {  // not logged in or not admin user
+        return (<></>)
     }
 
     return (

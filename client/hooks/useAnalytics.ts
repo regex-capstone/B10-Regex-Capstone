@@ -1,4 +1,4 @@
-import { Metric } from '@/isaac/models';
+import Metric from '@/isaac/analytics/model';
 import useSWR from 'swr';
 
 // @ts-ignore
@@ -8,7 +8,7 @@ export default function useAnalytics(page_title: string) {
     const { data, error, isLoading } = useSWR(`/api/analytics/${page_title}`, fetcher);
 
     return {
-        data: (data) ? data.metrics as Metric[] : [],
+        data: (data) ? data.metrics as Metric[] : [] as Metric[],
         error: error,
         isLoading: isLoading
     }

@@ -29,13 +29,10 @@ export const AuthOptions: NextAuthOptions = {
                 const accessToken = account.access_token;
                 const name = token.name as string;
                 const email = token.email as string;
-                
-                // persist the user data in the token for the middleware
+
                 let user: User = await api.getUserByEmail(email);
                 
-                if (!user) {
-                    // @TODO: handle this better
-                    // @TODO: handle admin side
+                if (!user) {    // new user!
                     const newUser = await api.addNewUser({
                         name: name,
                         email: email,
@@ -45,12 +42,12 @@ export const AuthOptions: NextAuthOptions = {
                     });
 
                     if (!newUser) throw new Error('Error adding new user.');
-
-                    user = newUser;
                 }
 
-                token.user = user;
+                token.email = email;
                 token.accessToken = accessToken;
+                token.name = user.name;
+                token.isAdmin = user.role === UserRole.ADMIN;
             }
 
             return token
@@ -58,8 +55,9 @@ export const AuthOptions: NextAuthOptions = {
         async session({ session, token }) {
             session.accessToken = token.accessToken;
             session.picture = token.picture ?? '';
-            session.user = token.user as User;
-
+            session.isAdmin = token.isAdmin as boolean;
+            session.name = token.name as string;
+            
             return session;
         },
         async redirect({ url, baseUrl }) {

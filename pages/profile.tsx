@@ -11,11 +11,12 @@ import LoadingSpinner from "@/client/LoadingSpinner";
 
 export default function ProfilePage() {
     const router = useRouter();
-    // const { data: session } = useSession();
 
+    const { data: sessionData } = useSession();
     const { data: userData } = useUser();
 
     const [user, setUser] = useState<User>();
+    const [profileImage, setProfileImage] = useState<string>();
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -23,6 +24,14 @@ export default function ProfilePage() {
             setUser(userData);
         }
     }, [userData])
+
+    useEffect(() => {
+        if (sessionData) {
+            if (sessionData.user) {
+                setProfileImage(sessionData.user.image as string);
+            }
+        }
+    }, [sessionData]);
 
     const handleStandingChange = (e: any) => {
         setUser((prev: User | undefined) => {
@@ -72,9 +81,6 @@ export default function ProfilePage() {
     }
 
     if (!user) return (<LoadingSpinner />);
-    if (user) {
-        console.log(user);
-    }
 
     return (
         <>
@@ -91,10 +97,10 @@ export default function ProfilePage() {
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
-                                {/* <Avatar alt="<username>" src={session?.picture} sx={{
+                                <Avatar alt="<username>" src={profileImage} sx={{
                                     width: 150,
                                     height: 150,
-                                }}></Avatar> */}
+                                }}></Avatar>
                                 <h1>{user.name}</h1>
                                 <h1>{user.role.toUpperCase()}</h1>
                             </Stack>
