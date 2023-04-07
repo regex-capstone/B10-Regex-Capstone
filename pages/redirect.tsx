@@ -12,8 +12,8 @@ export default function RedirectComponent() {
 
     useEffect(() => {
         if (session) {
-            const isDocumented = (
-                userData.standing !== UserStanding.UNKNOWN
+            const isDocumented = (userData 
+                && userData.standing !== UserStanding.UNKNOWN
                 && userData.major !== UserMajor.UNKNOWN
             ) ? true : false;
 

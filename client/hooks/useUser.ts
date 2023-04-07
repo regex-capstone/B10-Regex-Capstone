@@ -9,7 +9,7 @@ export function useUser() {
     const { data, error, isLoading } = useSWR(`/api/user`, fetcher);
 
     return {
-        data: (data) ? data.user as User : {} as User,
+        data: (data) ? data.user as User : undefined,
         error: error,
         isLoading: isLoading
     }
