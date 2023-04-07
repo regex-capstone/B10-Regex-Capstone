@@ -44,7 +44,7 @@ export default function Search(props: SearchProps) {
     const [categories, setCategories] = useState<Category[]>(JSON.parse(props.categories) as Category[]);
     const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
 
-    //
+    // CSG states
     const [catFilter, setFilter] = useState([] as string[]);
     const [filteredResults, setFilteredResults] = useState<Page[]>([]);
 
@@ -117,9 +117,9 @@ function SearchResultList(props: {
 
     const createSearchResult = (result: Page, i: number) => {
         const category = categories.find(c => c.id === result.page_category_id);
-
+        
         if (!category) {
-            return <>Error</>
+            return <></>
         }
 
         return (
