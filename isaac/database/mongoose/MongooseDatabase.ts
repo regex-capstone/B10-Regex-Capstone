@@ -102,10 +102,20 @@ const MongooseDatabase: Database = {
             const page = new MongooseModels.Page(p);
             await page.validate();
             await page.save();
+            // TODO; fix this fucking add shit bullshit
+
+            const pageId = page._doc._id;
+            const newPage = {
+                ...page._doc,
+                id: pageId.toString()
+            };
+
+            delete newPage._id;
+
 
             return {
                 success: true,
-                payload: page
+                payload: newPage
             }
         } catch (err: any) {
             return {

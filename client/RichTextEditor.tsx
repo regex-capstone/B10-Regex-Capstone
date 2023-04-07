@@ -8,7 +8,7 @@ import { stateToMarkdown } from 'draft-js-export-markdown';
 // @ts-ignore
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { useRouter } from "next/router";
-import { PageRequest } from "@/isaac/models/Page";
+import Page, { PageRequest } from "@/isaac/models/Page";
 import { ContentState, EditorState } from "draft-js";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -70,6 +70,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
         try {
             let request;
             let redirectTitle;
+            let pagePayload: any = {};
 
             if (!pageData) {
                 const pageRequest: PageRequest = {
@@ -86,11 +87,11 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                 }
 
                 const fetchPage = (await fetch('/api/page', pageOptions));
-                const pagePayload = await fetchPage.json();
+                pagePayload = (await fetchPage.json()).page;
 
                 request = {
                     content: getMarkdown(editorState),
-                    rev_page_id: pagePayload.page_id as string
+                    rev_page_id: pagePayload.id
                 }
 
                 redirectTitle = title;
@@ -112,10 +113,10 @@ export default function RichTextEditor(props: RichTextEditorProps) {
             }
 
             await fetch('/api/revision', options);
+            const pageId = (pagePayload) ? pagePayload.id : pageData?.id;
 
-            await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/page/${redirectTitle}`);
-
-            router.push(`/page/${redirectTitle}`);
+            await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
+            router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
         } catch (err) {
             console.error(err); // @TODO: handle toast notifications
         }
@@ -175,7 +176,6 @@ function getMarkdown(rawData: any) {
 }
 
 function initializeEditorState(content: string) {
-    console.log(content);
     const contentState = stateFromMarkdown(content ?? "");
     return content
         ? EditorState.createWithContent(contentState)

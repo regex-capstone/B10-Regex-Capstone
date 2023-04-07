@@ -106,7 +106,7 @@ function AdminTools() {
             <CardContent>
                 <Stack spacing={2} direction="column">
                     <b>Admin Tools</b>
-                    <Link href="/page/create" passHref style={{
+                    <Link href="/p/new" passHref style={{
                         textDecoration: 'none',
                     }}>
                         <Button variant="contained">Create Page</Button>
