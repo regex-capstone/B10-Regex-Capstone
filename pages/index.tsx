@@ -1,10 +1,8 @@
-import { Autocomplete, AutocompleteRenderInputParams, Avatar, Box, Button, Container, Icon, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Avatar, Box, Button, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
-import { ReactNode } from "react";
-import InputUnstyled from '@mui/base/InputUnstyled';
 
 
 export default function Index() {
@@ -76,13 +74,32 @@ export default function Index() {
                         marginTop: "-2rem"
                     }}>
                         <Card>
-                            card
+                            <Box sx={{
+                                fontSize: "1.5rem",
+                                fontWeight: 700,
+                            }}>
+                                Trending
+                            </Box>
+                            <Stack direction="column">
+                                <a href="#">Something</a>
+                                <a href="#">Something</a>
+                                <a href="#">Something</a>
+                                <a href="#">Something</a>
+                            </Stack>
                         </Card>
                         <Card>
-                            card
-                        </Card>
-                        <Card>
-                            card
+                            <Box sx={{
+                                fontSize: "1.5rem",
+                                fontWeight: 700,
+                            }}>
+                                Recently Updated
+                            </Box>
+                            <Stack direction="column">
+                                <a href="#">Something</a>
+                                <a href="#">Something</a>
+                                <a href="#">Something</a>
+                                <a href="#">Something</a>
+                            </Stack>
                         </Card>
                     </Stack>
                 </Container>
