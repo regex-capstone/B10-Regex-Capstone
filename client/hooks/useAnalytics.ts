@@ -1,4 +1,4 @@
-import Metric from '@/isaac/analytics/model';
+import { Metric } from '@/isaac/analytics/model';
 import useSWR from 'swr';
 
 // @ts-ignore
