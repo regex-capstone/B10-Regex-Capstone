@@ -3,6 +3,8 @@ import AddIcon from '@mui/icons-material/Add';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 
 export default function Index() {
@@ -20,6 +22,7 @@ export default function Index() {
 }
 
 function Header() {
+    const router = useRouter()
     return (
         <Box sx={{
             position: "fixed",
@@ -36,7 +39,7 @@ function Header() {
                 <Stack spacing={0} direction="row" sx={{
                     flex: 1,
                 }}>
-                    <IconButton>
+                    <IconButton onClick={(e) => router.push("/")}>
                         <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
                     </IconButton>
                     <IconButton>
@@ -46,7 +49,7 @@ function Header() {
                         <AnalyticsIcon />
                     </IconButton>
                 </Stack>
-                <IconButton>
+                <IconButton onClick={(e) => router.push("/profile")}>
                     <Avatar src="https://media.licdn.com/dms/image/D5603AQGhcM-bkkBW6w/profile-displayphoto-shrink_100_100/0/1669079083666?e=1686182400&v=beta&t=VIl10WQqHZMjTVFvJHGrOsp2m5lMlkwhrOmEp4o71Ww" />
                 </IconButton>
             </Stack>
@@ -73,10 +76,14 @@ function Background() {
 }
 
 function SearchModule() {
+    const router = useRouter();
+    const [value, setValue] = useState<string>("");
+    const onSearch = (query: string) => {
+        router.push(`/search?q=${query}`);
+    }
     return (
         <Box sx={{
             width: "100%",
-            // backgroundColor: "#FAD",
             zIndex: 0,
             position: "absolute",
             top: 0,
@@ -97,49 +104,50 @@ function SearchModule() {
                     >
                         ISAAC
                     </Typography>
-                    <SearchBar />
+                    <Box sx={{
+                        minWidth: "60%",
+                    }}>
+                        <Autocomplete
+                            id="free-solo-demo"
+                            freeSolo
+                            options={["Suggestion 1", "Suggestion 2", "Suggestion 3"]}
+                            renderInput={(params) => <TextField
+                                {...params}
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        onSearch(value)
+                                        e.preventDefault()
+                                    }
+                                }}
+                                variant="standard"
+                                InputProps={{
+                                    disableUnderline: true,
+                                    endAdornment: <SearchIcon />,
+                                }}
+                                sx={{
+                                    paddingLeft: "1em",
+                                    paddingRight: "1em",
+                                    paddingTop: "0.5em",
+                                    paddingBottom: "0.5em",
+                                    backgroundColor: "#FFF",
+                                    borderRadius: 30,
+                                    border: "none",
+                                }} />}
+                        />
+                    </Box >
                     <Stack spacing={1} direction="row">
-                        <Button variant="contained">
+                        <Button variant="contained" onClick={(e) => onSearch(value)}>
                             Search
                         </Button>
-                        <Button variant="contained">
-                            Browse TOpics
+                        <Button variant="contained" onClick={(e) => router.push("/#")}>
+                            Browse Topics
                         </Button>
                     </Stack>
                 </Stack>
             </Container>
         </Box>
-    )
-}
-
-function SearchBar() {
-    return (
-        <Box sx={{
-            minWidth: "60%",
-        }}>
-            <Autocomplete
-                id="free-solo-demo"
-                freeSolo
-                // TODO: Add Autosugggestions
-                options={["Suggestion 1", "Suggestion 2", "Suggestion 3"]}
-                renderInput={(params) => <TextField
-                    {...params}
-                    variant="standard"
-                    InputProps={{
-                        disableUnderline: true,
-                        endAdornment: <SearchIcon />,
-                    }}
-                    sx={{
-                        paddingLeft: "1em",
-                        paddingRight: "1em",
-                        paddingTop: "0.5em",
-                        paddingBottom: "0.5em",
-                        backgroundColor: "#FFF",
-                        borderRadius: 30,
-                        border: "none",
-                    }} />}
-            />
-        </Box >
     )
 }
 
