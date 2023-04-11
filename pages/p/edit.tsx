@@ -7,6 +7,7 @@ import RichTextEditor from "@/client/RichTextEditor";
 import { useRouter } from "next/router";
 import usePage from "@/client/hooks/usePage";
 import useRevision from "@/client/hooks/useRevision";
+import { UserRole } from "@/isaac/models/User";
 
 /* /p/edit?page=[title] */
 export default function Edit() {
@@ -50,4 +51,9 @@ export default function Edit() {
             }
         </>
     )
+}
+
+// ADMIN only
+Edit.auth = {
+    role: UserRole.ADMIN
 }

@@ -117,7 +117,7 @@ const ApiEndpoint: API = {
         const pages: Page[] = await IsaacAPI.getPages({}) as Page[];
         const searchPages = await IsaacAPI.search(q, pages);
         return {
-            pages: searchPages,
+            results: searchPages,
             time_elapsed: performance.now() - s
         };
     },

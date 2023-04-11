@@ -1,17 +1,19 @@
-import { User } from "@/isaac/models";
 import { useEffect, useState } from "react";
+import { useUser } from "./useUser";
+import { UserMajor, UserStanding } from "@/isaac/models/User";
 
-export default function usePageEngagement(user: User, page_id: string) {
+export default function usePageEngagement(page_id: string) {
     const [success, setSuccess] = useState(false);
     const [metId, setMetId] = useState('');
     const [firstLoad, setFirstLoad] = useState(true);
+    const { data: userData, isLoading } = useUser();
 
     const handlePost = async () => {
-        if (firstLoad) {
-            const body = {
-                major: user.major,
-                standing: user.standing,
-                met_page_id: page_id
+        if (firstLoad && !isLoading) {
+            let body = {
+                met_page_id: page_id,
+                major: (userData) ? userData.major : UserMajor.UNKNOWN,
+                standing: (userData) ? userData.standing : UserStanding.UNKNOWN
             }
     
             const options = {
@@ -22,22 +24,22 @@ export default function usePageEngagement(user: User, page_id: string) {
                 body: JSON.stringify(body)
             }
     
-            const request = await fetch('/api/analytic', options);
+            const request = await fetch('/api/analytics', options);
             const response = await request.json();
     
             setSuccess(true);
             setMetId(response.met_id);
+            setFirstLoad(false);
         }
-        setFirstLoad(false);
     }
 
     useEffect(() => {
         handlePost();
-    })
+    }, [isLoading])
 
     return {
-        success: success,
-        metId: metId
+        success: success as boolean,
+        metId: metId as string
     }
 }
 

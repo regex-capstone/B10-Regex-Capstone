@@ -4,8 +4,9 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Logo from "@/client/Logo";
 import Head from "next/head";
 import RichTextEditor from "@/client/RichTextEditor";
-import { Category as CategoryData } from '@/isaac/models';
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import useCategory from "@/client/hooks/useCategory";
+import LoadingSpinner from "@/client/LoadingSpinner";
 
 /*
     Path: /p/new
@@ -15,13 +16,11 @@ import { useState, useEffect } from "react";
 export default function CreatePage() {
     const [categoryId, setCategoryId] = useState('');
     const [title, setTitle] = useState('');
-    const [categories, setCategories] = useState<CategoryData[]>([]);
+    const { data: categoriesData } = useCategory();
 
-    useEffect(() => {
-        fetch(`/api/category`)
-            .then(res => res.json())
-            .then(data => setCategories(data))
-    }, []);
+    if (!categoriesData) {
+        return <LoadingSpinner />
+    }
 
     return (
         <>
@@ -66,7 +65,7 @@ export default function CreatePage() {
                                 onChange={(e: SelectChangeEvent) => setCategoryId(e.target.value)}
                             >
                                 {
-                                    categories.map(cat => {
+                                    categoriesData.map(cat => {
                                         return (
                                             <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
                                         )

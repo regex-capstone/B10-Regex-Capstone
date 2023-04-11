@@ -6,47 +6,59 @@ import { UserMajor, UserStanding } from "@/isaac/models/User";
 import { useEffect, useState } from "react";
 import User from '../isaac/models/User';
 import { useRouter } from "next/router";
-import useUser from "@/client/hooks/useUser";
+import { saveUser, useUser } from "@/client/hooks/useUser";
 import LoadingSpinner from "@/client/LoadingSpinner";
 
 export default function ProfilePage() {
     const router = useRouter();
-    const { data: session } = useSession();
-    const { data, error, isLoading } = useUser(session?.user.email as string);
 
-    const [user, setUser] = useState({} as User);
-    const [loading, setLoading] = useState(true);
+    const { data: sessionData } = useSession();
+    const { data: userData } = useUser();
+
+    const [user, setUser] = useState<User>();
+    const [profileImage, setProfileImage] = useState<string>();
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        if (data) {
-            setUser(data.user);
-            setLoading(false);
+        if (userData) {
+            setUser(userData);
         }
+    }, [userData])
 
-        return () => setLoading(true);
-    }, [data]);
+    useEffect(() => {
+        if (sessionData) {
+            if (sessionData.user) {
+                setProfileImage(sessionData.user.image as string);
+            }
+        }
+    }, [sessionData]);
 
     const handleStandingChange = (e: any) => {
-        setUser((prev: User) => {
-            return {
-                ...prev,
-                standing: e.target.value
+        setUser((prev: User | undefined) => {
+            if (prev) {
+                return {
+                    ...prev,
+                    standing: e.target.value
+                }
             }
         });
     }
 
     const handleMajorChange = (e: any) => {
-        setUser((prev: User) => {
-            return {
-                ...prev,
-                major: e.target.value
+        setUser((prev: User | undefined) => {
+            if (prev) {
+                return {
+                    ...prev,
+                    major: e.target.value
+                }
             }
         });
     }
 
     const handleSave = async () => {
         try {
+            if (!user) throw new Error('No user to save!');
+            
             setSaving(true);
 
             const userRequest: User = {
@@ -56,16 +68,7 @@ export default function ProfilePage() {
             }
 
             if (userRequest !== user) {
-                const userOptions = {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userRequest),
-                }
-
-                const postRequest = await fetch('/api/user', userOptions);
-                await postRequest.json();
+                saveUser(userRequest);
             }
             
             setSaving(false);
@@ -77,8 +80,7 @@ export default function ProfilePage() {
         }
     }
 
-    if (isLoading || loading) return <LoadingSpinner />
-    if (error) return <div>{error.message}</div>
+    if (!user) return (<LoadingSpinner />);
 
     return (
         <>
@@ -95,12 +97,12 @@ export default function ProfilePage() {
                                 justifyContent: 'center',
                                 alignItems: 'center'
                             }}>
-                                <Avatar alt="<username>" src={session?.picture} sx={{
+                                <Avatar alt="<username>" src={profileImage} sx={{
                                     width: 150,
                                     height: 150,
                                 }}></Avatar>
-                                <h1>{session?.user.name}</h1>
-                                <h1>{session?.user.role.toUpperCase()}</h1>
+                                <h1>{user.name}</h1>
+                                <h1>{user.role.toUpperCase()}</h1>
                             </Stack>
                             <h2>Academic Information</h2>
                             <Stack direction={'column'} spacing={3} sx={{

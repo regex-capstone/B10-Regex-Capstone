@@ -12,7 +12,6 @@ import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } fro
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import User, { UserRole } from "@/isaac/models/User";
 import { useEffect } from "react";
 import usePageEngagement from "@/client/hooks/usePageEngagement";
 
@@ -55,15 +54,10 @@ interface PageProps {
 
 /* (root)/page/[id] */
 export default function Page(props: PageProps) {
-    const { data: session } = useSession();
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
-    const { success, metId } = usePageEngagement(session?.user as User, pageData.id as string);
+    usePageEngagement(pageData.id as string);
     const query = "";
-
-    useEffect(() => {
-        console.log(`page tracked: ${metId}`);
-    }, [success])
 
     return (
         <>
@@ -128,8 +122,8 @@ function AdminTools(props: { page: PageData }) {
     const router = useRouter();
     const { data: session } = useSession();
 
-    if (session?.user.role !== UserRole.ADMIN) {
-        return <></>;
+    if (!session || !session.isAdmin) {
+        return (<></>);
     }
 
     const onDelete = async (title: string) => {

@@ -13,20 +13,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
         case 'GET':
-            const allCategories = await api.getAllCategories();
-            res.status(200).json(allCategories)
+            res.status(200).json({
+                success: true,
+                categories: await api.getAllCategories()
+            });
+            
             break;
         case 'POST':
             if (!body) throw new Error('POST request has no body.');
             if (!body.name) throw new Error('POST request has no name.');
-    
-            const categoryId = await api.addNewCategory({
-                name: body.name
-            });
                 
             res.status(200).json({
                 success: true,
-                category_id: categoryId
+                category_id: await api.addNewCategory({
+                    name: body.name
+                })
             });
                 
             break;

@@ -17,7 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             const results = await api.search(query);
 
-            res.status(200).json(results);
+            res.status(200).json({
+                success: true,
+                results: results
+            });
             break;
         default:
             res.setHeader('Allow', ['GET'])
