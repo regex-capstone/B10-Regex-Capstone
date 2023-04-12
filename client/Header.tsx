@@ -1,22 +1,89 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Avatar, Box, Button, IconButton, Stack, TextField, Typography } from '@mui/material';
 import Theme from '@/client/Theme';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import Search from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { useState } from 'react';
 
-export default function Header() {
+export default function Header(props: { disableSearchBar?: boolean}) {
+    const router = useRouter()
+    const { data: session } = useSession()
     return (
         <Box sx={{
-            backgroundColor: Theme.COLOR.BACKGROUND_DARK,
-            color: Theme.COLOR.TEXT_LIGHT,
-            width: '100%',
-            padding: 0,
-            margin: 0,
-            height: '2em',
-            display: 'flex',
-            justifyContent: 'flex-end',
+            position: "fixed",
+            top: 0,
+            backgroundColor: "#FFF",
+            boxShadow: 5,
+            width: "100%",
         }}>
-            <ProfileComponent />
+            <Stack spacing={2} direction="row" sx={{
+                display: "flex",
+                alignItems: "left",
+                justifyContent: "right",
+            }}>
+                <Stack spacing={0} direction="row" sx={{
+                    flex: 1,
+                }}>
+                    <IconButton onClick={(e) => router.push("/")}>
+                        <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
+                    </IconButton>
+                    <IconButton>
+                        <AddIcon />
+                    </IconButton>
+                    <IconButton>
+                        <AnalyticsIcon />
+                    </IconButton>
+                </Stack>
+                <Box sx={{
+                    flex: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                }}>
+                    { props.disableSearchBar ? null : <SearchBar />}
+                </Box>
+                <Box sx={{
+                    flex: 1,
+                    display: "flex",
+                    justifyContent: "right",
+                }}>
+                    <IconButton onClick={(e) => router.push("/profile")}>
+                        <Avatar src={session?.picture} />
+                    </IconButton>
+                </Box>
+            </Stack>
         </Box>
+    )
+}
+
+function SearchBar() {
+    const router = useRouter()
+    const [value, setValue] = useState<string>("");
+    return (
+        <TextField
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault()
+                    router.push(`/search?q=${value}`)
+                }
+            }}
+            variant="standard"
+            InputProps={{
+                disableUnderline: true,
+                endAdornment: <IconButton onClick={(e) => router.push(`/search?q=${value}`)}><Search fontSize='small' /></IconButton>,
+            }}
+            sx={{
+                paddingLeft: "0.5rem",
+                height: "2rem",
+                border: "1px solid #DDD",
+                width: "100%",
+            }}
+        />
     )
 }
 
@@ -42,7 +109,7 @@ function ProfileComponent() {
             <>
                 <Box sx={boxStyle}>
                     <Typography fontSize={'1rem'}>
-                            <b>GUEST</b>
+                        <b>GUEST</b>
                     </Typography>
                 </Box>
                 <Button variant="text" sx={buttonStyle}>
