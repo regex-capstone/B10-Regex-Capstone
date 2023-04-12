@@ -1,10 +1,9 @@
-import { Autocomplete, Avatar, Box, Button, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { Autocomplete, Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Header from "@/client/Header";
 
 
 export default function Index() {
@@ -13,47 +12,11 @@ export default function Index() {
             <Head>
                 <title>ISAAC</title>
             </Head>
-            <Header />
+            <Header disableSearchBar />
             <Background />
             <SearchModule />
             <PageBody />
         </>
-    )
-}
-
-function Header() {
-    const router = useRouter()
-    return (
-        <Box sx={{
-            position: "fixed",
-            top: 0,
-            backgroundColor: "#FFF",
-            boxShadow: 5,
-            width: "100%",
-        }}>
-            <Stack spacing={2} direction="row" sx={{
-                display: "flex",
-                alignItems: "left",
-                justifyContent: "right",
-            }}>
-                <Stack spacing={0} direction="row" sx={{
-                    flex: 1,
-                }}>
-                    <IconButton onClick={(e) => router.push("/")}>
-                        <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
-                    </IconButton>
-                    <IconButton>
-                        <AddIcon />
-                    </IconButton>
-                    <IconButton>
-                        <AnalyticsIcon />
-                    </IconButton>
-                </Stack>
-                <IconButton onClick={(e) => router.push("/profile")}>
-                    <Avatar src="https://media.licdn.com/dms/image/D5603AQGhcM-bkkBW6w/profile-displayphoto-shrink_100_100/0/1669079083666?e=1686182400&v=beta&t=VIl10WQqHZMjTVFvJHGrOsp2m5lMlkwhrOmEp4o71Ww" />
-                </IconButton>
-            </Stack>
-        </Box>
     )
 }
 
