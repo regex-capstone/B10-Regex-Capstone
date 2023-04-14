@@ -125,7 +125,7 @@ function PageBody() {
             position: "relative",
             zIndex: 1,
         }}>
-            <Container maxWidth="md">
+            <Container maxWidth="sm">
                 <Stack spacing={2} direction="column" sx={{
                     marginTop: "-2rem"
                 }}>
