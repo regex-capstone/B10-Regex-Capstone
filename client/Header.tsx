@@ -6,14 +6,13 @@ import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
-export default function Header(props: { disableSearchBar?: boolean}) {
+export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean}) {
     const router = useRouter()
     const { data: session } = useSession()
     return (
         <Box sx={{
-            position: "fixed",
             top: 0,
             backgroundColor: "#FFF",
             boxShadow: 5,
@@ -30,12 +29,7 @@ export default function Header(props: { disableSearchBar?: boolean}) {
                     <IconButton onClick={(e) => router.push("/")}>
                         <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
                     </IconButton>
-                    <IconButton>
-                        <AddIcon />
-                    </IconButton>
-                    <IconButton>
-                        <AnalyticsIcon />
-                    </IconButton>
+                    { props.actions }
                 </Stack>
                 <Box sx={{
                     flex: 2,
