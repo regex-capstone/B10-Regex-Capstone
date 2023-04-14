@@ -6,7 +6,6 @@ import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import NotAuthorizedPage from '@/client/NotAuthorizedPage';
 import Theme from '@/client/Theme';
 
-// application theme, left intentionally empty (default)
 const theme = createTheme({
     palette: {
         primary: {
