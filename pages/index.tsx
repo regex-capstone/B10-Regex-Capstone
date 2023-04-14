@@ -102,15 +102,10 @@ function SearchModule() {
                         />
                     </Box >
                     <Stack spacing={1} direction="row">
-                        <Button variant="contained" onClick={(e) => onSearch(value)} sx={{
-                            backgroundColor: Theme.COLOR.PRIMARY,
-                        }}>
+                        <Button color="primary" variant="contained" onClick={(e) => onSearch(value)}>
                             Search
                         </Button>
-                        <Button variant="contained" onClick={(e) => router.push("/#")} sx={{
-                            backgroundColor: "WHITE",
-                            color: "BLACK",
-                        }}>
+                        <Button color="secondary" variant="contained" onClick={(e) => router.push("/#")}>
                             Browse Topics
                         </Button>
                     </Stack>

@@ -4,9 +4,19 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import NotAuthorizedPage from '@/client/NotAuthorizedPage';
+import Theme from '@/client/Theme';
 
 // application theme, left intentionally empty (default)
-const theme = createTheme({})
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: Theme.COLOR.PRIMARY,
+        },
+        secondary: {
+            main: Theme.COLOR.BACKGROUND_LIGHT,
+        },
+    }
+})
 
 /* (application root) */
 export default function App({

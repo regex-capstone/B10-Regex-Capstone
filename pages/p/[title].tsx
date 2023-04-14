@@ -70,7 +70,7 @@ export default function Page(props: PageProps) {
                     </IconButton>
                 </Stack>
             } />
-            <Container>
+            <Container maxWidth="md">
                 <h1>{pageData.title}</h1>
                 <ReactMarkdown>
                     {revisionData.content}
