@@ -54,7 +54,7 @@ function SearchModule() {
             left: 0,
             marginTop: "15vh",
         }}>
-            <Container>
+            <Container maxWidth="md">
                 <Stack spacing={2} direction="column" alignItems="center">
                     <Typography
                         fontFamily="sans-serif"
@@ -125,7 +125,7 @@ function PageBody() {
             position: "relative",
             zIndex: 1,
         }}>
-            <Container>
+            <Container maxWidth="md">
                 <Stack spacing={2} direction="column" sx={{
                     marginTop: "-2rem"
                 }}>

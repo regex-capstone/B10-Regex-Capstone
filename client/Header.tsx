@@ -1,4 +1,4 @@
-import { Avatar, Box, IconButton, Stack, TextField } from '@mui/material';
+import { Avatar, Box, Container, IconButton, Stack, TextField } from '@mui/material';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
@@ -14,43 +14,45 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
             boxShadow: 5,
             width: "100%",
         }}>
-            <Stack spacing={2} direction="row" sx={{
-                display: "flex",
-                alignItems: "left",
-                justifyContent: "right",
-            }}>
-                <Stack spacing={0} direction="row" sx={{
-                    flex: 1,
-                }}>
-                    <IconButton onClick={(e) => router.push("/")}>
-                        <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
-                    </IconButton>
-                    {props.actions}
-                </Stack>
-                <Box sx={{
-                    flex: 2,
+            <Container maxWidth="md">
+                <Stack spacing={2} direction="row" sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                }}>
-                    {props.disableSearchBar ? null : <SearchBar />}
-                </Box>
-                <Box sx={{
-                    flex: 1,
-                    display: "flex",
+                    alignItems: "left",
                     justifyContent: "right",
                 }}>
-                    <IconButton onClick={(e) => {
-                        if (session) { 
-                            router.push("/profile")
-                        } else {
-                            signIn()
-                        }
+                    <Stack spacing={0} direction="row" sx={{
+                        flex: 1,
                     }}>
-                        <Avatar src={session?.picture} />
-                    </IconButton>
-                </Box>
-            </Stack>
+                        <IconButton onClick={(e) => router.push("/")}>
+                            <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
+                        </IconButton>
+                        {props.actions}
+                    </Stack>
+                    <Box sx={{
+                        flex: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                    }}>
+                        {props.disableSearchBar ? null : <SearchBar />}
+                    </Box>
+                    <Box sx={{
+                        flex: 1,
+                        display: "flex",
+                        justifyContent: "right",
+                    }}>
+                        <IconButton onClick={(e) => {
+                            if (session) {
+                                router.push("/profile")
+                            } else {
+                                signIn()
+                            }
+                        }}>
+                            <Avatar src={session?.picture} />
+                        </IconButton>
+                    </Box>
+                </Stack>
+            </Container>
         </Box>
     )
 }
