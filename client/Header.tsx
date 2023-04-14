@@ -4,11 +4,9 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { ReactNode, useState } from 'react';
 
-export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean}) {
+export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean }) {
     const router = useRouter()
     const { data: session } = useSession()
     return (
@@ -29,7 +27,7 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                     <IconButton onClick={(e) => router.push("/")}>
                         <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
                     </IconButton>
-                    { props.actions }
+                    {props.actions}
                 </Stack>
                 <Box sx={{
                     flex: 2,
@@ -37,14 +35,20 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                     flexDirection: "column",
                     justifyContent: "center",
                 }}>
-                    { props.disableSearchBar ? null : <SearchBar />}
+                    {props.disableSearchBar ? null : <SearchBar />}
                 </Box>
                 <Box sx={{
                     flex: 1,
                     display: "flex",
                     justifyContent: "right",
                 }}>
-                    <IconButton onClick={(e) => router.push("/profile")}>
+                    <IconButton onClick={(e) => {
+                        if (session) { 
+                            router.push("/profile")
+                        } else {
+                            signIn()
+                        }
+                    }}>
                         <Avatar src={session?.picture} />
                     </IconButton>
                 </Box>
