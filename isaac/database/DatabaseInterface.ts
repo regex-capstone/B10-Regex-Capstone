@@ -2,17 +2,26 @@ import type { Page, Revision, Category, User } from '../models/index';
 import type Metric from '../analytics/model'
 
 export default interface Database {
-    getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    getLatestRevisions(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    getLatestCategories(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+    // READ
+    getPages(query: Object, sort: SortOptions): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getRevisions(query: Object, sort: SortOptions): Promise<SuccessDBResponse | ErrorDBResponse>,
+    getCategories(query: Object, sort: SortOptions): Promise<SuccessDBResponse | ErrorDBResponse>,
 
+    // CREATE
     addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
     addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
     addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
     
+    // UPDATE
     updatePage(id: string, query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
     
+    // DELETE
     deletePage(id: string): Promise<SuccessDBResponse | ErrorDBResponse>,
+    deleteRevision(id: string): Promise<SuccessDBResponse | ErrorDBResponse>,
+    deleteCategory(id: string): Promise<SuccessDBResponse | ErrorDBResponse>,
+
+    // aggregate
+    aggMetrics(groupOptions: any, sortOptions: any, lookupOptions: any): Promise<SuccessDBResponse | ErrorDBResponse>,
 
     getAnalytics(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
     addAnalytic(metric: Metric): Promise<SuccessDBResponse | ErrorDBResponse>
@@ -23,14 +32,13 @@ export default interface Database {
     updateUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
+export interface SortOptions {
+    created_at?: number
+}
+
 interface SuccessDBResponse {
     success: boolean,
-    payload?: string |
-        Page | Page[] |
-        Revision | Revision[] |
-        Category | Category[] |
-        Metric | Metric[] |
-        User | User[]
+    payload?: any
 }
 
 interface ErrorDBResponse {

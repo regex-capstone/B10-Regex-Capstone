@@ -57,7 +57,7 @@ const MongooseModels = {
 
     Metric: new mongoose.Schema({
         met_page_id: {
-            type: String,
+            type: mongoose.Schema.Types.ObjectId,
             required: [true, 'Page reference ID is missing...']
         },
         major: {

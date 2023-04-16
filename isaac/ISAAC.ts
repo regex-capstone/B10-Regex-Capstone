@@ -3,7 +3,7 @@ import type Metric from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
 import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions } from './ISAACOptions';
-import { isErrorResponse } from './database/DatabaseInterface';
+import { SortOptions, isErrorResponse } from './database/DatabaseInterface';
 import { NaturalProvider } from './search/natural/NaturalProvider';
 import Search from './search/SearchInterface';
 
@@ -12,10 +12,11 @@ const natural: Search = NaturalProvider;
 
 async function getPages(options: PageOptions): Promise<Page | Page[]> {
     let query = cleanQuery(options);
+    let sort: SortOptions = { created_at: -1 };
 
     let response;
 
-    response = (await database.getLatestPages(query));
+    response = (await database.getPages(query, sort));
 
     if (isErrorResponse(response)) throw response.error;
 
@@ -26,10 +27,11 @@ async function getPages(options: PageOptions): Promise<Page | Page[]> {
 
 async function getRevisions(options: RevisionOptions): Promise<Revision | Revision[]> {
     let query = cleanQuery(options);
+    let sort: SortOptions = { created_at: -1 };
 
     let response;
 
-    response = (await database.getLatestRevisions(query));
+    response = (await database.getRevisions(query, sort));
 
     if (isErrorResponse(response)) throw response.error;
 
@@ -40,10 +42,11 @@ async function getRevisions(options: RevisionOptions): Promise<Revision | Revisi
 
 async function getCategories(options: CategoryOptions): Promise<Category | Category[]> {
     let query = cleanQuery(options);
+    let sort: SortOptions = { created_at: -1 };
 
     let response;
 
-    response = (await database.getLatestCategories(query));
+    response = (await database.getCategories(query, sort));
 
     if (isErrorResponse(response)) throw response.error;
 

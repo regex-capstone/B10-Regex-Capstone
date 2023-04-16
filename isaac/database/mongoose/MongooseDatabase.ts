@@ -1,6 +1,6 @@
 import type { Page, Revision, Category } from '../../models/index';
 import Metric from '../../analytics/model'
-import Database from "../DatabaseInterface";
+import Database, { SortOptions } from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
 import { UpdatePageOptions } from '@/isaac/ISAACOptions';
@@ -12,11 +12,11 @@ try {
 }
 
 const MongooseDatabase: Database = {
-    getLatestPages: async (query: any) => {
+    getPages: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.Page
                 .find(query)
-                .sort({ created_at: -1 });
+                .sort(sort);
 
             const pages = data.map((raw) => {
                 const page: Page = {
@@ -42,11 +42,30 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestRevisions: async (query: any) => {
+    aggMetrics: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+        try {
+            const data = await MongooseModels.Metric
+                .aggregate()
+                .group(groupOptions)
+                .sort(sortOptions)
+                .lookup(lookupOptions)
+    
+            return {
+                success: true,
+                payload: data
+            };
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    getRevisions: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.Revision
                 .find(query)
-                .sort({ created_at: -1 });
+                .sort(sort);
 
             const revs = data.map((raw) => {
                 const rev: Revision = {
@@ -70,11 +89,11 @@ const MongooseDatabase: Database = {
         }
     },
 
-    getLatestCategories: async (query: any) => {
+    getCategories: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.Category
                 .find(query)
-                .sort({ created_at: -1 });
+                .sort(sort);
 
             const cats = data.map((raw) => {
                 const cat: Category = {
@@ -176,6 +195,32 @@ const MongooseDatabase: Database = {
     deletePage: async (id: string) => {
         try {
             await MongooseModels.Page.deleteOne({ _id: id })
+            return {
+                success: true
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    deleteRevision: async (id: string) => {
+        try {
+            await MongooseModels.Revision.deleteOne({ _id: id })
+            return {
+                success: true
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    deleteCategory: async (id: string) => {
+        try {
+            await MongooseModels.Category.deleteOne({ _id: id })
             return {
                 success: true
             }
