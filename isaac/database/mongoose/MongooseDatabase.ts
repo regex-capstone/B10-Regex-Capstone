@@ -207,9 +207,9 @@ const MongooseDatabase: Database = {
 
     deletePage: async (id: string) => {
         try {
-            await MongooseModels.Page.deleteOne({ _id: id })
+            const response = await MongooseModels.Page.deleteOne({ _id: id });
             return {
-                success: true
+                success: response.acknowledged ?? false
             }
         } catch (err: any) {
             return {
@@ -220,9 +220,9 @@ const MongooseDatabase: Database = {
 
     deleteRevision: async (id: string) => {
         try {
-            await MongooseModels.Revision.deleteOne({ _id: id })
+            const response = await MongooseModels.Revision.deleteOne({ _id: id });
             return {
-                success: true
+                success: response.acknowledged ?? false
             }
         } catch (err: any) {
             return {

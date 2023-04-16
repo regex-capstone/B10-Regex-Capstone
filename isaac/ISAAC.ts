@@ -103,16 +103,6 @@ async function addNewRevision(r: Revision): Promise<Revision> {
     return resultRev;
 }
 
-async function deletePage(p: Page) {
-    const response = await database.deletePage(p.id as string)
-
-    if (isErrorResponse(response)) throw response.error;
-
-    natural.setCorpusOutdated(true);
-
-    return p
-}
-
 async function addNewCategory(c: Category): Promise<Category> {
     const response = (await database.addCategory(c));
 
@@ -209,6 +199,24 @@ async function updateUser(u: User) {
     return resultUserId;
 }
 
+async function deletePage(p_id: string) {
+    const response = await database.deletePage(p_id)
+
+    if (isErrorResponse(response)) throw response.error;
+
+    natural.setCorpusOutdated(true);
+
+    return response.success;
+}
+
+async function deleteRevision(r_id: string) {
+    const response = await database.deleteRevision(r_id);
+
+    if (isErrorResponse(response)) throw response.error;
+
+    return response.success;
+}
+
 async function search(q: string, pages: Page[]) {
     if (natural.isCorpusOutdated()) {
         natural.updateCorpus(pages);
@@ -225,12 +233,13 @@ export default {
     getCategories: getCategories,
     addNewPage: addNewPage,
     addNewRevision: addNewRevision,
-    deletePage: deletePage,
     addNewCategory: addNewCategory,
     addAnalytic: addAnalytic,
     addNewUser: addNewUser,
     updatePage: updatePage,
     updateUser: updateUser,
+    deletePage: deletePage,
+    deleteRevision: deleteRevision,
     search: search
 };
 

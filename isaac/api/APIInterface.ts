@@ -12,7 +12,7 @@ export default interface API {
     getPageByTitle(p_title: string): Promise<Page>,
     getTrendingPages(): Promise<Page[]>,
     addNewPage(p: PageRequest): Promise<Page>,
-    deletePage(p_id: string): Promise<Page>
+    deletePage(p_id: string): Promise<boolean>
 
     // revisions
     getRecentPageRevisionById(p_id: string): Promise<Revision>,
@@ -20,6 +20,7 @@ export default interface API {
     getRevisionById(r_id: string): Promise<Revision>,
     getRecentPageRevisionByName(ref_page_name: string): Promise<Revision>,
     addRevision(r: RevisionRequest): Promise<Revision>,
+    deleteRevision(r_id: string): Promise<boolean>,
 
     // categories
     getAllCategories(): Promise<Category[]>,

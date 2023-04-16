@@ -18,8 +18,10 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>
     const categories: Category[] = await api.getAllCategories();
     const trendingPages: Page[] = await api.getTrendingPages();
 
+    const test = await api.deleteRevision('test00000000');
+
     // @TODO: deal with trending pages
-    console.log(trendingPages);
+    console.log(test);
 
     return {
         props: {

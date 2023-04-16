@@ -56,7 +56,7 @@ const ApiEndpoint: API = {
     },
 
     async deletePage(p_id: string) {
-        return (await IsaacAPI.deletePage(await this.getPageById(p_id))) as Page;
+        return (await IsaacAPI.deletePage(p_id)) as boolean;
     },
 
     // revisions
@@ -95,6 +95,10 @@ const ApiEndpoint: API = {
         ));
 
         return rev;
+    },
+
+    async deleteRevision(r_id: string) {
+        return (await IsaacAPI.deleteRevision(r_id)) as boolean;
     },
 
     // categories
