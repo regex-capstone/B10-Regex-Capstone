@@ -3,10 +3,13 @@ import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { NextApiRequest, NextApiResponse } from 'next'
 import type API from '../../../../isaac/api/APIInterface';
 import Page from '../../../../isaac/models/Page';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import { getServerSession } from 'next-auth';
 
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
     const query = req.query
     const page_title = query.page_title as string
@@ -26,9 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
             break;
         case 'DELETE':
-            if (!page) {
-                throw new Error('Page not found.');
-            }
+            if (!session) throw new Error('You must be logged in.');
+            
             const deleted = await api.deletePage(page.id as string);
             res.status(200).json({
                 success: true,

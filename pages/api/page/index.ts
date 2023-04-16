@@ -3,10 +3,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
 import API from '@/isaac/api/APIInterface';
 import ApiEndpoint from '@/isaac/api/APIEndpoint';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import { getServerSession } from 'next-auth';
 
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
     const body = req.body;
 
@@ -17,6 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(200).json(allPages)
             break
         case 'POST':
+            // TODO: test
+            if (!session) throw new Error('You must be logged in.');
+
             if (!body) throw new Error('POST request has no body.');
             if (!body.title) throw new Error('POST request has no title.');
             if (!body.page_category_id) throw new Error('POST request has no page_category_id.');

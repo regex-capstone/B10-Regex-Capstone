@@ -3,10 +3,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
 import API from '@/isaac/api/APIInterface';
 import ApiEndpoint from '@/isaac/api/APIEndpoint';
+import { getServerSession } from 'next-auth';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
     const body = req.body;
 
@@ -20,6 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             
             break;
         case 'POST':
+            if (!session) throw new Error('You must be logged in.');
+            
             if (!body) throw new Error('POST request has no body.');
             if (!body.name) throw new Error('POST request has no name.');
                 

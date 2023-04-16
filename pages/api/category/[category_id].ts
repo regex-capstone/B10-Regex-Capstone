@@ -3,10 +3,13 @@ import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { NextApiRequest, NextApiResponse } from 'next'
 import type API from '../../../isaac/api/APIInterface';
 import { Category } from '@/isaac/models';
+import { getServerSession } from 'next-auth';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 
 const api: API = ApiEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
     const query = req.query
     const category_id = query.category_id as string
@@ -26,8 +29,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
                 
             break;
+        case 'DELETE':
+            if (!session) throw new Error('You must be logged in.');
+
+            const success = await api.deleteCategoryAndPages(category_id);
+            res.status(200).json({
+                success: success
+            })
+            break;
         default:
-            res.setHeader('Allow', ['GET'])
+            res.setHeader('Allow', ['GET', 'DELETE'])
             res.status(405).send(`Method ${method} Not Allowed`)
         }
     } catch (e) {
