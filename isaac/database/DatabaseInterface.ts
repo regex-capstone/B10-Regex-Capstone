@@ -1,5 +1,6 @@
 import type { Page, Revision, Category, User } from '../models/index';
 import type Metric from '../analytics/model'
+import { AggregationTypes } from '../ISAACOptions';
 
 export default interface Database {
     // READ
@@ -71,7 +72,7 @@ export default interface Database {
      * @param sortOptions sort options for the aggregation
      * @param lookupOptions populate model references with the model object(s)
      */
-    aggMetrics(groupOptions: any, sortOptions: any, lookupOptions: any): Promise<SuccessDBResponse | ErrorDBResponse>,
+    aggregate(type: AggregationTypes): Promise<SuccessDBResponse | ErrorDBResponse>,
 
     getAnalytics(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
     addAnalytic(metric: Metric): Promise<SuccessDBResponse | ErrorDBResponse>

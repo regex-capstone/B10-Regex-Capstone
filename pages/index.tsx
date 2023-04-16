@@ -11,27 +11,16 @@ import Header from "@/client/Header";
 import Theme from "@/client/Theme";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-import MongooseDatabase from "@/isaac/database/mongoose/MongooseDatabase";
+import IsaacAPI from '@/isaac/ISAAC';
+import { AggregationTypes } from "@/isaac/ISAACOptions";
 
 const api: API = ApiEndpoint
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
-    const categories: Category[] = await api.getAllCategories()
-    const trendingPageClicksResponse = await MongooseDatabase.aggMetrics(
-        {
-            _id: '$met_page_id', count: { $sum: 1 }
-        },
-        {
-            count: -1
-        },
-        {
-            from: 'pages',
-            localField: '_id',
-            foreignField: '_id',
-            as: 'page'
-        }
-    );
-    const trendingPayload = trendingPageClicksResponse.payload;
+    const categories: Category[] = await api.getAllCategories();
+    const test = await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES });
+
+    console.log(test);
 
     return {
         props: {

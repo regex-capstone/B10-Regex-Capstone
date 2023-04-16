@@ -2,8 +2,8 @@ import type { Page, Revision, Category, User } from './models/index';
 import type Metric from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions } from './ISAACOptions';
-import { SortOptions, isErrorResponse } from './database/DatabaseInterface';
+import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions, AggregationTypes } from './ISAACOptions';
+import { isErrorResponse } from './database/DatabaseInterface';
 import { NaturalProvider } from './search/natural/NaturalProvider';
 import Search from './search/SearchInterface';
 
@@ -12,22 +12,40 @@ const natural: Search = NaturalProvider;
 
 async function getPages(options: PageOptions): Promise<Page | Page[]> {
     let query = cleanQuery(options);
-    let sort: SortOptions = { created_at: -1 };
+    let sort = { created_at: -1 };
 
     let response;
+    let payload: Page[] = [];
 
-    response = (await database.getPages(query, sort));
+    switch (options.aggregation_type) {
+        case AggregationTypes.TRENDING_PAGES:
+            response = (await database.aggregate(AggregationTypes.TRENDING_PAGES));
+            break;
+        default:
+            response = (await database.getPages(query, sort));
+            break;
+    }
 
     if (isErrorResponse(response)) throw response.error;
 
-    const payload = response.payload as Page[];
+    switch (options.aggregation_type) {
+        case AggregationTypes.TRENDING_PAGES:
+            for (const data of response.payload) {
+                const page = data.page[0];
+                payload.push(page);
+            }
+            break;
+        default:
+            payload = response.payload;
+            break;
+    }
 
     return options.single ? payload[0] : payload;
 }
 
 async function getRevisions(options: RevisionOptions): Promise<Revision | Revision[]> {
     let query = cleanQuery(options);
-    let sort: SortOptions = { created_at: -1 };
+    let sort = { created_at: -1 };
 
     let response;
 
@@ -42,7 +60,7 @@ async function getRevisions(options: RevisionOptions): Promise<Revision | Revisi
 
 async function getCategories(options: CategoryOptions): Promise<Category | Category[]> {
     let query = cleanQuery(options);
-    let sort: SortOptions = { created_at: -1 };
+    let sort = { created_at: -1 };
 
     let response;
 

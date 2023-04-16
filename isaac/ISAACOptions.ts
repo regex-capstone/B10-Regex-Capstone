@@ -5,7 +5,8 @@ export interface BaseOptions {
 
 export interface PageOptions extends BaseOptions {
     title?: string,
-    page_category_id?: string
+    page_category_id?: string,
+    aggregation_type?: AggregationTypes
 }
 
 export interface UpdatePageOptions extends BaseOptions {
@@ -25,6 +26,10 @@ export interface MetricsOptions extends BaseOptions {
     major?: string,
     standing?: string,
     single?: boolean
+}
+
+export enum AggregationTypes {
+    TRENDING_PAGES
 }
 
 // only needed for the firebase auth flavor

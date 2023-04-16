@@ -1,9 +1,9 @@
 import type { Page, Revision, Category } from '../../models/index';
 import Metric from '../../analytics/model'
-import Database, { SortOptions } from "../DatabaseInterface";
+import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
-import { UpdatePageOptions } from '@/isaac/ISAACOptions';
+import { AggregationTypes, UpdatePageOptions } from '@/isaac/ISAACOptions';
 
 try {
     await connectToDatabase();
@@ -42,13 +42,26 @@ const MongooseDatabase: Database = {
         }
     },
 
-    aggMetrics: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+    aggregate: async (type: AggregationTypes) => {
         try {
-            const data = await MongooseModels.Metric
-                .aggregate()
-                .group(groupOptions)
-                .sort(sortOptions)
-                .lookup(lookupOptions)
+            let data;
+
+            switch (type) {
+                case AggregationTypes.TRENDING_PAGES:
+                    data = await MongooseModels.Metric
+                        .aggregate()
+                        .group({
+                            _id: '$met_page_id', count: { $sum: 1 }
+                        })
+                        .sort({ count: -1 })
+                        .lookup({
+                            from: 'pages',
+                            localField: '_id',
+                            foreignField: '_id',
+                            as: 'page'
+                        });
+                    break;
+            }
     
             return {
                 success: true,
