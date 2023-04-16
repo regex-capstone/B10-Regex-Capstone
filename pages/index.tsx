@@ -1,6 +1,6 @@
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
 import API from "@/isaac/api/APIInterface";
-import { Category } from "@/isaac/models";
+import { Category, Page } from "@/isaac/models";
 import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPropsResult } from "next";
@@ -11,16 +11,15 @@ import Header from "@/client/Header";
 import Theme from "@/client/Theme";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-import IsaacAPI from '@/isaac/ISAAC';
-import { AggregationTypes } from "@/isaac/ISAACOptions";
 
 const api: API = ApiEndpoint
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
     const categories: Category[] = await api.getAllCategories();
-    const test = await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES });
+    const trendingPages: Page[] = await api.getTrendingPages();
 
-    console.log(test);
+    // @TODO: deal with trending pages
+    console.log(trendingPages);
 
     return {
         props: {

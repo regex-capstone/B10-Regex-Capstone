@@ -7,6 +7,7 @@ import { PageRequest } from '../models/Page';
 import { NaturalProvider } from '../search/natural/NaturalProvider';
 import { TfIdf } from 'natural';
 import { marked } from 'marked';
+import { AggregationTypes } from '../ISAACOptions';
 
 const ApiEndpoint: API = {
     // pages
@@ -24,6 +25,10 @@ const ApiEndpoint: API = {
 
     async getPageByTitle(p_title: string) {
         return (await IsaacAPI.getPages({ title: p_title, single: true })) as Page;
+    },
+
+    async getTrendingPages() {
+        return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES })) as Page[];
     },
 
     async addNewPage(p: PageRequest) {
