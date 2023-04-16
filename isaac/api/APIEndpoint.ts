@@ -121,7 +121,13 @@ const ApiEndpoint: API = {
         })) as Category;
     },
 
-    async deleteCategory(c_id: string) {
+    async deleteCategoryAndPages(c_id: string) {
+        const pages = await this.getPagesByCategoryId(c_id);
+
+        for (const page of pages) {
+            await this.deletePage(page.id as string);
+        }
+        
         return (await IsaacAPI.deleteCategory(c_id)) as boolean;
     },
 
