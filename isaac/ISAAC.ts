@@ -217,6 +217,14 @@ async function deleteRevision(r_id: string) {
     return response.success;
 }
 
+async function deleteCategory(c_id: string) {
+    const response = await database.deleteCategory(c_id);
+
+    if (isErrorResponse(response)) throw response.error;
+
+    return response.success;
+}
+
 async function search(q: string, pages: Page[]) {
     if (natural.isCorpusOutdated()) {
         natural.updateCorpus(pages);
@@ -240,6 +248,7 @@ export default {
     updateUser: updateUser,
     deletePage: deletePage,
     deleteRevision: deleteRevision,
+    deleteCategory: deleteCategory,
     search: search
 };
 

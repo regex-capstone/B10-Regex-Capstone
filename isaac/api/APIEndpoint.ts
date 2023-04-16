@@ -121,6 +121,10 @@ const ApiEndpoint: API = {
         })) as Category;
     },
 
+    async deleteCategory(c_id: string) {
+        return (await IsaacAPI.deleteCategory(c_id)) as boolean;
+    },
+
     async search(q: string) {
         const s = performance.now();
         const pages: Page[] = await IsaacAPI.getPages({}) as Page[];

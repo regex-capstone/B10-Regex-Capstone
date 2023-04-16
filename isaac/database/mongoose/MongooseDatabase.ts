@@ -233,9 +233,9 @@ const MongooseDatabase: Database = {
 
     deleteCategory: async (id: string) => {
         try {
-            await MongooseModels.Category.deleteOne({ _id: id })
+            const response = await MongooseModels.Category.deleteOne({ _id: id });
             return {
-                success: true
+                success: response.acknowledged ?? false
             }
         } catch (err: any) {
             return {
