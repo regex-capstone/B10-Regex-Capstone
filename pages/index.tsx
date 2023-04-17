@@ -4,7 +4,6 @@ import Head from "next/head";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Header from "@/client/Header";
-import Theme from "@/client/Theme";
 
 
 export default function Index() {
@@ -105,7 +104,7 @@ function SearchModule() {
                         <Button color="primary" variant="contained" onClick={(e) => onSearch(value)}>
                             Search
                         </Button>
-                        <Button color="secondary" variant="contained" onClick={(e) => router.push("/#")}>
+                        <Button color="secondary" variant="contained" onClick={(e) => router.push("/t/all")}>
                             Browse Topics
                         </Button>
                     </Stack>
