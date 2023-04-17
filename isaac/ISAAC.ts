@@ -2,7 +2,7 @@ import type { Page, Revision, Category, User } from './models/index';
 import type Metric from './analytics/model'
 import type Database from './database/DatabaseInterface';
 import MongooseDatabase from './database/mongoose/MongooseDatabase';
-import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions, AggregationTypes } from './ISAACOptions';
+import { CategoryOptions, PageOptions, RevisionOptions, MetricsOptions, BaseOptions, UpdatePageOptions, UserOptions, AggregationTypes, PageSortOptions } from './ISAACOptions';
 import { isErrorResponse } from './database/DatabaseInterface';
 import { NaturalProvider } from './search/natural/NaturalProvider';
 import Search from './search/SearchInterface';
@@ -10,9 +10,8 @@ import Search from './search/SearchInterface';
 const database: Database = MongooseDatabase;
 const natural: Search = NaturalProvider;
 
-async function getPages(options: PageOptions): Promise<Page | Page[]> {
+async function getPages(options: PageOptions, sort: PageSortOptions): Promise<Page | Page[]> {
     let query = cleanQuery(options);
-    let sort = { created_at: -1 };
 
     let response;
     let payload: Page[] = [];
@@ -43,9 +42,8 @@ async function getPages(options: PageOptions): Promise<Page | Page[]> {
     return options.single ? payload[0] : payload;
 }
 
-async function getRevisions(options: RevisionOptions): Promise<Revision | Revision[]> {
+async function getRevisions(options: RevisionOptions, sort: PageSortOptions): Promise<Revision | Revision[]> {
     let query = cleanQuery(options);
-    let sort = { created_at: -1 };
 
     let response;
 
@@ -58,9 +56,8 @@ async function getRevisions(options: RevisionOptions): Promise<Revision | Revisi
     return options.single ? payload[0] : payload;
 }
 
-async function getCategories(options: CategoryOptions): Promise<Category | Category[]> {
+async function getCategories(options: CategoryOptions, sort: PageSortOptions): Promise<Category | Category[]> {
     let query = cleanQuery(options);
-    let sort = { created_at: -1 };
 
     let response;
 

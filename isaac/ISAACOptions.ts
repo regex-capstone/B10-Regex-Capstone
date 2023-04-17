@@ -1,13 +1,13 @@
 export interface BaseOptions {
-    id?: string,
-    single?: boolean
+    id?: string;
+    single?: boolean;
 }
 
 export interface PageOptions extends BaseOptions {
-    title?: string,
-    page_category_id?: string,
-    aggregation_type?: AggregationTypes,
-    slug?: string
+    title?: string;
+    page_category_id?: string;
+    aggregation_type?: AggregationTypes;
+    slug?: string;
 }
 
 export interface UpdatePageOptions extends BaseOptions {
@@ -19,14 +19,14 @@ export interface RevisionOptions extends BaseOptions {
 }
 
 export interface CategoryOptions extends BaseOptions {
-    name?: string
+    name?: string;
 }
 
 export interface MetricsOptions extends BaseOptions {
-    met_page_id?: string,
-    major?: string,
-    standing?: string,
-    single?: boolean
+    met_page_id?: string;
+    major?: string;
+    standing?: string;
+    single?: boolean;
 }
 
 export enum AggregationTypes {
@@ -35,5 +35,9 @@ export enum AggregationTypes {
 
 // only needed for the firebase auth flavor
 export interface UserOptions extends BaseOptions {
-    email?: string
+    email?: string;
+}
+
+export interface PageSortOptions {
+    created_at?: number;
 }

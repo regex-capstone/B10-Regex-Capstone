@@ -5,8 +5,14 @@ import { RevisionRequest } from '../models/Revision';
 import { SearchResponse } from '../search/SearchInterface';
 
 export default interface API {
-    // pages 
-    getPages(get_type: GetPageTypes, get_options?: GetPageOptions): Promise<Page | Page[]>,
+    // pages
+    /**
+     * Gets the pages based on the given parameters
+     * @param get_type REQUIRED
+     * @param sort_type REQUIRED
+     * @param get_options DEPENDS on get_type
+     */
+    getPages(get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions): Promise<Page | Page[]>,
     // TODO: deprecate in v2.0
     getAllPages(): Promise<Page[]>,
     getPagesByCategoryId(c_id: string): Promise<Page[]>,
@@ -19,7 +25,13 @@ export default interface API {
     deletePage(p_id: string): Promise<boolean>
 
     // revisions
-    getRevisions(get_type: GetRevisionTypes, get_options?: GetRevisionOptions): Promise<Revision | Revision[]>,
+    /**
+     * Gets the revisions based on the given parameters
+     * @param get_type REQUIRED
+     * @param sort_type REQUIRED
+     * @param get_options DEPENDS on get_type
+     */
+    getRevisions(get_type: GetRevisionTypes, sort_type: SortType, get_options?: GetRevisionOptions): Promise<Revision | Revision[]>,
     // TODO: deprecate in v2.0
     getRecentPageRevisionById(p_id: string): Promise<Revision>,
     getAllPageRevisionsById(p_id: string): Promise<Revision[]>,
@@ -30,7 +42,13 @@ export default interface API {
     deleteRevision(r_id: string): Promise<boolean>,
 
     // categories
-    getCategories(get_type: GetCategoryTypes, get_options?: GetCategoryOptions): Promise<Category | Category[]>,
+    /**
+     * Gets the categories based on the given parameters
+     * @param get_type REQUIRED
+     * @param sort_type REQUIRED
+     * @param get_options DEPENDS on get_type
+     */
+    getCategories(get_type: GetCategoryTypes, sort_type: SortType, get_options?: GetCategoryOptions): Promise<Category | Category[]>,
     // TODO: deprecate in v2.0
     getAllCategories(): Promise<Category[]>,
     getCategoryById(c_id: string): Promise<Category>,
@@ -57,10 +75,16 @@ export enum GetPageTypes {
 }
 
 export interface GetPageOptions {
-    c_id?: string,
-    p_id?: string,
-    p_title?: string,
-    p_slug?: string
+    c_id?: string;
+    p_id?: string;
+    p_title?: string;
+    p_slug?: string;
+}
+
+export enum SortType {
+    ALPHABETICAL,
+    RECENTLY_CREATED,
+    NONE
 }
 
 export enum GetRevisionTypes {
@@ -70,9 +94,9 @@ export enum GetRevisionTypes {
 }
 
 export interface GetRevisionOptions {
-    p_id?: string,
-    r_id?: string,
-    ref_page_name?: string
+    p_id?: string;
+    r_id?: string;
+    ref_page_name?: string;
 }
 
 export enum GetCategoryTypes {
@@ -82,6 +106,6 @@ export enum GetCategoryTypes {
 }
 
 export interface GetCategoryOptions {
-    c_id?: string,
-    c_name?: string
+    c_id?: string;
+    c_name?: string;
 }

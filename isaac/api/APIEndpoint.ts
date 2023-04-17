@@ -5,57 +5,69 @@ import { RevisionRequest } from '../models/Revision';
 import { PageRequest } from '../models/Page';
 import { marked } from 'marked';
 import { AggregationTypes } from '../ISAACOptions';
-import { GetCategoryOptions, GetCategoryTypes, GetPageOptions, GetPageTypes, GetRevisionOptions, GetRevisionTypes } from './APIInterface';
+import { GetCategoryOptions, GetCategoryTypes, GetPageOptions, GetPageTypes, GetRevisionOptions, GetRevisionTypes, SortType } from './APIInterface';
 
 const ApiEndpoint: API = {
     // pages
-    async getPages(get_type: GetPageTypes, get_options?: GetPageOptions) {
+    async getPages(get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions) {
+        let sort_options: any = {};
+
+        switch (sort_type) {
+            case SortType.RECENTLY_CREATED:
+                sort_options.created_at = -1;
+                break;
+            case SortType.NONE:
+                break;
+            default:
+                throw new Error("Invalid sort type.");
+        }
+
         switch (get_type) {
             case GetPageTypes.ALL_PAGES:
-                return (await IsaacAPI.getPages({})) as Page[];
+                return (await IsaacAPI.getPages({}, sort_options)) as Page[];
 
             case GetPageTypes.PAGES_BY_TITLE:
                 if (!get_options?.p_title) throw new Error('No page title provided.');
-                return (await IsaacAPI.getPages({ title: get_options?.p_title })) as Page[];
+                return (await IsaacAPI.getPages({ title: get_options?.p_title }, sort_options)) as Page[];
 
             case GetPageTypes.PAGES_BY_CATEGORY_ID:
                 if (!get_options?.c_id) throw new Error('No category id provided.');
-                return (await IsaacAPI.getPages({ page_category_id: get_options?.c_id })) as Page[];
+                return (await IsaacAPI.getPages({ page_category_id: get_options?.c_id }, sort_options)) as Page[];
 
             case GetPageTypes.PAGE_BY_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await IsaacAPI.getPages({ id: get_options?.p_id, single: true })) as Page;
+                return (await IsaacAPI.getPages({ id: get_options?.p_id, single: true }, sort_options)) as Page;
 
             case GetPageTypes.PAGE_BY_SLUG:
                 if (!get_options?.p_slug) throw new Error('No page slug provided.');
-                return (await IsaacAPI.getPages({ slug: get_options?.p_slug, single: true })) as Page;
+                return (await IsaacAPI.getPages({ slug: get_options?.p_slug, single: true }, sort_options)) as Page;
 
             case GetPageTypes.TRENDING_PAGES:
-                return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES })) as Page[];
+                return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES }, sort_options)) as Page[];
         }
     },
     async getAllPages() {
-        return (await IsaacAPI.getPages({})) as Page[];
+        return (await IsaacAPI.getPages({}, { created_at: -1 })) as Page[];
     },
 
     async getPagesByCategoryId(c_id: string) {
-        return (await IsaacAPI.getPages({ page_category_id: c_id })) as Page[];
+        return (await IsaacAPI.getPages({ page_category_id: c_id }, { created_at: -1 })) as Page[];
     },
 
     async getPageById(p_id: string) {
-        return (await IsaacAPI.getPages({ id: p_id, single: true })) as Page;
+        return (await IsaacAPI.getPages({ id: p_id, single: true }, { created_at: -1 })) as Page;
     },
 
     async getPageByTitle(p_title: string) {
-        return (await IsaacAPI.getPages({ title: p_title, single: true })) as Page;
+        return (await IsaacAPI.getPages({ title: p_title, single: true }, { created_at: -1 })) as Page;
     },
 
     async getPageBySlug(slug: string) {
-        return (await IsaacAPI.getPages({ slug: slug, single: true })) as Page;
+        return (await IsaacAPI.getPages({ slug: slug, single: true }, { created_at: -1 })) as Page;
     },
 
     async getTrendingPages() {
-        return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES })) as Page[];
+        return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES }, { created_at: -1 })) as Page[];
     },
 
     async addNewPage(p: PageRequest) {
@@ -86,37 +98,49 @@ const ApiEndpoint: API = {
     },
 
     // revisions
-    async getRevisions(get_type: GetRevisionTypes, get_options?: GetRevisionOptions) {
+    async getRevisions(get_type: GetRevisionTypes, sort_type: SortType, get_options?: GetRevisionOptions) {
+        let sort_options: any = {};
+
+        switch (sort_type) {
+            case SortType.RECENTLY_CREATED:
+                sort_options.created_at = -1;
+                break;
+            case SortType.NONE:
+                break;
+            default:
+                throw new Error("Invalid sort type.");
+        }
+
         switch (get_type) {
             case GetRevisionTypes.ALL_REVISIONS_OF_PAGE_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await IsaacAPI.getRevisions({ rev_page_id: get_options?.p_id })) as Revision | Revision[];
+                return (await IsaacAPI.getRevisions({ rev_page_id: get_options?.p_id }, sort_options)) as Revision | Revision[];
 
             case GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await IsaacAPI.getRevisions({ rev_page_id: get_options?.p_id, single: true })) as Revision;
+                return (await IsaacAPI.getRevisions({ rev_page_id: get_options?.p_id, single: true }, sort_options)) as Revision;
 
             case GetRevisionTypes.REVISION_BY_REVISION_ID:
                 if (!get_options?.r_id) throw new Error('No revision id provided.');
-                return (await IsaacAPI.getRevisions({ id: get_options?.r_id, single: true })) as Revision;
+                return (await IsaacAPI.getRevisions({ id: get_options?.r_id, single: true }, sort_options)) as Revision;
         }
     },
 
     async getRecentPageRevisionById(p_id: string) {
-        return (await IsaacAPI.getRevisions({ rev_page_id: p_id, single: true })) as Revision;
+        return (await IsaacAPI.getRevisions({ rev_page_id: p_id, single: true }, { created_at: -1 })) as Revision;
     },
 
     async getAllPageRevisionsById(p_id: string) {
-        return (await IsaacAPI.getRevisions({ rev_page_id: p_id })) as Revision[];
+        return (await IsaacAPI.getRevisions({ rev_page_id: p_id }, { created_at: -1 })) as Revision[];
     },
 
     async getRevisionById(r_id: string) {
-        return (await IsaacAPI.getRevisions({ id: r_id, single: true })) as Revision;
+        return (await IsaacAPI.getRevisions({ id: r_id, single: true }, { created_at: -1 })) as Revision;
     },
 
     async getRecentPageRevisionByName(ref_page_name: string) {
         const page = (await this.getPageByTitle(ref_page_name)) as Page;
-        return (await IsaacAPI.getRevisions({ rev_page_id: page.id, single: true })) as Revision;
+        return (await IsaacAPI.getRevisions({ rev_page_id: page.id, single: true }, { created_at: -1 })) as Revision;
     },
 
     async addRevision(r: RevisionRequest) {
@@ -144,31 +168,46 @@ const ApiEndpoint: API = {
     },
 
     // categories
-    async getCategories(get_type: GetCategoryTypes, get_options?: GetCategoryOptions) {
+    async getCategories(get_type: GetCategoryTypes, sort_type: SortType, get_options?: GetCategoryOptions) {
+        let sort_options: any = {};
+
+        switch (sort_type) {
+            case SortType.ALPHABETICAL:
+                sort_options.name = 1;
+                break;
+            case SortType.RECENTLY_CREATED:
+                sort_options.created_at = -1;
+                break;
+            case SortType.NONE:
+                break;
+            default:
+                throw new Error("Invalid sort type.");
+        }
+        
         switch (get_type) {
             case GetCategoryTypes.ALL_CATEGORIES:
-                return (await IsaacAPI.getCategories({})) as Category[];
+                return (await IsaacAPI.getCategories({}, sort_options)) as Category[];
 
             case GetCategoryTypes.CATEGORY_BY_ID:
                 if (!get_options?.c_id) throw new Error('No category id provided.');
-                return (await IsaacAPI.getCategories({ id: get_options?.c_id, single: true })) as Category;
+                return (await IsaacAPI.getCategories({ id: get_options?.c_id, single: true }, sort_options)) as Category;
 
             case GetCategoryTypes.CATEGORY_BY_NAME:
                 if (!get_options?.c_name) throw new Error('No category name provided.');
-                return (await IsaacAPI.getCategories({ name: get_options?.c_name, single: true })) as Category;
+                return (await IsaacAPI.getCategories({ name: get_options?.c_name, single: true }, sort_options)) as Category;
         }
     },
 
     async getAllCategories() {
-        return (await IsaacAPI.getCategories({})) as Category[];
+        return (await IsaacAPI.getCategories({}, { created_at: -1 })) as Category[];
     },
 
     async getCategoryById(c_id: string) {
-        return (await IsaacAPI.getCategories({ id: c_id, single: true })) as Category;
+        return (await IsaacAPI.getCategories({ id: c_id, single: true }, { created_at: -1 })) as Category;
     },
 
     async getCategoryByName(c_name: string) {
-        return (await IsaacAPI.getCategories({ name: c_name, single: true })) as Category;
+        return (await IsaacAPI.getCategories({ name: c_name, single: true }, { created_at: -1 })) as Category;
     },
 
     async addNewCategory(c: Category) {
@@ -190,7 +229,7 @@ const ApiEndpoint: API = {
 
     async search(q: string) {
         const s = performance.now();
-        const pages: Page[] = await IsaacAPI.getPages({}) as Page[];
+        const pages: Page[] = await IsaacAPI.getPages({}, { created_at: -1 }) as Page[];
         const searchPages = await IsaacAPI.search(q, pages);
         return {
             results: searchPages,

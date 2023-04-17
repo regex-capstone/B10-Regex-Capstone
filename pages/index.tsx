@@ -1,5 +1,5 @@
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import API from "@/isaac/api/APIInterface";
+import API, { GetCategoryTypes, SortType } from "@/isaac/api/APIInterface";
 import { Category, Page } from "@/isaac/models";
 import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
@@ -15,8 +15,10 @@ import { useSession } from "next-auth/react";
 const api: API = ApiEndpoint
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
-    const categories: Category[] = await api.getAllCategories();
+    const categories: Category[] = await api.getCategories(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[];
     const trendingPages: Page[] = await api.getTrendingPages();
+
+    console.log(categories);
 
     // TODO: deal with trending pages
 

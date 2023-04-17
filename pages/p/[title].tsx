@@ -70,7 +70,6 @@ export default function Page(props: PageProps) {
                     <Grid2 xs={3}>
                         <Stack direction={'column'} spacing={2}>
                             <Logo />
-                            <ContentTable page={pageData} />
                         </Stack>
                     </Grid2>
                     <Grid2 xs={6}>
@@ -87,22 +86,6 @@ export default function Page(props: PageProps) {
                 </Grid2>
             </Container>
         </>
-    )
-}
-
-function ContentTable(props: { page: PageData }) {
-    const { page } = props;
-    const headings = page.headings ?? [];
-
-    return (
-        <Stack direction={'column'}>
-            <h3>Content</h3>
-            <Stack direction={'column'} spacing={2}>
-                {headings.map((heading, i) => (
-                    <a href={`#${heading}`} key={i}>{heading.text}</a>
-                ))}
-            </Stack>
-        </Stack>
     )
 }
 
