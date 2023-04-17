@@ -1,16 +1,39 @@
 import type { Page, Revision, Category, User } from '../models/index';
-import natural from "natural";
 import type API from "./APIInterface";
 import IsaacAPI from "../ISAAC";
 import { RevisionRequest } from '../models/Revision';
 import { PageRequest } from '../models/Page';
-import { NaturalProvider } from '../search/natural/NaturalProvider';
-import { TfIdf } from 'natural';
 import { marked } from 'marked';
 import { AggregationTypes } from '../ISAACOptions';
+import { GetCategoryOptions, GetCategoryTypes, GetPageOptions, GetPageTypes, GetRevisionOptions, GetRevisionTypes } from './APIInterface';
 
 const ApiEndpoint: API = {
     // pages
+    async getPages(get_type: GetPageTypes, get_options?: GetPageOptions) {
+        switch (get_type) {
+            case GetPageTypes.ALL_PAGES:
+                return (await IsaacAPI.getPages({})) as Page[];
+
+            case GetPageTypes.PAGES_BY_TITLE:
+                if (!get_options?.p_title) throw new Error('No page title provided.');
+                return (await IsaacAPI.getPages({ title: get_options?.p_title })) as Page[];
+
+            case GetPageTypes.PAGES_BY_CATEGORY_ID:
+                if (!get_options?.c_id) throw new Error('No category id provided.');
+                return (await IsaacAPI.getPages({ page_category_id: get_options?.c_id })) as Page[];
+
+            case GetPageTypes.PAGE_BY_ID:
+                if (!get_options?.p_id) throw new Error('No page id provided.');
+                return (await IsaacAPI.getPages({ id: get_options?.p_id, single: true })) as Page;
+
+            case GetPageTypes.PAGE_BY_SLUG:
+                if (!get_options?.p_slug) throw new Error('No page slug provided.');
+                return (await IsaacAPI.getPages({ slug: get_options?.p_slug, single: true })) as Page;
+
+            case GetPageTypes.TRENDING_PAGES:
+                return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES })) as Page[];
+        }
+    },
     async getAllPages() {
         return (await IsaacAPI.getPages({})) as Page[];
     },
@@ -63,6 +86,22 @@ const ApiEndpoint: API = {
     },
 
     // revisions
+    async getRevisions(get_type: GetRevisionTypes, get_options?: GetRevisionOptions) {
+        switch (get_type) {
+            case GetRevisionTypes.ALL_REVISIONS_OF_PAGE_ID:
+                if (!get_options?.p_id) throw new Error('No page id provided.');
+                return (await IsaacAPI.getRevisions({ rev_page_id: get_options?.p_id })) as Revision | Revision[];
+
+            case GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID:
+                if (!get_options?.p_id) throw new Error('No page id provided.');
+                return (await IsaacAPI.getRevisions({ rev_page_id: get_options?.p_id, single: true })) as Revision;
+
+            case GetRevisionTypes.REVISION_BY_REVISION_ID:
+                if (!get_options?.r_id) throw new Error('No revision id provided.');
+                return (await IsaacAPI.getRevisions({ id: get_options?.r_id, single: true })) as Revision;
+        }
+    },
+
     async getRecentPageRevisionById(p_id: string) {
         return (await IsaacAPI.getRevisions({ rev_page_id: p_id, single: true })) as Revision;
     },
@@ -105,6 +144,21 @@ const ApiEndpoint: API = {
     },
 
     // categories
+    async getCategories(get_type: GetCategoryTypes, get_options?: GetCategoryOptions) {
+        switch (get_type) {
+            case GetCategoryTypes.ALL_CATEGORIES:
+                return (await IsaacAPI.getCategories({})) as Category[];
+
+            case GetCategoryTypes.CATEGORY_BY_ID:
+                if (!get_options?.c_id) throw new Error('No category id provided.');
+                return (await IsaacAPI.getCategories({ id: get_options?.c_id, single: true })) as Category;
+
+            case GetCategoryTypes.CATEGORY_BY_NAME:
+                if (!get_options?.c_name) throw new Error('No category name provided.');
+                return (await IsaacAPI.getCategories({ name: get_options?.c_name, single: true })) as Category;
+        }
+    },
+
     async getAllCategories() {
         return (await IsaacAPI.getCategories({})) as Category[];
     },
