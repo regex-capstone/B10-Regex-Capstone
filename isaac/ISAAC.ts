@@ -74,10 +74,6 @@ async function getCategories(options: CategoryOptions): Promise<Category | Categ
 }
 
 async function addNewPage(p: Page): Promise<Page> {
-    const doesPageExists = (await getPages({ title: p.title })) as Page[];
-
-    if (doesPageExists.length > 0) throw new Error('Page with same title already exists.');
-
     const response = (await database.addPage(p));
 
     if (isErrorResponse(response)) throw response.error;

@@ -24,6 +24,10 @@ const MongooseModels = {
         description: {
             type: String,
             required: [true, 'Description is missing...']
+        },
+        slug: {
+            type: String,
+            required: [true, 'Slug is missing...']
         }
     }, { strict: true }),
 

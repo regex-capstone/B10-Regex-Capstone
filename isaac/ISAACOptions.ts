@@ -6,7 +6,8 @@ export interface BaseOptions {
 export interface PageOptions extends BaseOptions {
     title?: string,
     page_category_id?: string,
-    aggregation_type?: AggregationTypes
+    aggregation_type?: AggregationTypes,
+    slug?: string
 }
 
 export interface UpdatePageOptions extends BaseOptions {

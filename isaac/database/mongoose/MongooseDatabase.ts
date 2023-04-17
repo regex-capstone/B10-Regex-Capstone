@@ -4,6 +4,7 @@ import Database from "../DatabaseInterface";
 import MongooseModels from './MongooseModels';
 import connectToDatabase from './MongooseProvider';
 import { AggregationTypes, UpdatePageOptions } from '@/isaac/ISAACOptions';
+import convert, { LOWERCASE_TRANSFORMER, TITLECASE_TRANSFORMER } from 'url-slug';
 
 try {
     await connectToDatabase();
@@ -24,7 +25,6 @@ const MongooseDatabase: Database = {
                     title: raw.title,
                     page_category_id: raw.page_category_id,
                     created_at: raw.created_at,
-                    headings: raw.headings ?? [],
                     description: raw.description ?? ''
                 };
 
@@ -132,11 +132,16 @@ const MongooseDatabase: Database = {
     addPage: async (p: Page) => {
         try {
             const page = new MongooseModels.Page(p);
+            const pageId = page._doc._id;
+
+            page.slug = convert(`${page.title} ${pageId}`, {
+                separator: '-',
+                transformer: LOWERCASE_TRANSFORMER
+            });
+            
             await page.validate();
             await page.save();
-            // TODO; fix this fucking add shit bullshit
 
-            const pageId = page._doc._id;
             const newPage = {
                 ...page._doc,
                 id: pageId.toString()

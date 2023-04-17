@@ -4,7 +4,7 @@ export default interface Page {
     page_category_id: string;
     created_at: number;
     description: string;
-    headings: Heading[];    // @TODO handle headings
+    slug?: string;
 }
 
 export interface PageRequest {

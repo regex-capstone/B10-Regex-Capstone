@@ -27,6 +27,10 @@ const ApiEndpoint: API = {
         return (await IsaacAPI.getPages({ title: p_title, single: true })) as Page;
     },
 
+    async getPageBySlug(slug: string) {
+        return (await IsaacAPI.getPages({ slug: slug, single: true })) as Page;
+    },
+
     async getTrendingPages() {
         return (await IsaacAPI.getPages({ aggregation_type: AggregationTypes.TRENDING_PAGES })) as Page[];
     },
@@ -38,7 +42,6 @@ const ApiEndpoint: API = {
             title: p.title,
             page_category_id: p.page_category_id,
             description: '<add description here>',
-            headings: [],
             created_at: createdAt
         });
 

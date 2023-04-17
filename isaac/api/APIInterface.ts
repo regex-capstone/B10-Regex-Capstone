@@ -8,8 +8,9 @@ export default interface API {
     // pages 
     getAllPages(): Promise<Page[]>,
     getPagesByCategoryId(c_id: string): Promise<Page[]>,
-    getPageById(p_id: string): Promise<Page>,
+    getPageById(p_id: string): Promise<Page>,  // @deprecate in v2.0
     getPageByTitle(p_title: string): Promise<Page>,
+    getPageBySlug(slug: string): Promise<Page>,
     getTrendingPages(): Promise<Page[]>,
     addNewPage(p: PageRequest): Promise<Page>,
     deletePage(p_id: string): Promise<boolean>
