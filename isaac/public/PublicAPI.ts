@@ -1,4 +1,5 @@
 import CategoryPublicAPIInterface, { CategoryPublicAPI } from "./api/Category";
+import MetricPublicAPIInterface, { MetricPublicAPI } from "./api/Metric";
 import PagePublicAPIInterface, { PagePublicAPI } from "./api/Page";
 import RevisionPublicAPIInterface, { RevisionPublicAPI } from "./api/Revision";
 import SearchPublicAPIInterface, { SearchPublicAPI } from "./api/Search";
@@ -15,7 +16,8 @@ interface PublicAPIInterface {
     Category: CategoryPublicAPIInterface,
     Revision: RevisionPublicAPIInterface,
     Search: SearchPublicAPIInterface,
-    User: UserPublicAPIInterface
+    User: UserPublicAPIInterface,
+    Metric: MetricPublicAPIInterface
 }
 
 const PublicAPIEndpoint: PublicAPIInterface = {
@@ -23,7 +25,8 @@ const PublicAPIEndpoint: PublicAPIInterface = {
     Category: CategoryPublicAPI,
     Revision: RevisionPublicAPI,
     Search: SearchPublicAPI,
-    User: UserPublicAPI
+    User: UserPublicAPI,
+    Metric: MetricPublicAPI
 }
 
 export default PublicAPIEndpoint;

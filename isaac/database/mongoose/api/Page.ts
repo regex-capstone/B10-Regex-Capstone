@@ -78,6 +78,7 @@ export const PageModelAPI: ModelAPI<Page> = {
         }
     },
 
+    // TODO: verify that this works
     update: async (id: string, attributes: Partial<Page>) => {
         try {
             const page = await MongooseModels.Page.updateOne({ _id: id }, attributes);

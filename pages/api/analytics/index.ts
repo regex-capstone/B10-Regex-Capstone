@@ -1,9 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import AnalyticsAPI from '@/isaac/analytics/AnalyticsEndpoints';
+import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
+import { GetMetricTypes } from '@/isaac/public/api/Metric';
 import { NextApiRequest, NextApiResponse } from 'next'
-import type Analytics from '../../../isaac/analytics/AnalyticsInterface';
 
-const analyticsApi: Analytics = AnalyticsAPI;
+const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
         case 'GET':
-            const allAnalytics = await analyticsApi.getAllAnalytics();
+            const allAnalytics = await api.Metric.get(GetMetricTypes.ALL_METRICS, SortType.RECENTLY_CREATED);
             res.status(200).json(allAnalytics);
             break
         case 'POST':
@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!body.standing) throw new Error('POST request has no standing.');
             if (!body.met_page_id) throw new Error('POST request has no met_page_id.');
 
-            const metId = await analyticsApi.addAnalytic({
+            const metId = await api.Metric.add({
                 major: body.major,
                 standing: body.standing,
                 met_page_id: body.met_page_id

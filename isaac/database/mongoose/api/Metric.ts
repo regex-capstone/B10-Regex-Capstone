@@ -67,6 +67,6 @@ export const MetricModelAPI: ModelAPI<Metric> = {
         }
     },
 
-    update: async (m: Metric) => { throw new Error("Not implemented"); },
+    update: async (id: string, attributes: Partial<Metric>) => { throw new Error("Not implemented"); },
     delete: async (id: string) => { throw new Error("Not implemented"); }
 }

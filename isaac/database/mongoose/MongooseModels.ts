@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
-import Metric from '../../analytics/model';
-import { Page, Revision, Category, User } from '../../models/index';
+import { Page, Revision, Category, User, Metric } from '../../models/index';
 
 export const PageSchema = new mongoose.Schema({
     title: { 

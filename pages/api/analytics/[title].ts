@@ -1,12 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import AnalyticsAPI from '@/isaac/analytics/AnalyticsEndpoints';
 import { NextApiRequest, NextApiResponse } from 'next'
-import type Analytics from '../../../isaac/analytics/AnalyticsInterface';
 import { Page, Metric } from '@/isaac/models';
 import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
+import { GetMetricTypes } from '@/isaac/public/api/Metric';
 
-const analyticsApi: Analytics = AnalyticsAPI;
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -28,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         switch (method) {
         case 'GET':
-            const met: Metric[] = await analyticsApi.getAnalytics(page.id as string);
+            const met: Metric[] = (await api.Metric.get(GetMetricTypes.METRICS_OF_PAGE_ID, SortType.RECENTLY_CREATED, { p_id: page.id as string } ) as Metric[]);
 
             if (!met) {
                 throw new Error('Metrics not found.');
