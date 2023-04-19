@@ -1,12 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { NextApiRequest, NextApiResponse } from 'next'
-import type API from '../../../isaac/api/APIInterface';
-import { Category } from '@/isaac/models';
+import { Category, Page } from '@/isaac/models';
 import { getServerSession } from 'next-auth';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
+import { GetPageTypes } from '@/isaac/public/api/Page';
+import { GetCategoryTypes } from '@/isaac/public/api/Category';
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
@@ -15,7 +16,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const category_id = query.category_id as string
 
     try {
-        const category: Category = await api.getCategoryById(category_id);
+        const category: Category = await api.Category.get(
+            GetCategoryTypes.CATEGORY_BY_ID, 
+            SortType.NONE, 
+            { c_id: category_id }
+        ) as Category;
 
         if (!category) {
             throw new Error('Category not found.');
@@ -32,7 +37,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'DELETE':
             if (!session) throw new Error('You must be logged in.');
 
-            const success = await api.deleteCategoryAndPages(category_id);
+            // delete all pages under the selected category
+            const pages = (await api.Page.get(GetPageTypes.PAGES_BY_CATEGORY_ID, SortType.NONE, { c_id: category.id as string }) as Page[]);
+
+            for (const page of pages) {
+                await api.Page.delete(page.id as string);
+            }
+            
+            const success = await api.Category.delete(category_id);
             res.status(200).json({
                 success: success
             })

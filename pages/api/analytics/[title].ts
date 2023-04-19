@@ -3,11 +3,11 @@ import AnalyticsAPI from '@/isaac/analytics/AnalyticsEndpoints';
 import { NextApiRequest, NextApiResponse } from 'next'
 import type Analytics from '../../../isaac/analytics/AnalyticsInterface';
 import { Page, Metric } from '@/isaac/models';
-import API from '@/isaac/api/APIInterface';
-import APIEndpoint from '@/isaac/api/APIEndpoint';
+import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
+import { GetPageTypes } from '@/isaac/public/api/Page';
 
 const analyticsApi: Analytics = AnalyticsAPI;
-const api: API = APIEndpoint;
+const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const method = req.method
@@ -15,7 +15,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const title = query.title as string
 
     try {
-        const page: Page = await api.getPageByTitle(title);
+        // TODO: SLUG
+        const page: Page = (await api.Page.get(
+            GetPageTypes.PAGES_BY_TITLE, 
+            SortType.NONE,
+            { p_title: title }
+        ) as Page[])[0];
 
         if (!page) {
             throw new Error('Page not found.');

@@ -1,4 +1,3 @@
-import { TfIdf } from "natural";
 import { Page } from "../models";
 
 export default interface Search {

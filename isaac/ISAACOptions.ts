@@ -3,41 +3,23 @@ export interface BaseOptions {
     single?: boolean;
 }
 
-export interface PageOptions extends BaseOptions {
-    title?: string;
-    page_category_id?: string;
-    aggregation_type?: AggregationTypes;
-    slug?: string;
-}
+export function cleanOptions(options: BaseOptions) {
+    const id = options.id;
 
-export interface UpdatePageOptions extends BaseOptions {
-    description?: string;
-}
+    let query = {}
 
-export interface RevisionOptions extends BaseOptions {
-    rev_page_id?: string;
-}
+    // Because MongoDB uses '_id' instead of just 'id', we need to do change
+    // the property here.
+    if (id) {
+        delete options.id;
 
-export interface CategoryOptions extends BaseOptions {
-    name?: string;
-}
+        query = {
+            _id: id
+        }
+    }
 
-export interface MetricsOptions extends BaseOptions {
-    met_page_id?: string;
-    major?: string;
-    standing?: string;
-    single?: boolean;
-}
-
-export enum AggregationTypes {
-    TRENDING_PAGES
-}
-
-// only needed for the firebase auth flavor
-export interface UserOptions extends BaseOptions {
-    email?: string;
-}
-
-export interface PageSortOptions {
-    created_at?: number;
+    return {
+        ...query,
+        ...options
+    }
 }

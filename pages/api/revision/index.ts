@@ -1,12 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
-import API from '@/isaac/api/APIInterface';
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { getServerSession } from 'next-auth';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
@@ -22,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!body.content) throw new Error('POST request has no content.');
             if (!body.rev_page_id) throw new Error('POST request has no rev_page_id.');
 
-            const revId = await api.addRevision({
+            const revId = await api.Revision.add({
                 content: body.content,
                 rev_page_id: body.rev_page_id
             });

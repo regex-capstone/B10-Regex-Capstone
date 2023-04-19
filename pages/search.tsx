@@ -9,18 +9,19 @@ import { roundOff } from "@/client/utils/TimeUtils";
 import useSearch from "@/client/hooks/useSearch";
 import LoadingSpinner from "@/client/LoadingSpinner";
 import useCategory from "@/client/hooks/useCategory";
-import API from '@/isaac/api/APIInterface';
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
+import ApiEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { SearchResponse } from '@/isaac/search/SearchInterface';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
+import { GetCategoryTypes } from '@/isaac/public/api/Category';
 
 /**
  * Uses SSG to generate the search result page on the first load.
  */
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
-    const api: API = ApiEndpoint;
-    const searchResponse: SearchResponse = await api.search((context.query.q ?? "") as string);
-    const categories: Category[] = (await api.getAllCategories());
+    const api = PublicAPIEndpoint;
+    const searchResponse: SearchResponse = await api.Search.search((context.query.q ?? "") as string);
+    const categories: Category[] = (await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[]);
     const secondsElapsed: number = roundOff(searchResponse.time_elapsed / 1000);
     return {
         props: {

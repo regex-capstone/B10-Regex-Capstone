@@ -1,11 +1,11 @@
 import { NextAuthOptions } from "next-auth";
 import User, { UserMajor, UserRole } from "@/isaac/models/User";
 import GoogleProvider from "../google/GoogleProvider";
-import API from "@/isaac/api/APIInterface";
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
+import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { UserStanding } from '../../models/User';
+import { GetUserTypes } from "@/isaac/public/api/User";
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
 export interface ComponentAuthOptions {
     role: string,
@@ -30,10 +30,11 @@ export const AuthOptions: NextAuthOptions = {
                 const name = token.name as string;
                 const email = token.email as string;
 
-                let user: User = await api.getUserByEmail(email);
+                let user: User = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email });
                 
+                // TODO: rehandle user shit
                 if (!user) {    // new user!
-                    const newUser = await api.addNewUser({
+                    const newUser = await api.User.add({
                         name: name,
                         email: email,
                         role: UserRole.STUDENT,

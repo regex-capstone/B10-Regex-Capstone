@@ -1,13 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
+import { SortType } from '@/isaac/public/PublicAPI';
 import { NextApiRequest, NextApiResponse } from 'next'
-import type API from '../../../../isaac/api/APIInterface';
 import Page from '../../../../isaac/models/Page';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
+import { GetPageTypes } from '@/isaac/public/api/Page';
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
+// TODO: handle to only allow slugs
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
@@ -15,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const page_title = query.page_title as string
 
     try {
-        const page: Page = await api.getPageByTitle(page_title);
+        const page: Page = (await api.Page.get(GetPageTypes.PAGES_BY_TITLE, SortType.NONE, { p_title: page_title }) as Page[])[0];
 
         if (!page) {
             throw new Error('Page not found.');
@@ -31,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'DELETE':
             if (!session) throw new Error('You must be logged in.');
             
-            const deleted = await api.deletePage(page.id as string);
+            const deleted = await api.Page.delete(page.id as string);
             res.status(200).json({
                 success: true,
                 page: deleted

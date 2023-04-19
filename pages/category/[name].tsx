@@ -1,6 +1,5 @@
 import { Category, Page } from "@/isaac/models"
-import API from "@/isaac/api/APIInterface"
-import APIEndpoint from "@/isaac/api/APIEndpoint"
+import { SortType } from "@/isaac/public/PublicAPI"
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next"
 import SearchBar from "@/client/SearchBar"
 import Head from "next/head"
@@ -9,10 +8,13 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Link from "next/link"
 import Logo from "@/client/Logo"
 import Header from "@/client/Header"
+import PublicAPIEndpoint from "@/isaac/public/PublicAPI"
+import { GetCategoryTypes } from "@/isaac/public/api/Category"
+import { GetPageTypes } from "@/isaac/public/api/Page"
 
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
-    const api: API = APIEndpoint
-    const categories: Category[] = await api.getAllCategories()
+    const api = PublicAPIEndpoint;
+    const categories: Category[] = (await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[]);
     return {
         paths: categories.map((category: Category) => ({
             params: { name: category.name },
@@ -22,10 +24,18 @@ export async function getStaticPaths(context: GetStaticPathsContext): Promise<Ge
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<CategoryProps>> {
-    const api: API = APIEndpoint
+    const api = PublicAPIEndpoint;
     const { name } = context.params ?? {};
-    const category: Category = await api.getCategoryByName(name as string)
-    const pages: Page[] = await api.getPagesByCategoryId(category.id as string)
+    const category: Category = await api.Category.get(
+        GetCategoryTypes.CATEGORY_BY_NAME,
+        SortType.NONE,
+        { c_name: name as string }
+    ) as Category;
+    const pages: Page[] = (await api.Page.get(
+        GetPageTypes.PAGES_BY_CATEGORY_ID,
+        SortType.ALPHABETICAL,
+        { c_id: category.id as string }
+    )) as Page[];
     return {
         props: {
             category: JSON.stringify(category),

@@ -1,14 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
-import API from '@/isaac/api/APIInterface';
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { User } from '@/isaac/models';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
+import { GetUserTypes } from '@/isaac/public/api/User';
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
+// TODO: double check this works
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const method = req.method;
@@ -27,7 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 throw new Error('Not authenticated.');
             }
 
-            const user: User = await api.getUserByEmail(email);
+            const user: User = await api.User.get(
+                GetUserTypes.USER_BY_EMAIL,
+                { email: email }
+            );
 
             if (!user) {
                 throw new Error('User not found.');
@@ -42,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'PUT':
             if (!body) throw new Error('PUT request has no body.');
 
-            const userId = await api.updateUser(body);
+            const userId = await api.User.update(body);
 
             res.status(200).json({
                 success: true,

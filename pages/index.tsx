@@ -1,6 +1,5 @@
-import ApiEndpoint from "@/isaac/api/APIEndpoint";
-import API, { GetCategoryTypes, SortType } from "@/isaac/api/APIInterface";
-import { Category, Page } from "@/isaac/models";
+import { SortType } from "@/isaac/public/PublicAPI";
+import { Category } from "@/isaac/models";
 import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { GetStaticPropsResult } from "next";
@@ -11,16 +10,18 @@ import Header from "@/client/Header";
 import Theme from "@/client/Theme";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
+import { GetCategoryTypes } from "@/isaac/public/api/Category";
+import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 
-const api: API = ApiEndpoint
+const api = PublicAPIEndpoint;
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
-    const categories: Category[] = await api.getCategories(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[];
-    const trendingPages: Page[] = await api.getTrendingPages();
+    const categories: Category[] = await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[];
+    // TODO: SERVER - handle trending pages again
+    
+    // const trendingPages: Page[] = await api.getTrendingPages();
 
-    console.log(categories);
-
-    // TODO: deal with trending pages
+    // TODO: CLIENT - deal with trending pages
 
     return {
         props: {
@@ -37,7 +38,7 @@ interface IndexProps {
 
 /* (root)/ */
 export default function Index(props: IndexProps) {
-    const categories: Category[] = JSON.parse(props.categories) as Category[]
+    const categories: Category[] = JSON.parse(props.categories) as Category[];
 
     return (
         <>
