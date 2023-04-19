@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
 import { useState } from "react";
@@ -124,13 +124,16 @@ function PageBody() {
             position: "relative",
             zIndex: 1,
         }}>
-            <Container maxWidth="sm">
-                <Stack spacing={2} direction="column" sx={{
-                    marginTop: "-2rem"
+            <Container maxWidth="md">
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    marginTop: -5,
                 }}>
                     <TrendingCard />
                     <RecentCard />
-                </Stack>
+                </Box>
             </Container>
         </Box>
     )
@@ -143,7 +146,10 @@ function Card(props: any) {
             backgroundColor: "#FFF",
             boxShadow: 5,
             padding: 2,
+            margin: 1,
             borderRadius: 5,
+            flex: 1,
+            minWidth: "200px",
         }}>
             {props.children}
         </Box>
@@ -160,10 +166,10 @@ function TrendingCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
-                <a href="#">Something</a>
-                <a href="#">Something</a>
-                <a href="#">Something</a>
-                <a href="#">Something</a>
+                <a href="#">A Really Long Title of Some Really Long Article</a>
+                <a href="#">Another Great Article, With A Shorter Title</a>
+                <a href="#">Some Good Stuff</a>
+                <a href="#">Somewhere Over The Rainbow</a>
             </Stack>
         </Card>
     )
@@ -179,10 +185,10 @@ function RecentCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
             <Stack direction="column">
-                <a href="#">Something</a>
-                <a href="#">Something</a>
-                <a href="#">Something</a>
-                <a href="#">Something</a>
+                <a href="#">Long Article</a>
+                <a href="#">Some Good Stuff</a>
+                <a href="#">Somewhere Over The Rainbow</a>
+                <a href="#">Another Great Article, With A Shorter Title</a>
             </Stack>
         </Card>
     )
