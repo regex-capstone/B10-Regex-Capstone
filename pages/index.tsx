@@ -157,7 +157,7 @@ function TrendingCard() {
                 fontSize: "1.5rem",
                 fontWeight: 700,
             }}>
-                Trending
+                <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
                 <a href="#">Something</a>
@@ -176,7 +176,7 @@ function RecentCard() {
                 fontSize: "1.5rem",
                 fontWeight: 700,
             }}>
-                Recently Updated
+                <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
             <Stack direction="column">
                 <a href="#">Something</a>

@@ -5,6 +5,7 @@ import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import NotAuthorizedPage from '@/client/NotAuthorizedPage';
 import Theme from '@/client/Theme';
+import './_app.css'
 
 const theme = createTheme({
     palette: {
@@ -13,6 +14,27 @@ const theme = createTheme({
         },
         secondary: {
             main: Theme.COLOR.BACKGROUND_LIGHT,
+        },
+    },
+    typography: {
+        fontFamily: "Open Sans, sans-serif",
+        h1: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h2: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h3: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h4: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h5: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h6: {
+            fontFamily: "Encode Sans, sans-serif",
         },
     }
 })
