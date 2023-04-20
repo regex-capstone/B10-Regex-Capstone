@@ -2,6 +2,7 @@ import { BaseOptions, cleanOptions } from "../ISAACOptions";
 import { isErrorResponse } from "../database/DatabaseInterface";
 import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import { Category } from "../models";
+import { ServerCategoryRequest } from "../models/Category";
 
 
 export interface CategoryOptions extends BaseOptions {
@@ -25,8 +26,8 @@ export const CategoryAPI = {
         return options.single ? payload[0] : payload;
     },
 
-    add: async (c: Category) => {
-        const response = (await MongooseDatabaseAPI.Category.add(c));
+    add: async (serverRequest: ServerCategoryRequest) => {
+        const response = (await MongooseDatabaseAPI.Category.add(serverRequest));
 
         if (isErrorResponse(response)) throw response.error;
 

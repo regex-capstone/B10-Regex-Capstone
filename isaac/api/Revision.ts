@@ -2,6 +2,7 @@ import { BaseOptions, cleanOptions } from "../ISAACOptions";
 import { isErrorResponse } from "../database/DatabaseInterface";
 import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import { Revision } from "../models";
+import { ServerRevisionRequest } from "../models/Revision";
 
 export interface RevisionOptions extends BaseOptions {
     rev_page_id?: string;
@@ -24,8 +25,8 @@ export const RevisionAPI = {
         return options.single ? payload[0] : payload;
     },
 
-    add: async (r: Revision) => {
-        const response = (await MongooseDatabaseAPI.Revision.add(r));
+    add: async (serverRequest: ServerRevisionRequest) => {
+        const response = (await MongooseDatabaseAPI.Revision.add(serverRequest));
 
         if (isErrorResponse(response)) throw response.error;
 

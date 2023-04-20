@@ -1,6 +1,6 @@
 import { Page } from "../models";
-import Search from "../search/SearchInterface";
-import { NaturalProvider } from "../search/natural/NaturalProvider";
+import Search from "../services/search/SearchInterface";
+import { NaturalProvider } from "../services/search/natural/NaturalProvider";
 
 const natural: Search = NaturalProvider;
 

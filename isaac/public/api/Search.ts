@@ -1,6 +1,6 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Page } from "@/isaac/models";
-import { SearchResponse } from "@/isaac/search/SearchInterface";
+import { SearchResponse } from "@/isaac/services/search/SearchInterface";
 
 export default interface SearchPublicAPIInterface {
     search(q: string): Promise<SearchResponse>

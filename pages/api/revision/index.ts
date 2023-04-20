@@ -15,32 +15,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
-        case 'POST':
-            if (!session) throw new Error('You must be logged in.');
+            case 'POST':
+                if (!session) throw new Error('You must be logged in.');
 
-            if (!body) throw new Error('POST request has no body.');
-            if (!body.content) throw new Error('POST request has no content.');
-            if (!body.rev_page_id) throw new Error('POST request has no rev_page_id.');
+                if (!body) throw new Error('POST request has no body.');
+                if (!body.content) throw new Error('POST request has no content.');
+                if (!body.rev_page_id) throw new Error('POST request has no rev_page_id.');
 
-            // TODO: check here
-            const clientRequest: ClientRevisionRequest = {
-                content: body.content,
-                rev_page_id: body.rev_page_id
-            }
+                // TODO: check here
+                const clientRequest: ClientRevisionRequest = {
+                    content: body.content,
+                    rev_page_id: body.rev_page_id
+                }
 
-            const rev = await api.Revision.add(clientRequest);
+                const rev = await api.Revision.add(clientRequest);
 
-            console.log(rev);
-
-            res.status(200).json({
-                success: true,
-                revision_id: rev.id
-            });
-                
-            break;
-        default:
-            res.setHeader('Allow', ['POST'])
-            res.status(405).end(`Method ${method} Not Allowed`)
+                res.status(200).json({
+                    success: true,
+                    revision_id: rev.id
+                });
+                    
+                break;
+            default:
+                res.setHeader('Allow', ['POST']);
+                res.status(405).end(`Method ${method} Not Allowed`);
         }
     } catch (e) {
         res.status(500).json({

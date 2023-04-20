@@ -8,7 +8,7 @@ import { stateToMarkdown } from 'draft-js-export-markdown';
 // @ts-ignore
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { useRouter } from "next/router";
-import Page, { PageRequest } from "@/isaac/models/Page";
+import Page, { ClientPageRequest } from "@/isaac/models/Page";
 import { ContentState, EditorState } from "draft-js";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -73,7 +73,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
             let pagePayload: any = {};
 
             if (!pageData) {
-                const pageRequest: PageRequest = {
+                const ClientPageRequest: ClientPageRequest = {
                     title: title as string,
                     page_category_id: categoryId as string
                 }
@@ -83,7 +83,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(pageRequest),
+                    body: JSON.stringify(ClientPageRequest),
                 }
 
                 const fetchPage = (await fetch('/api/page', pageOptions));

@@ -6,6 +6,7 @@ import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { Category } from '@/isaac/models';
 import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
+import { ClientCategoryRequest } from '@/isaac/models/Category';
 
 const api = PublicAPIEndpoint;
 
@@ -16,31 +17,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
-        case 'GET':
-            res.status(200).json({
-                success: true,
-                categories: (await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[])
-            });
-            
-            break;
-        case 'POST':
-            if (!session) throw new Error('You must be logged in.');
-            
-            if (!body) throw new Error('POST request has no body.');
-            if (!body.name) throw new Error('POST request has no name.');
+            case 'GET':
+                res.status(200).json({
+                    success: true,
+                    categories: (
+                        await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[]
+                    )
+                });
                 
-            res.status(200).json({
-                success: true,
-                category_id: await api.Category.add({
+                break;
+            case 'POST':
+                if (!session) throw new Error('You must be logged in.');
+                
+                if (!body) throw new Error('POST request has no body.');
+                if (!body.name) throw new Error('POST request has no name.');
+
+                const clientRequest: ClientCategoryRequest = {
                     name: body.name
-                })
-            });
-                
-            break;
-        default:
-            res.setHeader('Allow', ['GET', 'POST'])
-            res.status(405).end(`Method ${method} Not Allowed`)
-        }
+                }
+
+                const category = await api.Category.add(clientRequest);
+                    
+                res.status(200).json({
+                    success: true,
+                    category: category
+                });
+                    
+                break;
+            default:
+                res.setHeader('Allow', ['GET', 'POST'])
+                res.status(405).end(`Method ${method} Not Allowed`)
+            }
     } catch (e) {
         res.status(500).json({
             message: 'Something went wrong...',

@@ -1,11 +1,11 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Category } from "../../models";
-import { CategoryRequest } from "../../models/Category";
+import { ClientCategoryRequest, ServerCategoryRequest } from "../../models/Category";
 import { SortType } from "../PublicAPI";
 
 export default interface CategoryPublicAPIInterface {
     get(get_type: GetCategoryTypes, sort_type: SortType, get_options?: GetCategoryOptions): Promise<Category | Category[]>,
-    add(c: CategoryRequest): Promise<Category>,
+    add(c: ClientCategoryRequest): Promise<Category>,
     delete(c_id: string): Promise<boolean>,
 }
 
@@ -55,11 +55,13 @@ export const CategoryPublicAPI: CategoryPublicAPIInterface = {
         return [];
     },
 
-    add: async (c: CategoryRequest): Promise<Category> => {
-        return (await ISAACAPI.Category.add({
-            ...c,
+    add: async (clientRequest: ClientCategoryRequest): Promise<Category> => {
+        const serverRequest: ServerCategoryRequest = {
+            ...clientRequest,
             created_at: Date.now()
-        })) as Category;
+        }
+
+        return (await isaac.Category.add(serverRequest)) as Category;
     },
 
     delete: async (c_id: string): Promise<boolean> => {
