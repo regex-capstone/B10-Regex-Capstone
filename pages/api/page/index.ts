@@ -5,6 +5,8 @@ import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
 import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
+import { ClientPageRequest } from '@/isaac/models/Page';
+import { ClientRevisionRequest } from '@/isaac/models/Revision';
 
 const api = PublicAPIEndpoint;
 
@@ -20,17 +22,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.status(200).json(allPages)
             break
         case 'POST':
-            // TODO: test
             if (!session) throw new Error('You must be logged in.');
 
             if (!body) throw new Error('POST request has no body.');
             if (!body.title) throw new Error('POST request has no title.');
             if (!body.page_category_id) throw new Error('POST request has no page_category_id.');
-    
-            const page = await api.Page.add({
+
+            // Initialize the new page
+            const pageRequest: ClientPageRequest = {
                 title: body.title,
                 page_category_id: body.page_category_id
-            });
+            }
+    
+            const page = await api.Page.add(pageRequest);
+
+            // Initialize the new page's first revision
+            const revisionRequest: ClientRevisionRequest = {
+                    content: '<>',
+                    rev_page_id: page.id as string
+            }
+
+            const revision = await api.Revision.add(revisionRequest);
+
+            // Update the search corpus
+            api.Search.resetCorpus();
+
                 
             res.status(200).json({
                 success: true,

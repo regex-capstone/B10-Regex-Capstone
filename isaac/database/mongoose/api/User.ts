@@ -10,9 +10,9 @@ export const UserModelAPI: ModelAPI<User> = {
                 .find(query)
                 .sort(sort);
 
-            const users = data.map((raw) => {
+            const users: User[] = data.map((raw) => {
                 const user = {
-                    id: raw._id,
+                    id: raw._id.toString(),
                     role: raw.role,
                     standing: raw.standing,
                     major: raw.major,

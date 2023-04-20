@@ -22,8 +22,8 @@ const MongooseDatabaseAPI: DatabaseAPI = {
     Page: PageModelAPI,
     Revision: RevisionModelAPI,
     Category: CategoryModelAPI,
-    User: UserModelAPI,
-    Metric: MetricModelAPI
+    // User: UserModelAPI,
+    // Metric: MetricModelAPI
 };
 
 export default MongooseDatabaseAPI;

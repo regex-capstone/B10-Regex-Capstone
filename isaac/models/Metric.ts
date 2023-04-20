@@ -1,3 +1,5 @@
+import MongooseUtil from '../database/mongoose/MongooseUtil';
+
 export default interface Metric {
     created_at?: number;
     major: string;

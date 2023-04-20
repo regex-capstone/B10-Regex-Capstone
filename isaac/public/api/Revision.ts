@@ -1,10 +1,10 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { SortType } from "../PublicAPI";
-import Revision, { RevisionRequest } from "@/isaac/models/Revision";
+import Revision, { ClientRevisionRequest, ServerRevisionRequest } from "@/isaac/models/Revision";
 
 export default interface RevisionPublicAPIInterface {
     get(get_type: GetRevisionTypes, sort_type: SortType, get_options?: GetRevisionOptions): Promise<Revision | Revision[]>,
-    add(r: RevisionRequest): Promise<Revision>,
+    add(r: ClientRevisionRequest): Promise<Revision>,
     delete(p_id: string): Promise<boolean>
 }
 
@@ -53,43 +53,14 @@ export const RevisionPublicAPI: RevisionPublicAPIInterface = {
         }
     },
 
-    add: async (r: RevisionRequest) => {
-        const rev = (await isaac.Revision.add({
-            content: r.content as string,
-            rev_page_id: r.rev_page_id as string,
-            created_at: Date.now() as number
-        })) as Revision;
+    add: async (clientRequest: ClientRevisionRequest) => {
+        const serverRequest: ServerRevisionRequest = {
+            ...clientRequest,
+            created_at: Date.now()
+        }
+        const rev = (await isaac.Revision.add(serverRequest)) as Revision;
 
         if (!rev) throw new Error('Error adding new revision.');
-
-        // TODO: handle page description update
-        // const tokens = marked.lexer(rev.content);
-        // const description = findParagraphs(tokens, 150);
-
-        // const page = (await IsaacAPI.updatePage(
-        //     rev.rev_page_id.toString(),
-        //     { description: description }
-        // ));
-
-        // function findParagraphs(token: any, return_length: number) {
-        //     return findParagraphsHelper(token, 0, return_length);
-        // }
-        
-        // function findParagraphsHelper(tokens: any, index: number, return_length: number): string {
-        //     if (tokens.length <= index) return '';
-        
-        //     const token = tokens[index];
-        
-        //     if (token.type == 'paragraph') {
-        //         let text: string = (token.text as string);
-                
-        //         return (text.length > return_length) 
-        //             ? text.substring(0, return_length - 3) + '...'
-        //             : text.substring(0, return_length);
-        //     }
-        
-        //     return findParagraphsHelper(token.tokens, index + 1, return_length);
-        // }
 
         return rev;
     },

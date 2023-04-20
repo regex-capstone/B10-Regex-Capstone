@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 import { escapeHTML } from '../utils/EscapeUtils';
-import { SearchResponse } from '../../isaac/search/SearchInterface';
+import { SearchResponse } from '../../isaac/services/search/SearchInterface';
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then(res => res.json())

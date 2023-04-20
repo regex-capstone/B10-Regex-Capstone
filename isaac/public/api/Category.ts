@@ -1,11 +1,11 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Category } from "../../models";
-import { CategoryRequest } from "../../models/Category";
+import { ClientCategoryRequest, ServerCategoryRequest } from "../../models/Category";
 import { SortType } from "../PublicAPI";
 
 export default interface CategoryPublicAPIInterface {
     get(get_type: GetCategoryTypes, sort_type: SortType, get_options?: GetCategoryOptions): Promise<Category | Category[]>,
-    add(c: CategoryRequest): Promise<Category>,
+    add(c: ClientCategoryRequest): Promise<Category>,
     delete(c_id: string): Promise<boolean>,
 }
 
@@ -51,15 +51,15 @@ export const CategoryPublicAPI: CategoryPublicAPIInterface = {
                 if (!get_options?.c_name) throw new Error('No category name provided.');
                 return (await isaac.Category.get({ name: get_options?.c_name, single: true }, sort_options)) as Category;
         }
-
-        return [];
     },
 
-    add: async (c: CategoryRequest): Promise<Category> => {
-        return (await ISAACAPI.Category.add({
-            ...c,
+    add: async (clientRequest: ClientCategoryRequest): Promise<Category> => {
+        const serverRequest: ServerCategoryRequest = {
+            ...clientRequest,
             created_at: Date.now()
-        })) as Category;
+        };
+
+        return (await ISAACAPI.Category.add(serverRequest)) as Category;
     },
 
     delete: async (c_id: string): Promise<boolean> => {

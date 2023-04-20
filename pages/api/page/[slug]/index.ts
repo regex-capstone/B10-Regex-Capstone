@@ -9,15 +9,14 @@ import { GetPageTypes } from '@/isaac/public/api/Page';
 
 const api = PublicAPIEndpoint;
 
-// TODO: handle to only allow slugs
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
     const query = req.query
-    const page_title = query.page_title as string
+    const slug = query.slug as string
 
     try {
-        const page: Page = (await api.Page.get(GetPageTypes.PAGES_BY_TITLE, SortType.NONE, { p_title: page_title }) as Page[])[0];
+        const page: Page = await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug }) as Page;
 
         if (!page) {
             throw new Error('Page not found.');
