@@ -4,7 +4,7 @@ module.exports = {
         preflight: false,
     },
     content: [
-        "./pages/**/*.{js,jsx,ts,tsx}",
+        "./pages/p/analytics.{js,jsx,ts,tsx}",
         "./node_modules/@tremor/**/*.{js,ts,jsx,tsx}"
     ],
     important: '#__next',
@@ -13,4 +13,3 @@ module.exports = {
     },
     plugins: [],
 }
-
