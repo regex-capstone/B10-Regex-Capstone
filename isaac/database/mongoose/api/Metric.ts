@@ -1,7 +1,6 @@
 import { Metric } from "@/isaac/models";
 import { ModelAPI } from "../../DatabaseInterface";
 import MongooseModels from "../MongooseModels";
-import mongoose from "mongoose";
 
 export const MetricModelAPI: ModelAPI<Metric> = {
     get: async (query: any, sort: any) => {
@@ -12,15 +11,14 @@ export const MetricModelAPI: ModelAPI<Metric> = {
 
             const metrics = data.map((raw) => {
                 const metric: Metric = {
-                    // TODO: normalize ids to ObjectId
-                    met_page_id: raw.met_page_id,
+                    met_page_id: raw.id,
                     created_at: raw.created_at,
                     major: raw.major,
                     standing: raw.standing
                 };
 
                 return metric;
-            });
+            }) ?? [];
     
             return {
                 success: true,

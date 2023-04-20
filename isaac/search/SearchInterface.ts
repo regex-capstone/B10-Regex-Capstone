@@ -1,4 +1,4 @@
-import { Page } from "../../models";
+import { Page } from "../models";
 
 export default interface Search {
     search(query: string, pages: Page[]): Page[],

@@ -1,11 +1,11 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Page } from "../../models";
-import { ClientPageRequest, ServerPageRequest } from "../../models/Page";
+import { PageRequest } from "../../models/Page";
 import { SortType } from "../PublicAPI";
 
 export default interface PagePublicAPIInterface {
     get(get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions): Promise<Page | Page[]>,
-    add(p: ClientPageRequest): Promise<Page>,
+    add(p: PageRequest): Promise<Page>,
     delete(p_id: string): Promise<boolean>
 }
 
@@ -70,16 +70,26 @@ export const PagePublicAPI: PagePublicAPIInterface = {
         }
     },
 
-    add: async (clientRequest: ClientPageRequest) => {
-        const serverRequest: ServerPageRequest = {
-            ...clientRequest,
-            description: '<>',
-            created_at: Date.now()
-        }
+    add: async (p: PageRequest) => {
+        const createdAt = Date.now();
 
-        const page: Page = await isaac.Page.add(serverRequest);
+        const page: Page = await isaac.Page.add({
+            title: p.title,
+            page_category_id: p.page_category_id,
+            description: '<add description here>',
+            created_at: createdAt
+        });
 
         if (!page) throw new Error('Error adding new page.');
+        
+        // TODO: revision creation
+        // const rev: Revision = await IsaacAPI.addNewRevision({
+        //     created_at: createdAt,
+        //     content: '<add content here>',
+        //     rev_page_id: page.id as string
+        // });
+
+        // if (!rev) throw new Error('Error adding new revision.');
 
         return page;
     },

@@ -1,21 +1,22 @@
 import { Category } from '@/isaac/models';
 import { ModelAPI } from '../../DatabaseInterface';
 import MongooseModels from '../MongooseModels';
-import { ServerCategoryRequest } from '@/isaac/models/Category';
 
-export const CategoryModelAPI: ModelAPI<Category, ServerCategoryRequest> = {
-    get: async (options: any, sort: any) => {
+export const CategoryModelAPI: ModelAPI<Category> = {
+    get: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.Category
-                .find(options)
+                .find(query)
                 .sort(sort);
 
-            const cats: Category[] = data.map((raw) => {
-                return {
-                    id: raw._id.toString(),
-                    name: raw.name,
-                    created_at: raw.created_at
+            const cats = data.map((raw) => {
+                const cat: Category = {
+                    id: raw._doc._id,
+                    name: raw._doc.name,
+                    created_at: raw._doc.created_at
                 };
+
+                return cat;
             });
     
             return {
@@ -23,15 +24,17 @@ export const CategoryModelAPI: ModelAPI<Category, ServerCategoryRequest> = {
                 payload: cats
             };
         } catch (err: any) {
+
+            console.log(err);
             return {
                 error: err
             }
         }
     },
 
-    add: async (request: ServerCategoryRequest) => {
+    add: async (c: Category) => {
         try {
-            const cat = new MongooseModels.Category(request);
+            const cat = new MongooseModels.Category(c);
             await cat.validate();
             await cat.save();
     
@@ -59,6 +62,24 @@ export const CategoryModelAPI: ModelAPI<Category, ServerCategoryRequest> = {
         }
     },
 
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented') },
+    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+        try {
+            const data = await MongooseModels.Metric
+                .aggregate()
+                .group(groupOptions)
+                .sort(sortOptions)
+                .lookup(lookupOptions);
+            
+            return {
+                success: true,
+                payload: data
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+    
     update: (id: string, attributes: Partial<Category>) => { throw new Error('Not implemented') }
 }

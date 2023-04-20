@@ -2,7 +2,6 @@ import { BaseOptions, cleanOptions } from "../ISAACOptions";
 import { isErrorResponse } from "../database/DatabaseInterface";
 import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import { Page } from "../models";
-import { ServerPageRequest } from "../models/Page";
 
 export interface PageOptions extends BaseOptions {
     title?: string;
@@ -27,8 +26,8 @@ export const PageAPI = {
         return options.single ? payload[0] : payload;
     },
 
-    add: async (request: ServerPageRequest) => {
-        const response = (await MongooseDatabaseAPI.Page.add(request));
+    add: async (p: Page) => {
+        const response = (await MongooseDatabaseAPI.Page.add(p));
 
         if (isErrorResponse(response)) throw response.error;
 

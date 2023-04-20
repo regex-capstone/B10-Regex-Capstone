@@ -2,25 +2,24 @@ import { Page } from '@/isaac/models';
 import { ModelAPI } from '../../DatabaseInterface';
 import MongooseModels from '../MongooseModels';
 import convert, { LOWERCASE_TRANSFORMER } from 'url-slug';
-import mongoose from 'mongoose';
-import { ServerPageRequest } from '@/isaac/models/Page';
 
-export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
-    get: async (options: any, sort: any) => {
+export const PageModelAPI: ModelAPI<Page> = {
+    get: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.Page
-                .find(options)
+                .find(query)
                 .sort(sort);
 
-            const pages: Page[] = data.map((raw) => {
-                return {
-                    id: raw._id.toString(),
+            const pages = data.map((raw) => {
+                const page: Page = {
+                    id: raw._id,
                     title: raw.title,
-                    page_category_id: (raw.page_category_id as mongoose.Types.ObjectId).toString(),
+                    page_category_id: raw.page_category_id,
                     created_at: raw.created_at,
-                    description: raw.description,
-                    slug: raw.slug
+                    description: raw.description ?? ''
                 };
+
+                return page;
             });
     
             return {
@@ -34,14 +33,12 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
         }
     },
 
-    add: async (request: ServerPageRequest) => {
+    add: async (p: Page) => {
         try {
-            const page = new MongooseModels.Page({
-                ...request,
-                page_category_id: new mongoose.Types.ObjectId(request.page_category_id)
-            });
+            const page = new MongooseModels.Page(p);
+            const pageId = page._doc._id;
 
-            page.slug = convert(`${page.title} ${page._id.toString()}`, {
+            page.slug = convert(`${page.title} ${pageId}`, {
                 separator: '-',
                 transformer: LOWERCASE_TRANSFORMER
             });
@@ -51,10 +48,11 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
 
             const newPage = {
                 ...page._doc,
-                id: page._id.toString()
+                id: pageId.toString()
             };
 
             delete newPage._id;
+
 
             return {
                 success: true,
@@ -96,5 +94,22 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
         }
     },
 
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented') }
+    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+        try {
+            const data = await MongooseModels.Page
+                .aggregate()
+                .group(groupOptions)
+                .sort(sortOptions)
+                .lookup(lookupOptions);
+            
+            return {
+                success: true,
+                payload: data
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    }
 }

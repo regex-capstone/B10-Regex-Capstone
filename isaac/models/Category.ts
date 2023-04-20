@@ -4,10 +4,6 @@ export default interface Category {
     created_at: number
 }
 
-export interface ClientCategoryRequest {
+export interface CategoryRequest {
     name: string
-}
-
-export interface ServerCategoryRequest extends ClientCategoryRequest {
-    created_at: number
 }

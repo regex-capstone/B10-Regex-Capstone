@@ -8,7 +8,7 @@ import { stateToMarkdown } from 'draft-js-export-markdown';
 // @ts-ignore
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { useRouter } from "next/router";
-import Page, { ClientPageRequest } from "@/isaac/models/Page";
+import Page, { PageRequest } from "@/isaac/models/Page";
 import { ContentState, EditorState } from "draft-js";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -70,10 +70,10 @@ export default function RichTextEditor(props: RichTextEditorProps) {
         try {
             let request;
             let redirectTitle;
-            let pagePayload: Page;
+            let pagePayload: any = {};
 
             if (!pageData) {
-                const pageRequest: ClientPageRequest = {
+                const pageRequest: PageRequest = {
                     title: title as string,
                     page_category_id: categoryId as string
                 }
@@ -102,7 +102,6 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                 }
 
                 redirectTitle = pageData.title;
-                pagePayload = pageData;
             }
 
             const options = {
@@ -114,10 +113,10 @@ export default function RichTextEditor(props: RichTextEditorProps) {
             }
 
             await fetch('/api/revision', options);
-            const pageId = pagePayload.id;
+            const pageId = (pagePayload) ? pagePayload.id : pageData?.id;
 
             await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
-            router.push(`/p/${pagePayload.slug}`);   // TODO: handle page slug change
+            router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
         } catch (err) {
             console.error(err); // @TODO: handle toast notifications
         }

@@ -2,22 +2,23 @@ import { Revision } from "@/isaac/models";
 import { ModelAPI } from "../../DatabaseInterface";
 import mongoose from "mongoose";
 import MongooseModels from "../MongooseModels";
-import { ServerRevisionRequest } from "@/isaac/models/Revision";
 
-export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
-    get: async (options: any, sort: any) => {
+export const RevisionModelAPI: ModelAPI<Revision> = {
+    get: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.Revision
-                .find(options)
+                .find(query)
                 .sort(sort);
 
-            const revs: Revision[] = data.map((raw) => {
-                return {
-                    id: raw._id.toString(),
+            const revs = data.map((raw) => {
+                const rev: Revision = {
+                    id: raw._id,
                     content: raw.content,
                     created_at: raw.created_at,
                     rev_page_id: raw.rev_page_id
                 };
+
+                return rev;
             });
     
             return {
@@ -31,12 +32,9 @@ export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
         }
     },
 
-    add: async (request: ServerRevisionRequest) => {
+    add: async (r: Revision) => {
         try {
-            const rev = new MongooseModels.Revision({
-                ...request,
-                rev_page_id: new mongoose.Types.ObjectId(request.rev_page_id)
-            });
+            const rev = new MongooseModels.Revision(r);
             await rev.validate();
             await rev.save();
     
@@ -64,6 +62,24 @@ export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
         }
     },
 
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented') },
+    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+        try {
+            const data = await MongooseModels.Revision
+                .aggregate()
+                .group(groupOptions)
+                .sort(sortOptions)
+                .lookup(lookupOptions);
+            
+            return {
+                success: true,
+                payload: data
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
     update: (id: string, attributes: Partial<Revision>) => { throw new Error('Not implemented') }
 }

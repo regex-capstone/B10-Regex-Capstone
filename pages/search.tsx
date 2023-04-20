@@ -11,7 +11,7 @@ import LoadingSpinner from "@/client/LoadingSpinner";
 import useCategory from "@/client/hooks/useCategory";
 import ApiEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { SearchResponse } from '@/isaac/services/search/SearchInterface';
+import { SearchResponse } from '@/isaac/search/SearchInterface';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
 
