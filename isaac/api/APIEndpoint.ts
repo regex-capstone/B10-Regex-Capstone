@@ -6,6 +6,7 @@ import { RevisionRequest } from '../models/Revision';
 import { PageRequest } from '../models/Page';
 import { NaturalProvider } from '../search/natural/NaturalProvider';
 import { TfIdf } from 'natural';
+import { performance } from 'perf_hooks';
 import { marked } from 'marked';
 
 const ApiEndpoint: API = {
