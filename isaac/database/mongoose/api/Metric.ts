@@ -31,6 +31,7 @@ export const MetricModelAPI: ModelAPI<Metric> = {
         }
     },
 
+    // TODO: change these adds to requests
     add: async (m: Metric) => {
         try {
             const met = new MongooseModels.Metric(m);
