@@ -22,7 +22,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (!body.content) throw new Error('POST request has no content.');
                 if (!body.rev_page_id) throw new Error('POST request has no rev_page_id.');
 
-                // TODO: check here
                 const clientRequest: ClientRevisionRequest = {
                     content: body.content,
                     rev_page_id: body.rev_page_id
