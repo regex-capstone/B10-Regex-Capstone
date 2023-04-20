@@ -4,6 +4,7 @@ import '@/isaac/database/mongoose/MongooseProvider';
 import { getServerSession } from 'next-auth';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
+import { ClientRevisionRequest } from '@/isaac/models/Revision';
 
 const api = PublicAPIEndpoint;
 
@@ -21,14 +22,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (!body.content) throw new Error('POST request has no content.');
             if (!body.rev_page_id) throw new Error('POST request has no rev_page_id.');
 
-            const revId = await api.Revision.add({
+            // TODO: check here
+            const clientRequest: ClientRevisionRequest = {
                 content: body.content,
                 rev_page_id: body.rev_page_id
-            });
+            }
+
+            const rev = await api.Revision.add(clientRequest);
+
+            console.log(rev);
 
             res.status(200).json({
                 success: true,
-                revision_id: revId
+                revision_id: rev.id
             });
                 
             break;

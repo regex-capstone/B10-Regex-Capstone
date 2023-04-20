@@ -16,8 +16,9 @@ import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
 import { GetRevisionTypes } from "@/isaac/public/api/Revision";
 
+const api = PublicAPIEndpoint;
+
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-    const api = PublicAPIEndpoint;
     const pages: PageData[] = (await api.Page.get(GetPageTypes.ALL_PAGES, SortType.NONE) as PageData[]);
 
     return {
@@ -33,11 +34,10 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-    const api = PublicAPIEndpoint;
     const { slug } = context.params ?? {};
     const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as PageData);
     // TODO: why is this Revision and not RevisionData - is the *Data suffix a needed convention?
-    const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID, SortType.NONE, { p_id: pageData.id }) as Revision);
+    const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID, SortType.RECENTLY_CREATED, { p_id: pageData.id }) as Revision);
 
     return {
         props: {

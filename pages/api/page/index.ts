@@ -38,8 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             // Initialize the new page's first revision
             const revisionRequest: ClientRevisionRequest = {
-                    content: '<>',
-                    rev_page_id: page.id as string
+                content: '<>',
+                rev_page_id: page.id as string
             }
 
             const revision = await api.Revision.add(revisionRequest);
