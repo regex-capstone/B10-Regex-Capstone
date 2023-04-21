@@ -40,10 +40,17 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback> = {
             await payload.validate();
             await payload.save();
 
+            const newMetricPageFeedback = {
+                ...payload,
+                id: (payload._id as mongoose.Types.ObjectId).toString()
+            };
+
+            delete newMetricPageFeedback._id;
+
             return {
                 success: true,
-                payload: payload
-            }
+                payload: newMetricPageFeedback
+            };
         } catch (err: any) {
             return {
                 error: err

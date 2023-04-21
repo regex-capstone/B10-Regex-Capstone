@@ -3,8 +3,9 @@ import { ModelAPI } from '../../DatabaseInterface';
 import MongooseModels from '../MongooseModels';
 import mongoose from 'mongoose';
 import { ServerCategoryRequest } from '@/isaac/models/Category';
+import convert, { LOWERCASE_TRANSFORMER } from 'url-slug';
 
-export const CategoryModelAPI: ModelAPI<Category> = {
+export const CategoryModelAPI: ModelAPI<Category, ServerCategoryRequest> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.Category
@@ -12,13 +13,12 @@ export const CategoryModelAPI: ModelAPI<Category> = {
                 .sort(sort);
 
             const cats = data.map((raw) => {
-                const cat: Category = {
+                return {
                     id: (raw._id as mongoose.Types.ObjectId).toString(),
                     name: raw.name,
-                    created_at: raw.created_at
+                    created_at: raw.created_at,
+                    slug: raw.slug
                 };
-
-                return cat;
             });
     
             return {
@@ -35,12 +35,25 @@ export const CategoryModelAPI: ModelAPI<Category> = {
     add: async (serverRequest: ServerCategoryRequest) => {
         try {
             const cat = new MongooseModels.Category(serverRequest);
+
+            cat.slug = convert(`${cat.name} ${cat._id}`, {
+                separator: '-',
+                transformer: LOWERCASE_TRANSFORMER
+            });
+
             await cat.validate();
             await cat.save();
+
+            const newCat = {
+                ...cat._doc,
+                id: (cat._id as mongoose.Types.ObjectId).toString()
+            };
+
+            delete newCat._id;
     
             return {
                 success: true,
-                payload: cat
+                payload: newCat
             }
         } catch (err: any) {
             return {

@@ -7,6 +7,7 @@ import { ServerCategoryRequest } from "../models/Category";
 
 export interface CategoryOptions extends BaseOptions {
     name?: string;
+    slug?: string;
 }
 
 export interface CategorySortOptions {

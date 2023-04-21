@@ -65,8 +65,6 @@ export const PagePublicAPI: PagePublicAPIInterface = {
                 return (await isaac.Page.get({ slug: get_options?.p_slug, single: true }, sort_options)) as Page;
             default:
                 throw new Error('Invalid get type.');
-            // case GetPageTypes.TRENDING_PAGES:
-            //     return (await ISAACAPI.Page.get({ aggregation_type: AggregationTypes.TRENDING_PAGES }, sort_options)) as Page[];
         }
     },
 
@@ -87,6 +85,10 @@ export const PagePublicAPI: PagePublicAPIInterface = {
     },
 
     delete: async (p_id: string) => {
-        return (await isaac.Page.delete(p_id)) as boolean;
+        const isDeleted = (await isaac.Page.delete(p_id)) as boolean;
+
+        if (isDeleted) isaac.Search.resetCorpus();
+
+        return isDeleted;
     }
 }

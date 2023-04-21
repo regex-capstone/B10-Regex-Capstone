@@ -3,7 +3,7 @@ import MetricPageClick, { ServerMetricPageClickRequest } from "@/isaac/models/Me
 import MongooseModels from "../MongooseModels";
 import mongoose from "mongoose";
 
-export const MetricPageClickAPI: ModelAPI<MetricPageClick> = {
+export const MetricPageClickAPI: ModelAPI<MetricPageClick, ServerMetricPageClickRequest> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.MetricPageClick
@@ -37,10 +37,17 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick> = {
             await payload.validate();
             await payload.save();
 
+            const newMetricPageClick = {
+                ...payload,
+                id: (payload._id as mongoose.Types.ObjectId).toString()
+            };
+
+            delete newMetricPageClick._id;
+
             return {
                 success: true,
-                payload: payload
-            }
+                payload: newMetricPageClick
+            };
         } catch (err: any) {
             return {
                 error: err

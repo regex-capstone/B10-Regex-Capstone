@@ -2,6 +2,7 @@ import { MetricSearchQuery } from "@/isaac/models";
 import { ModelAPI } from "../../DatabaseInterface";
 import MongooseModels from "../MongooseModels";
 import { ServerMetricSearchQueryRequest } from "@/isaac/models/MetricSearchQuery";
+import mongoose from "mongoose";
 
 export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery> = {
     get: async (options: any, sort: any) => {
@@ -34,10 +35,17 @@ export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery> = {
             await payload.validate();
             await payload.save();
 
+            const newMetricSearchQuery = {
+                ...payload,
+                id: (payload._id as mongoose.Types.ObjectId).toString()
+            };
+
+            delete newMetricSearchQuery._id;
+
             return {
                 success: true,
-                payload: payload
-            }
+                payload: newMetricSearchQuery
+            };
         } catch (err: any) {
             return {
                 error: err

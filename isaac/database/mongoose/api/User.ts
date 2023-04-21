@@ -1,9 +1,10 @@
 import { User } from "@/isaac/models";
 import { ModelAPI } from "../../DatabaseInterface";
 import MongooseModels from "../MongooseModels";
+import { ServerUserRequest } from "@/isaac/models/User";
 
 // only used for the firebase flavor
-export const UserModelAPI: ModelAPI<User> = {
+export const UserModelAPI: ModelAPI<User, ServerUserRequest> = {
     get: async (query: any, sort: any) => {
         try {
             const data = await MongooseModels.User
@@ -33,11 +34,18 @@ export const UserModelAPI: ModelAPI<User> = {
         }
     },
 
-    add: async (u: User) => {
+    add: async (serverRequest: ServerUserRequest) => {
         try {
-            const newUser = new MongooseModels.User(u);
-            await newUser.validate();
-            await newUser.save();
+            const user = new MongooseModels.User(serverRequest);
+            await user.validate();
+            await user.save();
+
+            const newUser = {
+                ...user._doc,
+                id: user._id
+            }
+
+            delete newUser._id;
     
             return {
                 success: true,

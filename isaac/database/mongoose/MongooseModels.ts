@@ -55,26 +55,10 @@ const CategorySchema = new mongoose.Schema({
     created_at: {
         type: Date,
         required: [true, 'Creation date is missing...'] 
-    }
-    
-}, { strict: true });
-
-const MetricSchema = new mongoose.Schema({
-    met_page_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true, 'Page reference ID is missing...']
     },
-    major: {
+    slug: {
         type: String,
-        required: [true, 'Major is missing...']
-    },
-    standing: {
-        type: String,
-        required: [true, 'Standing is missing...']
-    },
-    created_at: {
-        type: Date,
-        required: [true, 'Date missing...']
+        required: [true, 'Slug is missing...']
     }
 }, { strict: true });
 
@@ -146,7 +130,6 @@ export default {
     Page: mongoose.models.Page || mongoose.model<Page>('Page', PageSchema),
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', RevisionSchema),
     Category: mongoose.models.Category || mongoose.model<Category>('Category', CategorySchema),
-    Metric: mongoose.models.Metric || mongoose.model<Metric>('Metric', MetricSchema),   // TODO: deprecate
     User: mongoose.models.User || mongoose.model<User>('User', UserSchema),
     MetricPageClick: mongoose.models.MetricPageClick || mongoose.model<MetricPageClick>('MetricPageClick', MetricPageClickSchema),
     MetricPageFeedback: mongoose.models.MetricPageFeedback || mongoose.model<MetricPageFeedback>('MetricPageFeedback', MetricPageFeedbackSchema),

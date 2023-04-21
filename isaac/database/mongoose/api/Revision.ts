@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import MongooseModels from "../MongooseModels";
 import { ServerRevisionRequest } from "@/isaac/models/Revision";
 
-export const RevisionModelAPI: ModelAPI<Revision> = {
+export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.Revision
@@ -37,12 +37,20 @@ export const RevisionModelAPI: ModelAPI<Revision> = {
                 ...serverRequest,
                 rev_page_id: new mongoose.Types.ObjectId(serverRequest.rev_page_id)
             });
+
             await rev.validate();
             await rev.save();
+
+            const newRev = {
+                ...rev,
+                id: (rev._id as mongoose.Types.ObjectId).toString()
+            }
+
+            delete newRev._id;
     
             return {
                 success: true,
-                payload: rev
+                payload: newRev
             }
         } catch (err: any) {
             return {

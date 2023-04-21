@@ -57,10 +57,7 @@ export const PageAPI = {
         const response = (await database.Page.delete(p_id));
 
         if (isErrorResponse(response)) throw response.error;
-
-        // TODO: Update the natural language corpus
-        // natural.setCorpusOutdated(true);
-
+        
         return response.success;
     }
 }

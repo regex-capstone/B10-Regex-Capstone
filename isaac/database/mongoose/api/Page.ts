@@ -5,7 +5,7 @@ import convert, { LOWERCASE_TRANSFORMER } from 'url-slug';
 import mongoose from 'mongoose';
 import { ServerPageRequest } from '@/isaac/models/Page';
 
-export const PageModelAPI: ModelAPI<Page> = {
+export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.Page

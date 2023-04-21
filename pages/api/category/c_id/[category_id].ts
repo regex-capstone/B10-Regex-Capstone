@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const category: Category = (
-            await api.Category.get(GetCategoryTypes.CATEGORY_BY_ID, SortType.NONE, { c_id: category_id }
+            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_id: category_id }
         ) as Category);
 
         if (!category) { throw new Error('Category not found.'); }

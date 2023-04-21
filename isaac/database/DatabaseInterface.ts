@@ -1,4 +1,9 @@
-import type { Page, Revision, Category, User, Metric, MetricPageClick, MetricSearchQuery, MetricPageFeedback } from '../models/index';
+import { ServerCategoryRequest } from '../models/Category';
+import { ServerMetricPageClickRequest } from '../models/MetricPageClick';
+import { ServerPageRequest } from '../models/Page';
+import { ServerRevisionRequest } from '../models/Revision';
+import { ServerUserRequest } from '../models/User';
+import type { Page, Revision, Category, User, MetricPageClick, MetricSearchQuery, MetricPageFeedback } from '../models/index';
 
 /**
  * The database API interface for the ISAAC API.
@@ -8,12 +13,11 @@ import type { Page, Revision, Category, User, Metric, MetricPageClick, MetricSea
  * CURRENT: MongoDB w/ Mongoose
  */
 export default interface DatabaseAPI {
-    Page: ModelAPI<Page>,
-    Revision: ModelAPI<Revision>,
-    Category: ModelAPI<Category>,
-    User: ModelAPI<User>,
-    Metric: ModelAPI<Metric>,
-    MetricPageClick: ModelAPI<MetricPageClick>,
+    Page: ModelAPI<Page, ServerPageRequest>,
+    Revision: ModelAPI<Revision, ServerRevisionRequest>,
+    Category: ModelAPI<Category, ServerCategoryRequest>,
+    User: ModelAPI<User, ServerUserRequest>,
+    MetricPageClick: ModelAPI<MetricPageClick, ServerMetricPageClickRequest>,
     // MetricSearchQuery: ModelAPI<MetricSearchQuery>,
     // MetricPageFeedback: ModelAPI<MetricPageFeedback>
 }
@@ -22,9 +26,9 @@ export default interface DatabaseAPI {
  * Each database model should have the following methods
  * at least initialized in the code.
  */
-export interface ModelAPI<K> {
-    get: (query: any, sort: any) => Promise<SuccessDBResponse | ErrorDBResponse>,
-    add: (item: K) => Promise<SuccessDBResponse | ErrorDBResponse>,
+export interface ModelAPI<K, T> {
+    get: (options: any, sort: any) => Promise<SuccessDBResponse | ErrorDBResponse>,
+    add: (serverRequest: T) => Promise<SuccessDBResponse | ErrorDBResponse>,
     delete: (id: string) => Promise<SuccessDBResponse | ErrorDBResponse>,
     update: (id: string, attributes: Partial<K>) => Promise<SuccessDBResponse | ErrorDBResponse>,
     aggregate: (groupOptions: any, sortOptions: any, lookupOptions: any) => Promise<SuccessDBResponse | ErrorDBResponse>

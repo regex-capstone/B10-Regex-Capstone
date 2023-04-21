@@ -8,6 +8,10 @@ export default interface User {
     email: string
 }
 
+export interface ServerUserRequest {
+    
+}
+
 export enum UserRole {
     ADMIN = 'admin',
     STUDENT = 'student'

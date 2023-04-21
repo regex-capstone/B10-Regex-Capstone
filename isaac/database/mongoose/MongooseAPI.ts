@@ -4,7 +4,6 @@ import { PageModelAPI } from './api/Page';
 import { RevisionModelAPI } from './api/Revision';
 import { CategoryModelAPI } from './api/Category';
 import { UserModelAPI } from './api/User';
-import { MetricModelAPI } from './api/Metric';
 import { MetricPageClickAPI } from "./api/MetricPageClick";
 import MetricSearchQuery from '../../models/MetricSearchQuery';
 import MetricPageFeedback from '../../models/MetricPageFeedback';
@@ -28,7 +27,6 @@ const MongooseDatabaseAPI: DatabaseAPI = {
     Revision: RevisionModelAPI,
     Category: CategoryModelAPI,
     User: UserModelAPI,
-    Metric: MetricModelAPI,
     MetricPageClick: MetricPageClickAPI,
     // MetricSearchQuery: MetricSearchQueryAPI,
     // MetricPageFeedback: MetricPageFeedbackAPI

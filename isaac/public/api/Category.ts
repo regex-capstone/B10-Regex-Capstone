@@ -12,12 +12,14 @@ export default interface CategoryPublicAPIInterface {
 export enum GetCategoryTypes {
     ALL_CATEGORIES,
     CATEGORY_BY_ID,
-    CATEGORY_BY_NAME
+    CATEGORY_BY_NAME,
+    CATEGORY_BY_SLUG
 }
 
 export interface GetCategoryOptions {
     c_id?: string;
     c_name?: string;
+    c_slug?: string;
 }
 
 const isaac = ISAACAPI;
@@ -50,6 +52,10 @@ export const CategoryPublicAPI: CategoryPublicAPIInterface = {
             case GetCategoryTypes.CATEGORY_BY_NAME:
                 if (!get_options?.c_name) throw new Error('No category name provided.');
                 return (await isaac.Category.get({ name: get_options?.c_name, single: true }, sort_options)) as Category;
+
+            case GetCategoryTypes.CATEGORY_BY_SLUG:
+                if (!get_options?.c_slug) throw new Error('No category slug provided.');
+                return (await isaac.Category.get({ slug: get_options?.c_slug, single: true }, sort_options)) as Category;
         }
 
         return [];
