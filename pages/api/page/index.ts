@@ -23,7 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     SortType.NONE
                 )) as Page[];
 
-                res.status(200).json(pages);
+                res.status(200).json({
+                    success: true,
+                    payload: pages
+                });
                 break;
             case 'POST':
                 if (!session) throw new Error('You must be logged in.');
