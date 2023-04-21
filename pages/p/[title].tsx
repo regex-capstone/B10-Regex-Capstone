@@ -1,5 +1,5 @@
 import SearchBar from "@/client/SearchBar";
-import { Button, Container, Stack } from "@mui/material";
+import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import usePageEngagement from "@/client/hooks/usePageEngagement";
+import React, { useState } from 'react';
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -78,6 +79,9 @@ export default function Page(props: PageProps) {
                             <SearchBar initialQuery={query} />
                             <Content page={pageData} revision={revisionData} />
                         </Stack>
+                        <Box>
+                            <FeedbackSection />
+                        </Box>
                     </Grid2>
                     <Grid2 xs={3} sx={{
                         marginTop: 13,
@@ -144,3 +148,91 @@ function AdminTools(props: { page: PageData }) {
         </>
     )
 }
+
+function UserFeedback() {
+    // const { data: session } = useSession();
+    // const router = useRouter();
+    // const { title } = router.query;
+
+    // useEffect(() => {
+    //     if (!session) {
+    //         router.push(`/api/auth/signin?callbackUrl=/p/${title}`)
+    //     }
+    // }, [session])
+
+    return (
+        <>
+            <h3>User Feedback</h3>
+            <Stack direction={'column'} spacing={2}>
+                <p>Did you find this helpful?</p>
+                <Stack direction={'row'} spacing={2}>
+                    <Button>Yes</Button>
+                    <Button>No</Button>
+
+                </Stack>
+            </Stack>
+        </>
+    )
+}
+
+const FeedbackSection = () => {
+    const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
+    const [feedbackText, setFeedbackText] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+  
+    const handleYesButtonClick = () => {
+      setIsHelpful(true);
+    };
+  
+    const handleNoButtonClick = () => {
+      setIsHelpful(false);
+    };
+  
+    const handleSubmitFeedback = (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      // Do something with the feedback text, such as storing it in a database or displaying a confirmation message
+      setFeedbackText('');
+      setIsHelpful(null);
+      setIsSubmitted(true);
+    };
+  
+    return (
+      <>
+        <Stack direction={'column'} spacing={2}>
+            <p>Did you find this helpful?</p>
+            <Stack direction={'row'} spacing={2}>
+            {isHelpful === null ? (
+        <ButtonGroup>
+          <Button variant="contained" onClick={handleYesButtonClick}>
+            Yes
+          </Button>
+          <Button variant="contained" onClick={handleNoButtonClick}>
+            No
+          </Button>
+        </ButtonGroup>
+            ) : isHelpful ? (
+                <Typography variant="h6">Thank you for your feedback!</Typography>
+            ) : isSubmitted ? (
+                <Typography variant="h6">Thank you for your feedback!</Typography>
+            ) : (
+                <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <TextField
+                    label="Please provide additional feedback"
+                    variant="outlined"
+                    multiline
+                    rows={2}
+                    value={feedbackText}
+                    onChange={(event) => setFeedbackText(event.target.value)}
+                    style={{ marginRight: '1rem', width: 'max-content' }}
+                    inputProps={{ style: { fontSize: '1rem' } }}
+                />
+                <Button type="submit" variant="contained" color="primary" style={{ height: 'fit-content' }} onClick={handleYesButtonClick}>
+                    Submit
+                </Button>
+                </form>
+            )}
+            </Stack>
+        </Stack>
+      </>
+    );
+  };
