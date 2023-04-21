@@ -3,7 +3,7 @@ import { Container, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent
 import Grid2 from '@mui/material/Unstable_Grid2'
 import Logo from "@/client/Logo";
 import Head from "next/head";
-import RichTextEditor from "@/client/RichTextEditor";
+import QuillTextEditor from "@/client/QuillEditor";
 import { useState } from "react";
 import useCategory from "@/client/hooks/useCategory";
 import LoadingSpinner from "@/client/LoadingSpinner";
@@ -76,7 +76,7 @@ export default function CreatePage() {
                         {
                             title && categoryId
                                 ?
-                                <RichTextEditor
+                                <QuillTextEditor
                                     title={title}
                                     categoryId={categoryId}
                                 />
