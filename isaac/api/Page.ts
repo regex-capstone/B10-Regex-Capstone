@@ -14,11 +14,13 @@ export interface PageSortOptions {
     created_at?: number;
 }
 
+const database = MongooseDatabaseAPI;
+
 export const PageAPI = {
     get: async (options: PageOptions, sort: PageSortOptions) => {
         const query = cleanOptions(options);
 
-        const response = (await MongooseDatabaseAPI.Page.get(query, sort));
+        const response = (await database.Page.get(query, sort));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -28,7 +30,7 @@ export const PageAPI = {
     },
 
     add: async (serverRequest: ServerPageRequest) => {
-        const response = (await MongooseDatabaseAPI.Page.add(serverRequest));
+        const response = (await database.Page.add(serverRequest));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -36,14 +38,11 @@ export const PageAPI = {
 
         if (!resultPage) throw new Error('Error adding new page.');
 
-        // TODO: Update the natural language corpus
-        // natural.setCorpusOutdated(true);
-
         return resultPage;
     },
 
     update: async (p_id: string, attributes: Partial<Page>) => {
-        const response = (await MongooseDatabaseAPI.Page.update(p_id, attributes));
+        const response = (await database.Page.update(p_id, attributes));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -55,7 +54,7 @@ export const PageAPI = {
     },
 
     delete: async (p_id: string) => {
-        const response = (await MongooseDatabaseAPI.Page.delete(p_id));
+        const response = (await database.Page.delete(p_id));
 
         if (isErrorResponse(response)) throw response.error;
 

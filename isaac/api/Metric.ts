@@ -18,11 +18,13 @@ export enum MetricAggType {
     TRENDING_PAGES
 }
 
+const database = MongooseDatabaseAPI;
+
 export const MetricAPI = {
     get: async (options: MetricOptions, sort: MetricSortOptions) => {
         const query = cleanOptions(options);
 
-        let response = (await MongooseDatabaseAPI.Metric.get(query, sort));
+        let response = (await database.Metric.get(query, sort));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -32,7 +34,7 @@ export const MetricAPI = {
     },
 
     add: async (m: Metric) => {
-        const response = (await MongooseDatabaseAPI.Metric.add(m));
+        const response = (await database.Metric.add(m));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -48,7 +50,7 @@ export const MetricAPI = {
 
         switch (type) {
             case MetricAggType.TRENDING_PAGES:
-                response = (await MongooseDatabaseAPI.Metric.aggregate(
+                response = (await database.Metric.aggregate(
                     { _id: '$met_page_id', count: { $sum: 1 } },
                     { count: -1 },
                     { from: 'pages', localField: '_id', foreignField: '_id', as: 'page' }

@@ -13,11 +13,13 @@ export interface CategorySortOptions {
     created_at?: number;
 }
 
+const database = MongooseDatabaseAPI;
+
 export const CategoryAPI = {
     get: async (options: CategoryOptions, sort: CategorySortOptions) => {
         const query = cleanOptions(options);
 
-        let response = (await MongooseDatabaseAPI.Category.get(query, sort));
+        let response = (await database.Category.get(query, sort));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -27,7 +29,7 @@ export const CategoryAPI = {
     },
 
     add: async (serverRequest: ServerCategoryRequest) => {
-        const response = (await MongooseDatabaseAPI.Category.add(serverRequest));
+        const response = (await database.Category.add(serverRequest));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -39,7 +41,7 @@ export const CategoryAPI = {
     },
 
     delete: async (c_id: string) => {
-        const response = (await MongooseDatabaseAPI.Category.delete(c_id));
+        const response = (await database.Category.delete(c_id));
 
         if (isErrorResponse(response)) throw response.error;
 

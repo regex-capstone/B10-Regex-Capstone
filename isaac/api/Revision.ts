@@ -12,11 +12,13 @@ export interface RevisionSortOptions {
     created_at?: number;
 }
 
+const database = MongooseDatabaseAPI;
+
 export const RevisionAPI = {
     get: async (options: RevisionOptions, sort: RevisionSortOptions) => {
         const query = cleanOptions(options);
 
-        let response = (await MongooseDatabaseAPI.Revision.get(query, sort));
+        let response = (await database.Revision.get(query, sort));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -26,7 +28,7 @@ export const RevisionAPI = {
     },
 
     add: async (serverRequest: ServerRevisionRequest) => {
-        const response = (await MongooseDatabaseAPI.Revision.add(serverRequest));
+        const response = (await database.Revision.add(serverRequest));
 
         if (isErrorResponse(response)) throw response.error;
 
@@ -38,7 +40,7 @@ export const RevisionAPI = {
     },
 
     delete: async (r_id: string) => {
-        const response = (await MongooseDatabaseAPI.Revision.delete(r_id));
+        const response = (await database.Revision.delete(r_id));
 
         if (isErrorResponse(response)) throw response.error;
 

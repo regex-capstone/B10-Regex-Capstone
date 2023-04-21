@@ -79,6 +79,8 @@ export const PagePublicAPI: PagePublicAPIInterface = {
 
         const page: Page = await isaac.Page.add(serverRequest);
 
+        isaac.Search.resetCorpus();
+
         if (!page) throw new Error('Error adding new page.');
 
         return page;

@@ -1,4 +1,4 @@
-import type { Page, Revision, Category, User, Metric } from '../models/index';
+import type { Page, Revision, Category, User, Metric, MetricPageClick, MetricSearchQuery, MetricPageFeedback } from '../models/index';
 
 /**
  * The database API interface for the ISAAC API.
@@ -12,7 +12,10 @@ export default interface DatabaseAPI {
     Revision: ModelAPI<Revision>,
     Category: ModelAPI<Category>,
     User: ModelAPI<User>,
-    Metric: ModelAPI<Metric>
+    Metric: ModelAPI<Metric>,
+    MetricPageClick: ModelAPI<MetricPageClick>,
+    // MetricSearchQuery: ModelAPI<MetricSearchQuery>,
+    // MetricPageFeedback: ModelAPI<MetricPageFeedback>
 }
 
 /**

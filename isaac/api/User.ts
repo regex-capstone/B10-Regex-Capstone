@@ -7,11 +7,13 @@ export interface UserOptions extends BaseOptions {
     email?: string;
 }
 
+const database = MongooseDatabaseAPI;
+
 export const UserAPI = {
     get: async (options: UserOptions) => {
         let response;
     
-        response = (await MongooseDatabaseAPI.User.get(options, {}));
+        response = (await database.User.get(options, {}));
     
         if (isErrorResponse(response)) throw response.error;
     
@@ -21,7 +23,7 @@ export const UserAPI = {
     },
 
     add: async (u: User) => {
-        const response = (await MongooseDatabaseAPI.User.add(u));
+        const response = (await database.User.add(u));
     
         if (isErrorResponse(response)) throw response.error;
     
@@ -33,7 +35,7 @@ export const UserAPI = {
     },
 
     update: async (u_id: string, attributes: Partial<User>) => {
-        const response = (await MongooseDatabaseAPI.User.update(u_id, attributes));
+        const response = (await database.User.update(u_id, attributes));
     
         if (isErrorResponse(response)) throw response.error;
     

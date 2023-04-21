@@ -3,7 +3,7 @@ import { ModelAPI } from "../../DatabaseInterface";
 import MongooseModels from "../MongooseModels";
 import { ServerMetricSearchQueryRequest } from "@/isaac/models/MetricSearchQuery";
 
-export const MetricPageFeedbackAPI: ModelAPI<MetricSearchQuery> = {
+export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.MetricSearchQuery

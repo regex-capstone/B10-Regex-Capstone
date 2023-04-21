@@ -1,9 +1,13 @@
-import { PageAPI } from './api/Page';
-import { RevisionAPI } from './api/Revision';
-import { CategoryAPI } from './api/Category';
-import { UserAPI } from './api/User';
-import { MetricAPI } from './api/Metric';
-import { SearchAPI } from './api/Search';
+import { 
+    PageAPI,
+    RevisionAPI, 
+    CategoryAPI, 
+    UserAPI, 
+    MetricAPI, 
+    SearchAPI, 
+    MetricPageClickAPI 
+} from "./api";
+
 
 /**
  * This is the logic interface for the ISAAC API.
@@ -16,5 +20,6 @@ export default {
     Category: CategoryAPI,
     User: UserAPI,
     Metric: MetricAPI,
-    Search: SearchAPI
+    Search: SearchAPI,
+    MetricPageClick: MetricPageClickAPI
 };

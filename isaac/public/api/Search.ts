@@ -3,7 +3,8 @@ import { Page } from "@/isaac/models";
 import { SearchResponse } from "@/isaac/services/search/SearchInterface";
 
 export default interface SearchPublicAPIInterface {
-    search(q: string): Promise<SearchResponse>
+    search(q: string): Promise<SearchResponse>,
+    resetCorpus(): void
 }
 
 const isaac = ISAACAPI;
@@ -20,5 +21,9 @@ export const SearchPublicAPI: SearchPublicAPIInterface = {
             results: results,
             time_elapsed: performance.now() - s
         };
+    },
+
+    resetCorpus: () => {
+        isaac.Search.resetCorpus();
     }
 }

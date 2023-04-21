@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { ClientMetricPageClickRequest } from '@/isaac/models/MetricPageClick';
 import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetMetricTypes } from '@/isaac/public/api/Metric';
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -12,25 +13,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
         case 'GET':
-            const allAnalytics = await api.Metric.get(GetMetricTypes.ALL_METRICS, SortType.RECENTLY_CREATED);
-            res.status(200).json(allAnalytics);
-            break
-        case 'POST':
-            if (!body) throw new Error('POST request has no body.');
-            if (!body.major) throw new Error('POST request has no major.');
-            if (!body.standing) throw new Error('POST request has no standing.');
-            if (!body.met_page_id) throw new Error('POST request has no met_page_id.');
+            const metricPageClicks = await api.Metric.get(GetMetricTypes.ALL_METRICS, SortType.RECENTLY_CREATED);
+            res.status(200).json(metricPageClicks);
+            break;
 
-            const metId = await api.Metric.add({
-                major: body.major,
-                standing: body.standing,
-                met_page_id: body.met_page_id
-            });
+        case 'POST':
+            if (!body) throw new Error('No body provided.');
+            if (!body.page_id) throw new Error('No page id provided.');
+
+            const clientRequest: ClientMetricPageClickRequest = {
+                page_id: body.page_id
+            }
+
+            const payload = await api.MetricPageClick.add(clientRequest);
 
             res.status(200).json({
-                met_id: metId
+                success: true,
+                payload: payload
             });
-
             break;
         default:
             res.setHeader('Allow', ['GET', 'POST'])

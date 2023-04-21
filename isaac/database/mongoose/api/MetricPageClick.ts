@@ -47,6 +47,7 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick> = {
             }
         }
     },
+    
     aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
         try {
             return {
@@ -65,5 +66,17 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick> = {
     },
 
     update: async (id: string, attributes: Partial<MetricPageClick>) => { throw new Error('Not implemented'); },
-    delete: async (id: string) => { throw new Error('Not implemented'); }
+    
+    delete: async (id: string) => {
+        try {
+            const response = await MongooseModels.MetricPageClick.deleteOne({_id: id});
+            return {
+                success: response.acknowledged ?? false,
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    }
 }
