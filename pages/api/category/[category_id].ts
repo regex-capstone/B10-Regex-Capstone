@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'GET':
                 res.status(200).json({
                     success: true,
-                    category: category
+                    payload: category
                 });
                     
                 break;

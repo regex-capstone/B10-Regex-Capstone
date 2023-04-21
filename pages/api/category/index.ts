@@ -18,11 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'GET':
+                const categories = await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL);
+
                 res.status(200).json({
                     success: true,
-                    categories: (
-                        await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[]
-                    )
+                    payload: categories
                 });
                 
                 break;
@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     
                 res.status(200).json({
                     success: true,
-                    category: category
+                    payload: category
                 });
                     
                 break;

@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             res.status(200).json({
                 success: true,
-                user: user
+                payload: user
             });
                 
             break;
@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             res.status(200).json({
                 success: true,
-                user_id: userId
+                payload: userId
             });
                 
             break;
