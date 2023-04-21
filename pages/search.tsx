@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Box, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
+import { Box, Container, Stack, Checkbox, FormGroup, FormControlLabel, FormControl, InputLabel, Select, OutlinedInput, Chip, MenuItem, useTheme, SelectChangeEvent } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
@@ -15,6 +15,7 @@ import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { SearchResponse } from '@/isaac/search/SearchInterface';
 import Head from 'next/head';
 import Header from '@/client/Header';
+import React from 'react';
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
     const api: API = ApiEndpoint;
@@ -43,6 +44,7 @@ export default function Search(props: SearchProps) {
     const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
     const [catFilter, setFilter] = useState([] as string[]);
     const [filteredResults, setFilteredResults] = useState<Page[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState([] as string[]);
 
     const router = useRouter();
     const { q } = router.query as { q: string };
@@ -68,8 +70,8 @@ export default function Search(props: SearchProps) {
     }, [categoryData])
 
     useEffect(() => {
-        setFilteredResults(filterResults(results, catFilter));
-    }, [results, catFilter]);
+        setFilteredResults(filterResults(results, selectedCategories));
+    }, [results, selectedCategories]);
 
     return (
         <>
@@ -78,21 +80,58 @@ export default function Search(props: SearchProps) {
             </Head>
             <Header initialQuery={q} />
             <Container maxWidth="xl">
-                <SearchFilters />
+                <SearchFilters categories={categories} selected={selectedCategories} setSelected={setSelectedCategories} />
+                <i>{filteredResults.length} results ({timeElapsed} seconds)</i>
                 <SearchResults />
+                {/* <SearchResultList results={filteredResults} timeElapsed={timeElapsed} /> */}
                 <FeedbackForm />
             </Container>
         </>
     )
 
-    function SearchFilters() {
+    function SearchFilters(props: { categories: Category[], selected: string[], setSelected: (selected: string[]) => void }) {
+        const [selected, setSelected] = [props.selected, props.setSelected]
+        const handleChange = (event: SelectChangeEvent<typeof selected>) => {
+            const {
+                target: { value },
+            } = event;
+            setSelected(
+                // On autofill we get a stringified value.
+                typeof value === 'string' ? value.split(',') : value,
+            );
+        };
         return (
             <Box sx={{
                 marginTop: 2,
                 marginBottom: 2,
-                backgroundColor: "gray"
             }}>
-                <>Filters</>
+                <FormControl sx={{
+                    width: "100%"
+                }}>
+                    <InputLabel>Filters</InputLabel>
+                    <Select
+                        multiple
+                        value={selected}
+                        onChange={handleChange}
+                        input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                        renderValue={(selected) => (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                {selected.map((value) => (
+                                    <Chip key={value} label={value} />
+                                ))}
+                            </Box>
+                        )}
+                    >
+                        {props.categories.map((cat) => (
+                            <MenuItem
+                                key={cat.name}
+                                value={cat.name}
+                            >
+                                {cat.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
         )
     }
@@ -114,7 +153,11 @@ export default function Search(props: SearchProps) {
             <Box sx={{
                 marginTop: 2,
                 marginBottom: 2,
-                backgroundColor: "gray"
+                height: 200,
+                backgroundColor: "gray",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
             }}>
                 <>Feedback</>
             </Box>
@@ -222,6 +265,6 @@ function SearchResult(props: { result: Page }) {
 
 function filterResults(results: Page[], catFilter: string[]) {
     return (results && catFilter.length != 0)
-        ? results.filter(result => catFilter.includes(result.page_category_id as string))
+        ? results.filter(result => catFilter.includes(result.id as string))
         : results;
 }
