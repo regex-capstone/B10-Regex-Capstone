@@ -42,6 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         
                 const page = await api.Page.add(clientRequest);
 
+                console.log(page);
+
                 // initialize revision for the new page
                 const initRevisionRequest: ClientRevisionRequest = {
                     content: '<>',

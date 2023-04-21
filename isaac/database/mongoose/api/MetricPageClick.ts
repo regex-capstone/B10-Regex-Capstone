@@ -38,7 +38,7 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick, ServerMetricPageClick
             await payload.save();
 
             const newMetricPageClick = {
-                ...payload,
+                ...payload._doc,
                 id: (payload._id as mongoose.Types.ObjectId).toString()
             };
 

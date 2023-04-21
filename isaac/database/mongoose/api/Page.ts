@@ -50,7 +50,7 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
             await page.save();
 
             const newPage = {
-                ...page,
+                ...page._doc,
                 id: (page._id as mongoose.Types.ObjectId).toString()
             };
 

@@ -42,7 +42,7 @@ export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
             await rev.save();
 
             const newRev = {
-                ...rev,
+                ...rev._doc,
                 id: (rev._id as mongoose.Types.ObjectId).toString()
             }
 

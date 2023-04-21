@@ -36,7 +36,7 @@ export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery> = {
             await payload.save();
 
             const newMetricSearchQuery = {
-                ...payload,
+                ...payload._doc,
                 id: (payload._id as mongoose.Types.ObjectId).toString()
             };
 

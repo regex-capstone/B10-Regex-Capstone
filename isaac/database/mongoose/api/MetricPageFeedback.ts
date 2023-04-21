@@ -41,7 +41,7 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback> = {
             await payload.save();
 
             const newMetricPageFeedback = {
-                ...payload,
+                ...payload._doc,
                 id: (payload._id as mongoose.Types.ObjectId).toString()
             };
 

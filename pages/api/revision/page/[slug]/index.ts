@@ -2,14 +2,20 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetRevisionTypes } from '@/isaac/public/api/Revision';
-import { Revision } from '@/isaac/models';
+import { Page, Revision } from '@/isaac/models';
+import { getServerSession } from 'next-auth';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import { ClientRevisionRequest } from '@/isaac/models/Revision';
+import { GetPageTypes } from '@/isaac/public/api/Page';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const method = req.method
     const query = req.query
     const slug = query.slug as string
+    const body = req.body;
 
     try {
         switch (method) {
@@ -26,8 +32,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                     
                 break;
+            case 'POST':
+                // if (!session) throw new Error('You must be logged in.');
+
+                if (!body) throw new Error('POST request has no body.');
+                if (!body.content) throw new Error('POST request has no content.');
+
+                const page: Page = await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug }) as Page;
+
+                if (!page) throw new Error('Page not found.');
+
+                const clientRequest: ClientRevisionRequest = {
+                    content: body.content,
+                    rev_page_id: page.id as string
+                }
+
+                const revision = await api.Revision.add(clientRequest);
+
+                res.status(200).json({
+                    success: true,
+                    payload: revision
+                });
+                    
+                break;
             default:
-                res.setHeader('Allow', ['GET'])
+                res.setHeader('Allow', ['GET', 'POST'])
                 res.status(405).send(`Method ${method} Not Allowed`)
             }
     } catch (e) {
