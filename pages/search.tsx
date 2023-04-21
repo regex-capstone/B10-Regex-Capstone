@@ -13,6 +13,8 @@ import API from '@/isaac/api/APIInterface';
 import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { SearchResponse } from '@/isaac/search/SearchInterface';
+import Head from 'next/head';
+import Header from '@/client/Header';
 
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<SearchProps>> {
     const api: API = ApiEndpoint;
@@ -65,31 +67,82 @@ export default function Search(props: SearchProps) {
         }
     }, [categoryData])
 
-    useEffect(() => { 
+    useEffect(() => {
         setFilteredResults(filterResults(results, catFilter));
     }, [results, catFilter]);
+
     return (
-        <Container>
-            <Grid2 container spacing={2}>
-                <Grid2 xs={3}>
-                    <Stack direction={'column'} spacing={2}>
-                        <Logo />
-                        <Filters
-                            categories={categories}
-                            setFilter={setFilter}
-                            currFilter={catFilter}
-                        />
-                    </Stack>
-                </Grid2>
-                <Grid2 xs={6}>
-                    <Stack direction={'column'} spacing={2}>
-                        <SearchBar initialQuery={q} />
-                        <SearchResultList results={filteredResults} timeElapsed={timeElapsed} />
-                    </Stack>
-                </Grid2>
-            </Grid2>
-        </Container>
+        <>
+            <Head>
+                <title>ISAAC | {q}</title>
+            </Head>
+            <Header initialQuery={q} />
+            <Container maxWidth="xl">
+                <SearchFilters />
+                <SearchResults />
+                <FeedbackForm />
+            </Container>
+        </>
     )
+
+    function SearchFilters() {
+        return (
+            <Box sx={{
+                marginTop: 2,
+                marginBottom: 2,
+                backgroundColor: "gray"
+            }}>
+                <>Filters</>
+            </Box>
+        )
+    }
+
+    function SearchResults() {
+        return (
+            <Box sx={{
+                marginTop: 2,
+                marginBottom: 2,
+                backgroundColor: "gray"
+            }}>
+                <>Results</>
+            </Box>
+        )
+    }
+
+    function FeedbackForm() {
+        return (
+            <Box sx={{
+                marginTop: 2,
+                marginBottom: 2,
+                backgroundColor: "gray"
+            }}>
+                <>Feedback</>
+            </Box>
+        )
+    }
+
+    // return (
+    //     <Container>
+    //         <Grid2 container spacing={2}>
+    //             <Grid2 xs={3}>
+    //                 <Stack direction={'column'} spacing={2}>
+    //                     <Logo />
+    //                     <Filters
+    //                         categories={categories}
+    //                         setFilter={setFilter}
+    //                         currFilter={catFilter}
+    //                     />
+    //                 </Stack>
+    //             </Grid2>
+    //             <Grid2 xs={6}>
+    //                 <Stack direction={'column'} spacing={2}>
+    //                     <SearchBar initialQuery={q} />
+    //                     <SearchResultList results={filteredResults} timeElapsed={timeElapsed} />
+    //                 </Stack>
+    //             </Grid2>
+    //         </Grid2>
+    //     </Container>
+    // )
 }
 
 function SearchResultList(props: { results: Page[], timeElapsed: number }) {

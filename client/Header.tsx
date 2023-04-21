@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
 import { ReactNode, useState } from 'react';
 
-export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean }) {
+export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean, initialQuery?: string }) {
     const router = useRouter()
     const { data: session } = useSession()
     return (
@@ -34,7 +34,7 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                         flexDirection: "column",
                         justifyContent: "center",
                     }}>
-                        {props.disableSearchBar ? null : <SearchBar />}
+                        {props.disableSearchBar ? null : <SearchBar initialQuery={props.initialQuery} />}
                     </Box>
                     <Box sx={{
                         flex: 1,
@@ -57,9 +57,9 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
     )
 }
 
-function SearchBar() {
+function SearchBar(props: { initialQuery?: string }) {
     const router = useRouter()
-    const [value, setValue] = useState<string>("");
+    const [value, setValue] = useState<string>(props.initialQuery || "");
     return (
         <TextField
             value={value}
