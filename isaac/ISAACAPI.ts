@@ -3,7 +3,6 @@ import {
     RevisionAPI, 
     CategoryAPI, 
     UserAPI, 
-    MetricAPI, 
     SearchAPI, 
     MetricPageClickAPI 
 } from "./api";
@@ -19,7 +18,6 @@ export default {
     Revision: RevisionAPI,
     Category: CategoryAPI,
     User: UserAPI,
-    Metric: MetricAPI,
     Search: SearchAPI,
     MetricPageClick: MetricPageClickAPI
 };

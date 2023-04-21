@@ -18,8 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const page: Page = (
-            await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug }) as Page[]
-        )[0];
+            await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug }) as Page
+        );
 
         if (!page) {
             throw new Error('Page not found.');

@@ -18,7 +18,8 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
                     title: raw.title,
                     page_category_id: raw.page_category_id,
                     created_at: raw.created_at,
-                    description: raw.description ?? ''
+                    description: raw.description,
+                    slug: raw.slug
                 };
             });
     
