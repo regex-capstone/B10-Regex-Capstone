@@ -13,6 +13,7 @@ export default interface MetricPageClickPublicAPIInterface {
 }
 
 export enum GetMetricPageClickTypes {
+    ALL_METRIC_PAGE_CLICKS,
     METRIC_PAGE_CLICKS_BY_PAGE
 }
 
@@ -40,6 +41,9 @@ export const MetricPageClickPublicAPI: MetricPageClickPublicAPIInterface = {
         }
 
         switch (get_type) {
+            case GetMetricPageClickTypes.ALL_METRIC_PAGE_CLICKS:
+                return (await isaac.MetricPageClick.get({}, sort_options)) as MetricPageClick[];
+                
             case GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
                 return (await isaac.MetricPageClick.get({ p_id: get_options?.p_id }, sort_options)) as MetricPageClick[];
