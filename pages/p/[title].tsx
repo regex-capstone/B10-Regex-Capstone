@@ -179,6 +179,7 @@ const FeedbackSection = () => {
     const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
     const [feedbackText, setFeedbackText] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const CHARACTER_LIMIT = 100;
   
     const handleYesButtonClick = () => {
       setIsHelpful(true);
@@ -197,36 +198,65 @@ const FeedbackSection = () => {
     };
   
     return (
+        <div
+      style={{
+        backgroundColor: '#D3D3D3',
+        color: '#fff',
+        padding: '1rem',
+        position: 'fixed',
+        bottom: 1,
+        width: '30%',
+        height: '155px',
+        boxSizing: 'border-box',
+        zIndex: 9999,
+        marginBottom: '2rem',
+      }}
+    >
       <>
         <Stack direction={'column'} spacing={2}>
-            <p>Did you find this helpful?</p>
+            <Typography color="textPrimary">Did you find this helpful?</Typography>
             <Stack direction={'row'} spacing={2}>
             {isHelpful === null ? (
         <ButtonGroup>
-          <Button variant="contained" onClick={handleYesButtonClick}>
+          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
             Yes
           </Button>
-          <Button variant="contained" onClick={handleNoButtonClick}>
+          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0 }} onClick={handleNoButtonClick}>
             No
           </Button>
         </ButtonGroup>
             ) : isHelpful ? (
-                <Typography variant="h6">Thank you for your feedback!</Typography>
+                <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
             ) : isSubmitted ? (
-                <Typography variant="h6">Thank you for your feedback!</Typography>
+                <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
             ) : (
                 <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
                 <TextField
+                    type="text"
                     label="Please provide additional feedback"
                     variant="outlined"
                     multiline
                     rows={2}
                     value={feedbackText}
                     onChange={(event) => setFeedbackText(event.target.value)}
+                    inputProps={{ 
+                        style: { fontSize: '1rem' }, 
+                        maxLength: CHARACTER_LIMIT
+                    }}
                     style={{ marginRight: '1rem', width: 'max-content' }}
-                    inputProps={{ style: { fontSize: '1rem' } }}
+                    helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
+ 
                 />
-                <Button type="submit" variant="contained" color="primary" style={{ height: 'fit-content' }} onClick={handleYesButtonClick}>
+                <Button type="submit" variant="contained" color="primary" 
+                    style={{
+                        width: '80px',
+                        height: 'fit-content',
+                        backgroundColor: 'black',
+                        borderRadius:0,
+                        margin: '1.5rem' 
+                    }} 
+                    onClick={handleYesButtonClick}>
+                    
                     Submit
                 </Button>
                 </form>
@@ -234,5 +264,6 @@ const FeedbackSection = () => {
             </Stack>
         </Stack>
       </>
+      </div>
     );
   };
