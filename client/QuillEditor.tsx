@@ -169,6 +169,11 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
       
         return <>
             <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />
+            {/* <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats}>
+                <div className='editing-area' style={{
+                    height: '200px'
+                }} />
+            </ReactQuill> */}
             <Button onClick={handleSave}>
                 {
                     loading
@@ -189,7 +194,6 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                         ? <p>Editing {pageData.title}...</p>
                         : <p>Create a new page...</p>
                 }
-                <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
             </header>
             <Box id="editor">
                 {CreateQuillEditor(revisionData?.content as string)}
