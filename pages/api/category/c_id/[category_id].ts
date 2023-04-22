@@ -3,21 +3,23 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Category, Page } from '@/isaac/models';
 import { getServerSession } from 'next-auth';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
-import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
+import { SortType } from '@/isaac/public/SortType';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
-    const method = req.method
-    const query = req.query
-    const category_id = query.category_id as string
+    const { 
+        query: { category_id }, 
+        method 
+    } = req;
 
     try {
         const category: Category = (
-            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_id: category_id }
+            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_id: category_id as string }
         ) as Category);
 
         if (!category) { throw new Error('Category not found.'); }
@@ -28,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     success: true,
                     payload: category
                 });
-                    
+
                 break;
             case 'DELETE':
                 if (!session) throw new Error('You must be logged in.');

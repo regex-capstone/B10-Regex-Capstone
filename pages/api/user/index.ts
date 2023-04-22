@@ -12,51 +12,53 @@ const api = PublicAPIEndpoint;
 // TODO: double check this works
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
-    const method = req.method;
-    const body = req.body;
+    const { 
+        body,
+        method 
+    } = req;
 
     try {
         switch (method) {
-        case 'GET':
-            if (!session) {
-                throw new Error('Not authenticated.');
-            }
+            case 'GET':
+                if (!session) {
+                    throw new Error('Not authenticated.');
+                }
 
-            const email: string | null | undefined = session.user?.email;
-            
-            if (!email) {
-                throw new Error('Not authenticated.');
-            }
-
-            const user: User = await api.User.get(
-                GetUserTypes.USER_BY_EMAIL,
-                { email: email }
-            );
-
-            if (!user) {
-                throw new Error('User not found.');
-            }
-
-            res.status(200).json({
-                success: true,
-                payload: user
-            });
+                const email: string | null | undefined = session.user?.email;
                 
-            break;
-        case 'PUT':
-            if (!body) throw new Error('PUT request has no body.');
+                if (!email) {
+                    throw new Error('Not authenticated.');
+                }
 
-            const userId = await api.User.update(body);
+                const user: User = await api.User.get(
+                    GetUserTypes.USER_BY_EMAIL,
+                    { email: email }
+                );
 
-            res.status(200).json({
-                success: true,
-                payload: userId
-            });
-                
-            break;
-        default:
-            res.setHeader('Allow', ['GET', 'PUT'])
-            res.status(405).end(`Method ${method} Not Allowed`)
+                if (!user) {
+                    throw new Error('User not found.');
+                }
+
+                res.status(200).json({
+                    success: true,
+                    payload: user
+                });
+                    
+                break;
+            case 'PUT':
+                if (!body) throw new Error('PUT request has no body.');
+
+                const userId = await api.User.update(body);
+
+                res.status(200).json({
+                    success: true,
+                    payload: userId
+                });
+                    
+                break;
+            default:
+                res.setHeader('Allow', ['GET', 'PUT'])
+                res.status(405).end(`Method ${method} Not Allowed`)
         }
     } catch (e) {
         res.status(500).json({

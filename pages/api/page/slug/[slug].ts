@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { SortType } from '@/isaac/public/PublicAPI';
+import { SortType } from '@/isaac/public/SortType';
 import { NextApiRequest, NextApiResponse } from 'next'
 import Page from '../../../../isaac/models/Page';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
@@ -9,16 +9,16 @@ import { GetPageTypes } from '@/isaac/public/api/Page';
 
 const api = PublicAPIEndpoint;
 
-// TODO: handle to only allow slugs
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
-    const method = req.method
-    const query = req.query
-    const slug = query.slug as string
+    const { 
+        query: { slug },
+        method 
+    } = req;
 
     try {
         const page: Page = (
-            await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug }) as Page
+            await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as Page
         );
 
         if (!page) {

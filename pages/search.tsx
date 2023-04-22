@@ -9,11 +9,11 @@ import { roundOff } from "@/client/utils/TimeUtils";
 import useSearch from "@/client/hooks/useSearch";
 import LoadingSpinner from "@/client/LoadingSpinner";
 import useCategory from "@/client/hooks/useCategory";
-import ApiEndpoint, { SortType } from '@/isaac/public/PublicAPI';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { SearchResponse } from '@/isaac/services/search/SearchInterface';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
+import { SortType } from '@/isaac/public/SortType';
 
 /**
  * Uses SSG to generate the search result page on the first load.

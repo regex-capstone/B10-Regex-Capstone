@@ -1,5 +1,5 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
-import { SortType } from "../PublicAPI";
+import { SortType } from '@/isaac/public/SortType';
 import Revision, { ClientRevisionRequest, ServerRevisionRequest } from "@/isaac/models/Revision";
 import { Page } from "@/isaac/models";
 

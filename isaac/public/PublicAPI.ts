@@ -31,9 +31,3 @@ const PublicAPIEndpoint: PublicAPIInterface = {
 }
 
 export default PublicAPIEndpoint;
-
-export enum SortType {
-    ALPHABETICAL,
-    RECENTLY_CREATED,
-    NONE
-}

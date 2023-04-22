@@ -6,24 +6,26 @@ import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const method = req.method;
-    const query: string = req.query.q as string;
+    const { 
+        query: { q }, 
+        method 
+    } = req;
 
     try {
         switch (method) {
-        case 'GET':
-            if (!query) throw new Error('No query provided.');
+            case 'GET':
+                if (!q) throw new Error('No query provided.');
 
-            const results = await api.Search.search(query);
+                const results = await api.Search.search(q as string);
 
-            res.status(200).json({
-                success: true,
-                payload: results
-            });
-            break;
-        default:
-            res.setHeader('Allow', ['GET'])
-            res.status(405).end(`Method ${method} Not Allowed`)
+                res.status(200).json({
+                    success: true,
+                    payload: results
+                });
+                break;
+            default:
+                res.setHeader('Allow', ['GET'])
+                res.status(405).end(`Method ${method} Not Allowed`)
         }
     } catch (e) {
         res.status(500).json({

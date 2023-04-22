@@ -1,7 +1,7 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Category } from "../../models";
 import { ClientCategoryRequest, ServerCategoryRequest } from "../../models/Category";
-import { SortType } from "../PublicAPI";
+import { SortType } from '@/isaac/public/SortType';
 
 export default interface CategoryPublicAPIInterface {
     get(get_type: GetCategoryTypes, sort_type: SortType, get_options?: GetCategoryOptions): Promise<Category | Category[]>,

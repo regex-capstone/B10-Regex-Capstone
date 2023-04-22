@@ -3,25 +3,29 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
-import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import Page, { ClientPageRequest } from '@/isaac/models/Page';
 import { ClientRevisionRequest } from '@/isaac/models/Revision';
+import { SortType, parseSortType } from '@/isaac/public/SortType';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
-    const method = req.method
-    const body = req.body;
+    const { 
+        query: { sort_type: raw_sort_type }, 
+        body,
+        method 
+    } = req;
+    const sort_type = parseSortType(raw_sort_type as string);
 
     try {
         switch (method) {
             case 'GET':
-                const pages: Page[] = (await api.Page.get(
-                    GetPageTypes.ALL_PAGES, 
-                    SortType.NONE
-                )) as Page[];
+                const pages: Page[] = (
+                    await api.Page.get(GetPageTypes.ALL_PAGES, sort_type) as Page[]
+                );
 
                 res.status(200).json({
                     success: true,
@@ -39,10 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     title: body.title,
                     page_category_id: body.page_category_id
                 }
-        
-                const page = await api.Page.add(clientRequest);
 
-                console.log(page);
+                const page = await api.Page.add(clientRequest);
 
                 // initialize revision for the new page
                 const initRevisionRequest: ClientRevisionRequest = {
@@ -51,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 const revision = await api.Revision.add(initRevisionRequest);
-                    
+
                 res.status(200).json({
                     success: true,
                     payload: page
@@ -60,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             default:
                 res.setHeader('Allow', ['GET', 'POST'])
                 res.status(405).end(`Method ${method} Not Allowed`)
-            }
+        }
     } catch (e) {
         res.status(500).json({
             message: 'Something went wrong...',

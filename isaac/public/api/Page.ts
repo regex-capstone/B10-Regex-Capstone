@@ -1,7 +1,7 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Page } from "../../models";
 import { ClientPageRequest, ServerPageRequest } from "../../models/Page";
-import { SortType } from "../PublicAPI";
+import { SortType } from '@/isaac/public/SortType';
 
 export default interface PagePublicAPIInterface {
     get(get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions): Promise<Page | Page[]>,

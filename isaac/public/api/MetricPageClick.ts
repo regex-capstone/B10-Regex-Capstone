@@ -1,5 +1,5 @@
 import { MetricPageClick } from "@/isaac/models";
-import { SortType } from "../PublicAPI";
+import { SortType } from '@/isaac/public/SortType';
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { MetricPageClickSortOptions } from "@/isaac/api/MetricPageClick";
 import { ClientMetricPageClickRequest, ServerMetricPageClickRequest } from "@/isaac/models/MetricPageClick";

@@ -1,20 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Category } from '@/isaac/models';
-import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
+import { SortType } from '@/isaac/public/SortType';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const method = req.method
-    const query = req.query
-    const slug = query.slug as string
+    const { 
+        query: { slug }, 
+        method 
+    } = req;
+    
 
     try {
         const category: Category = (
-            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_slug: slug }
-        ) as Category);
+            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_slug: slug as string }
+            ) as Category);
 
         if (!category) { throw new Error('Category not found.'); }
 
@@ -24,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     success: true,
                     payload: category
                 });
-                    
+
                 break;
             default:
                 res.setHeader('Allow', ['GET']);
