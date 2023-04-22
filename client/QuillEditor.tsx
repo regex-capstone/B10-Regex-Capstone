@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import { Box, Button } from "@mui/material";
 import Page, { PageRequest } from "@/isaac/models/Page";
 import { useRouter } from "next/router";
-import Quill from 'quill';
+import React, { useState, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface QuillTextEditorProps {
     pageData?: PageData;
@@ -34,51 +35,43 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             }
         }
     }, [])
-
-    // Create and Initialize Quill Editor
-    // var QuillHTML = `
-    //     <!-- Include stylesheet -->
-    //     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    //     <link rel="stylesheet" href="//cdn.quilljs.com/1.3.6/quill.bubble.css">
-
-    //     <!-- Create the editor container -->
-    //     <div id="editor">
-    //     </div>
-    // `;
-    var toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-        ['blockquote', 'code-block'],
+    
+    // var toolbarOptions = [
+    //     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+    //     ['blockquote', 'code-block'],
       
-        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-        [{ 'direction': 'rtl' }],                         // text direction
+    //     [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+    //     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    //     [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+    //     [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+    //     [{ 'direction': 'rtl' }],                         // text direction
       
-        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+    //     [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+    //     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
       
-        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-        [{ 'font': [] }],
-        [{ 'align': [] }],
+    //     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+    //     [{ 'font': [] }],
+    //     [{ 'align': [] }],
       
-        ['clean']                                         // remove formatting button
-    ];
-    var options = {
-    // debug: 'info',
-    placeholder: 'Compose an epic...',
-    readOnly: false,
-    theme: 'snow',
-    modules: {
-      toolbar: toolbarOptions
-    }
-    };
-    var quill = new Quill('#editor', options);
+    //     ['clean']                                         // remove formatting button
+    // ];
+    // var options = {
+    //     // debug: 'info',
+    //     placeholder: 'Compose an epic...',
+    //     readOnly: false,
+    //     theme: 'snow',
+    //     modules: {
+    //     toolbar: toolbarOptions
+    //     }
+    // };
 
-    quill.root.innerHTML = revisionData?.content as string;
-
-    // Handle Saved Content
+    // @TODO: Handle Saved Content
+    // const handleSave = async () => {
+    //     let Editor = document.getElementsByClassName('ql-editor')[0];
+    //     console.log(Editor?.innerHTML);
+    // }
     const handleSave = async () => {
+        let Editor = document.getElementsByClassName('ql-editor')[0];
         setLoading(true);
 
         let textIndex = 0;
@@ -111,14 +104,14 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                 pagePayload = (await fetchPage.json()).page;
 
                 request = {
-                    content: quill.root.innerHTML,
+                    content: Editor?.innerHTML,
                     rev_page_id: pagePayload.id
                 }
 
                 redirectTitle = title;
             } else {
                 request = {
-                    content: quill.root.innerHTML,
+                    content: Editor?.innerHTML,
                     rev_page_id: pageData.id as string
                 }
 
@@ -143,7 +136,50 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
         }
     }
 
-    if (loading) return <h1>{loadingText}</h1>
+    const CreateQuillEditor = (content: string) => {
+        const [value, setValue] = useState(content);
+
+        let modules = {
+            toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline','strike'],
+                ['blockquote', 'code-block'],
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                [{'indent': '-1'}, {'indent': '+1'}],
+                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+                ['link'],
+                ['clean']
+            ],
+            // toolbar: false
+        };
+        
+        let formats = [
+            'header',
+            'bold', 'italic', 'underline', 'strike',
+            'blockquote', 'code-block',
+            'list', 'bullet',
+            'indent',
+            'color', 'background',
+            'font',
+            'align',
+            'link'
+        ];
+      
+        return <>
+            <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />
+            <Button onClick={handleSave}>
+                {
+                    loading
+                        ? loadingText
+                        : 'Save Changes'
+                }
+            </Button>
+        </>;
+    }
+
+    // if (loading) return <h1>{loadingText}</h1>
 
     return (
         <>
@@ -155,23 +191,9 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                 }
                 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
             </header>
-            <Box id="editor" sx={{
-                border: '1px solid black'
-            }}>
-                {/* Insert Quill Editor */}
+            <Box id="editor">
+                {CreateQuillEditor(revisionData?.content as string)}
             </Box>
-            <Button onClick={handleSave}>
-                {
-                    loading
-                        ? loadingText
-                        : 'Save Changes'
-                }
-            </Button>
-            <p>
-                <em>
-                    This editor uses Markdown. For a guide on how to use Markdown, click <a href="https://www.markdownguide.org/cheat-sheet/">here</a>.
-                </em>
-            </p>
         </>
     )
 }

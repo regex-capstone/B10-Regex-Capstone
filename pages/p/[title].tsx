@@ -3,7 +3,6 @@ import { Button, Container, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
-import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
 import Header from "@/client/Header";
 import ApiEndpoint from "@/isaac/api/APIEndpoint";
@@ -14,6 +13,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import usePageEngagement from "@/client/hooks/usePageEngagement";
+import 'react-quill/dist/quill.snow.css';
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -74,7 +74,7 @@ export default function Page(props: PageProps) {
                         </Stack>
                     </Grid2>
                     <Grid2 xs={6}>
-                        <Stack direction={'column'} spacing={2}>
+                        <Stack className="ql-snow" direction={'column'} spacing={2}>
                             <SearchBar initialQuery={query} />
                             <Content page={pageData} revision={revisionData} />
                         </Stack>
@@ -109,11 +109,7 @@ function ContentTable(props: { page: PageData }) {
 function Content(props: { page: PageData, revision: Revision }) {
     const { revision } = props;
     return (
-        <Container>
-            <ReactMarkdown>
-                {revision.content}
-            </ReactMarkdown>
-        </Container>
+        <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: revision.content }} />
     )
 }
 
