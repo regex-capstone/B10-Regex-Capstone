@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Page, Revision, Category, User, Metric, MetricPageClick } from '../../models/index';
+import { Page, Revision, Category, User, MetricPageClick } from '../../models/index';
 import MetricPageFeedback from '../../models/MetricPageFeedback';
 import MetricSearchQuery from '../../models/MetricSearchQuery';
 

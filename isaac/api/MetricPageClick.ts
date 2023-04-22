@@ -38,8 +38,8 @@ export const MetricPageClickAPI = {
         return resultMetricPageClick;
     },
 
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
-        let response = (await database.MetricPageClick.aggregate(groupOptions, sortOptions, lookupOptions));
+    aggregate: async (...agg_args: any[]) => {
+        let response = (await database.MetricPageClick.aggregate(...agg_args));
 
         if (isErrorResponse(response)) throw response.error;
 

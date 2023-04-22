@@ -55,15 +55,11 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick, ServerMetricPageClick
         }
     },
     
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+    aggregate: async (...agg_args: any) => {
         try {
             return {
                 success: true,
-                payload: await MongooseModels.MetricPageClick
-                    .aggregate()
-                    .group(groupOptions)
-                    .sort(sortOptions)
-                    .lookup(lookupOptions)
+                payload: await MongooseModels.MetricPageClick.aggregate(agg_args)
             }
         } catch (err: any) {
             return {

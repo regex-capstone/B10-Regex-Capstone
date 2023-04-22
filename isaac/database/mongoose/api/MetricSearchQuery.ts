@@ -4,7 +4,7 @@ import MongooseModels from "../MongooseModels";
 import { ServerMetricSearchQueryRequest } from "@/isaac/models/MetricSearchQuery";
 import mongoose from "mongoose";
 
-export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery> = {
+export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery, ServerMetricSearchQueryRequest> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.MetricSearchQuery
@@ -53,15 +53,11 @@ export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery> = {
         }
     },
     
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+    aggregate: async (...agg_args: any[]) => {
         try {
             return {
                 success: true,
-                payload: await MongooseModels.MetricSearchQuery
-                    .aggregate()
-                    .group(groupOptions)
-                    .sort(sortOptions)
-                    .lookup(lookupOptions)
+                payload: await MongooseModels.MetricSearchQuery.aggregate(agg_args)
             }
         } catch (err: any) {
             return {

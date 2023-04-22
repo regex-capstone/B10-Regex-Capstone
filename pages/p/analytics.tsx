@@ -4,7 +4,6 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Head from "next/head";
 import Link from "next/link";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, PieChart, Pie, Tooltip } from 'recharts'
-import useAnalytics from "@/client/hooks/useAnalytics";
 import { useRouter } from "next/router";
 import LoadingSpinner from "@/client/LoadingSpinner";
 import { UserRole } from "@/isaac/models/User";
@@ -19,7 +18,6 @@ export default function Analytics() {
     const router = useRouter();
     const { page: title } = router.query;
 
-    const { data: analyticData, isLoading } = useAnalytics(title as string);
     const [dateRange, setDateRange] = useState(30 as number);
     const [standingData, setStandingData] = useState([] as Metric[]);
     const [majorData, setMajorData] = useState([] as Metric[]);
@@ -27,25 +25,23 @@ export default function Analytics() {
     const [rawTimeData, setRawTimeData] = useState([] as Metric[]);
 
     useEffect(() => {
-        if (analyticData) {
-            const metrics = analyticData;
-            const tempStandingData: Metric[] = [];
-            const tempMajorData: Metric[] = [];
-            const tempTimeData: Metric[] = [];
+        // const metrics = [];
+        // const tempStandingData: Metric[] = [];
+        // const tempMajorData: Metric[] = [];
+        // const tempTimeData: Metric[] = [];
 
-            for (let i = 0; i < metrics.length; i++) {
-                const focusMetric = metrics[i];
+        // for (let i = 0; i < metrics.length; i++) {
+        //     const focusMetric = metrics[i];
 
-                processMetric(tempStandingData, focusMetric.standing);
-                processMetric(tempMajorData, focusMetric.major);
-                processMetric(tempTimeData, focusMetric.created_at);
-            }
+        //     processMetric(tempStandingData, focusMetric.standing);
+        //     processMetric(tempMajorData, focusMetric.major);
+        //     processMetric(tempTimeData, focusMetric.created_at);
+        // }
 
-            setStandingData(tempStandingData);
-            setMajorData(tempMajorData);
-            setRawTimeData(tempTimeData);
-        }
-    }, [analyticData])
+        // setStandingData(tempStandingData);
+        // setMajorData(tempMajorData);
+        // setRawTimeData(tempTimeData);
+    }, [])
 
     useEffect(() => {
         const tempTimeData: Metric[] = [];
@@ -64,10 +60,6 @@ export default function Analytics() {
         setTimeData(tempTimeData);
     }, [dateRange, rawTimeData])
 
-    if (isLoading) {
-        return <LoadingSpinner />;
-    }
-
     return (
         <>
             <Head>
@@ -80,7 +72,7 @@ export default function Analytics() {
                     <Grid2 xs={10} sx={{
                         marginTop: 13
                     }}>
-                        <h1>{ `Page Analytics | ${title}` }</h1>
+                        <h1>{`Page Analytics | ${title}`}</h1>
                         <Stack direction={'column'} spacing={2}>
                             <div id="time-chart">
                                 <h2>Total views: {rawTimeData.length}</h2>
@@ -99,7 +91,7 @@ export default function Analytics() {
                                         width={1000}
                                         height={300}
                                         data={timeData}
-                                        margin={{right: 100, top: 30, bottom: 100}}
+                                        margin={{ right: 100, top: 30, bottom: 100 }}
                                     >
                                         <XAxis dataKey="name" angle={45} textAnchor="start"></XAxis>
                                         <YAxis></YAxis>
@@ -120,7 +112,7 @@ export default function Analytics() {
                                         </ResponsiveContainer>
                                     </Stack>
                                 </div>
-                                <div id="major-chart" style={{paddingLeft: 200}}>
+                                <div id="major-chart" style={{ paddingLeft: 200 }}>
                                     <Stack direction={'column'}>
                                         <h2>Breakdown by Major</h2>
                                         <ResponsiveContainer width={300} height={300}>

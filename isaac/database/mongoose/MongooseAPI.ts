@@ -28,8 +28,8 @@ const MongooseDatabaseAPI: DatabaseAPI = {
     Category: CategoryModelAPI,
     User: UserModelAPI,
     MetricPageClick: MetricPageClickAPI,
-    // MetricSearchQuery: MetricSearchQueryAPI,
-    // MetricPageFeedback: MetricPageFeedbackAPI
+    MetricSearchQuery: MetricSearchQueryAPI,
+    MetricPageFeedback: MetricPageFeedbackAPI
 };
 
 export default MongooseDatabaseAPI;

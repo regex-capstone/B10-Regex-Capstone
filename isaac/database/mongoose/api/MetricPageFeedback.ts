@@ -4,7 +4,8 @@ import MongooseModels from "../MongooseModels";
 import mongoose from "mongoose";
 import { ServerMetricPageFeedbackRequest } from "@/isaac/models/MetricPageFeedback";
 
-export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback> = {
+// TODO handle
+export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback, ServerMetricPageFeedbackRequest> = {
     get: async (options: any, sort: any) => {
         try {
             const data = await MongooseModels.MetricPageFeedback
@@ -58,15 +59,11 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback> = {
         }
     },
     
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
+    aggregate: async (...agg_args: any[]) => {
         try {
             return {
                 success: true,
-                payload: await MongooseModels.MetricPageFeedback
-                    .aggregate()
-                    .group(groupOptions)
-                    .sort(sortOptions)
-                    .lookup(lookupOptions)
+                payload: await MongooseModels.MetricPageFeedback.aggregate(agg_args)
             }
         } catch (err: any) {
             return {

@@ -72,10 +72,25 @@ export const MetricPageClickPublicAPI: MetricPageClickPublicAPIInterface = {
         switch (type) {
             case MetricPageClickAggType.TRENDING_PAGES:
                 response = (await isaac.MetricPageClick.aggregate(
-                    { _id: '$met_page_id', count: { $sum: 1 } },
-                    { count: -1 },
-                    { from: 'pages', localField: '_id', foreignField: '_id', as: 'page' }
-                ));
+                    {
+                        $group: {
+                            _id: '$page_id',
+                            count: { $sum: 1 }
+                        }
+                    },
+                    {
+                        $sort: {
+                            count: -1
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: 'pages',
+                            localField: '_id',
+                            foreignField: '_id',
+                            as: 'page'
+                        }
+                    }));
                 break;
             default:
                 throw new Error('Invalid aggregation type.');

@@ -76,24 +76,6 @@ export const UserModelAPI: ModelAPI<User, ServerUserRequest> = {
         }
     },
 
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => {
-        try {
-            const data = await MongooseModels.User
-                .aggregate()
-                .group(groupOptions)
-                .sort(sortOptions)
-                .lookup(lookupOptions);
-            
-            return {
-                success: true,
-                payload: data
-            }
-        } catch (err: any) {
-            return {
-                error: err
-            }
-        }
-    },
-    
+    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented') },
     delete: (id: string) => { throw new Error('Not implemented') }
 }

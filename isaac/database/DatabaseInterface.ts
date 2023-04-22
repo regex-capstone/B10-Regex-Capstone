@@ -1,5 +1,7 @@
 import { ServerCategoryRequest } from '../models/Category';
 import { ServerMetricPageClickRequest } from '../models/MetricPageClick';
+import { ServerMetricPageFeedbackRequest } from '../models/MetricPageFeedback';
+import { ServerMetricSearchQueryRequest } from '../models/MetricSearchQuery';
 import { ServerPageRequest } from '../models/Page';
 import { ServerRevisionRequest } from '../models/Revision';
 import { ServerUserRequest } from '../models/User';
@@ -18,8 +20,8 @@ export default interface DatabaseAPI {
     Category: ModelAPI<Category, ServerCategoryRequest>,
     User: ModelAPI<User, ServerUserRequest>,
     MetricPageClick: ModelAPI<MetricPageClick, ServerMetricPageClickRequest>,
-    // MetricSearchQuery: ModelAPI<MetricSearchQuery>,
-    // MetricPageFeedback: ModelAPI<MetricPageFeedback>
+    MetricSearchQuery: ModelAPI<MetricSearchQuery, ServerMetricSearchQueryRequest>,
+    MetricPageFeedback: ModelAPI<MetricPageFeedback, ServerMetricPageFeedbackRequest>
 }
 
 /**
@@ -31,7 +33,7 @@ export interface ModelAPI<K, T> {
     add: (serverRequest: T) => Promise<SuccessDBResponse | ErrorDBResponse>,
     delete: (id: string) => Promise<SuccessDBResponse | ErrorDBResponse>,
     update: (id: string, attributes: Partial<K>) => Promise<SuccessDBResponse | ErrorDBResponse>,
-    aggregate: (groupOptions: any, sortOptions: any, lookupOptions: any) => Promise<SuccessDBResponse | ErrorDBResponse>
+    aggregate: (...agg_args: any[]) => Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {

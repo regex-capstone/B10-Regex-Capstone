@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { ClientMetricPageClickRequest } from '@/isaac/models/MetricPageClick';
 import PublicAPIEndpoint, { SortType } from '@/isaac/public/PublicAPI';
-import { GetMetricTypes } from '@/isaac/public/api/Metric';
 import { GetMetricPageClickTypes } from '@/isaac/public/api/MetricPageClick';
 import { NextApiRequest, NextApiResponse } from 'next'
 
