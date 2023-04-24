@@ -21,12 +21,16 @@ export interface GetRevisionOptions {
     r_id?: string;
     ref_page_name?: string;
     p_slug?: string;
+    populate?: boolean; // appending page data to revision data
 }
 
 const isaac = ISAACAPI;
 
 export const RevisionPublicAPI: RevisionPublicAPIInterface = {
     get: async (get_type: GetRevisionTypes, sort_type: SortType, get_options?: GetRevisionOptions) => {
+        let options: any = {
+            populate: get_options?.populate ?? false
+        };
         let sort_options: any = {};
 
         switch (sort_type) {
@@ -42,24 +46,21 @@ export const RevisionPublicAPI: RevisionPublicAPIInterface = {
         switch (get_type) {
             case GetRevisionTypes.ALL_REVISIONS_OF_PAGE_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await isaac.Revision.get({ rev_page_id: get_options?.p_id }, sort_options)) as Revision | Revision[];
+                return (await isaac.Revision.get({ ...options, page: get_options?.p_id }, sort_options)) as Revision | Revision[];
 
             case GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await isaac.Revision.get({ rev_page_id: get_options?.p_id, single: true }, sort_options)) as Revision;
+                return (await isaac.Revision.get({ ...options, page: get_options?.p_id, single: true }, sort_options)) as Revision;
 
             case GetRevisionTypes.REVISION_BY_REVISION_ID:
                 if (!get_options?.r_id) throw new Error('No revision id provided.');
-                return (await isaac.Revision.get({ id: get_options?.r_id, single: true }, sort_options)) as Revision;
+                return (await isaac.Revision.get({ ...options, id: get_options?.r_id, single: true }, sort_options)) as Revision;
 
             case GetRevisionTypes.REVISIONS_BY_PAGE_SLUG:
                 if (!get_options?.p_slug) throw new Error('No page slug provided.');
-                
                 const page = (await isaac.Page.get({ slug: get_options?.p_slug, single: true }, sort_options)) as Page;
-
                 if (!page) throw new Error('No page found.');
-
-                return (await isaac.Revision.get({ rev_page_id: page.id }, sort_options)) as Revision[];
+                return (await isaac.Revision.get({ ...options, page: page.id }, sort_options)) as Revision[];
 
             default:
                 throw new Error("Invalid get type.");
@@ -78,7 +79,7 @@ export const RevisionPublicAPI: RevisionPublicAPIInterface = {
 
         // TODO: handle page description update using HTML parser
         const page = (await isaac.Page.update(
-            rev.rev_page_id.toString(),
+            rev.page.toString(),
             { description: '<>' }
         ));
 

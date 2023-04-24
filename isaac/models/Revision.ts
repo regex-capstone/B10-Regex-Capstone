@@ -1,14 +1,16 @@
+import Page from "./Page";
+
 export default interface Revision {
     id?: string;
     content: string;
     created_at: number;
-    rev_page_id: string;    // TODO: handle
+    page: string;
     //TODO: make author?
 }
 
 export interface ClientRevisionRequest {
     content: string;
-    rev_page_id: string;
+    page: string;
 }
 
 export interface ServerRevisionRequest extends ClientRevisionRequest {

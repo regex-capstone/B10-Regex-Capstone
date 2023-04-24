@@ -36,7 +36,7 @@ const RevisionSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Content is missing...'] 
     },
-    rev_page_id: { 
+    page: { 
         type: mongoose.Schema.Types.ObjectId, 
         required: [true, 'Page reference is missing...'],
         ref: 'Page' 

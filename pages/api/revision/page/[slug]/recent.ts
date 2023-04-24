@@ -9,7 +9,7 @@ const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { 
-        query: { slug }, 
+        query: { slug, populate }, 
         method 
     } = req;
 
@@ -17,7 +17,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'GET':
                 const revision: Revision = (
-                    await api.Revision.get(GetRevisionTypes.REVISIONS_BY_PAGE_SLUG, SortType.RECENTLY_CREATED, { p_slug: slug as string }) as Revision[]
+                    await api.Revision.get(
+                        GetRevisionTypes.REVISIONS_BY_PAGE_SLUG,
+                        SortType.RECENTLY_CREATED,
+                        { 
+                            p_slug: slug as string,
+                            populate: (populate as string).toLowerCase() === 'true'
+                        }
+                    ) as Revision[]
                 )[0];
 
                 if (!revision) { throw new Error('Revisions not found.'); }

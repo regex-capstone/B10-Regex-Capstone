@@ -14,11 +14,12 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const { 
-        query: { sort_type: raw_sort_type, populate }, 
+        query: { sort_type: raw_sort_type, populate: populate_string }, 
         body,
         method 
     } = req;
     const sort_type = parseSortType(raw_sort_type as string);
+    const populate: boolean = (populate_string) ? (populate_string as string).toLowerCase() === 'true' : false;
 
     try {
         switch (method) {
@@ -27,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     await api.Page.get(
                         GetPageTypes.ALL_PAGES, sort_type, 
                         { 
-                            populate: (populate as string).toLowerCase() === 'true'
+                            populate: populate
                         }
                     ) as Page[]
                 );
@@ -54,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 // initialize revision for the new page
                 const initRevisionRequest: ClientRevisionRequest = {
                     content: '<>',
-                    rev_page_id: page.id as string
+                    page: page.id as string
                 }
 
                 const revision = await api.Revision.add(initRevisionRequest);

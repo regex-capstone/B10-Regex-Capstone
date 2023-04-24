@@ -7,17 +7,26 @@ import { ServerRevisionRequest } from "@/isaac/models/Revision";
 export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
     get: async (options: any, sort: any) => {
         try {
-            const data = await MongooseModels.Revision
-                .find(options)
-                .sort(sort);
+            const populate: boolean = options.populate ?? false;
+
+            delete options.populate;
+
+            const data = (populate) 
+                ? await MongooseModels.Revision
+                    .find(options)
+                    .populate('page')
+                    .sort(sort)
+                : await MongooseModels.Revision
+                    .find(options)
+                    .sort(sort);
 
             const revisions: Revision[] = data.map((raw) => {
                 return {
                     id: (raw._id as mongoose.Types.ObjectId).toString(),
                     content: raw.content,
                     created_at: raw.created_at,
-                    rev_page_id: raw.rev_page_id
-                };;
+                    page: raw.page
+                };
             });
     
             return {
@@ -35,7 +44,7 @@ export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
         try {
             const rev = new MongooseModels.Revision({
                 ...serverRequest,
-                rev_page_id: new mongoose.Types.ObjectId(serverRequest.rev_page_id)
+                page: new mongoose.Types.ObjectId(serverRequest.page)
             });
 
             await rev.validate();

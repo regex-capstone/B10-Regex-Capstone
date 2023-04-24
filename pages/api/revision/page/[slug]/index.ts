@@ -14,16 +14,24 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const { 
-        query: { slug }, 
-        method ,
+        query: { slug, populate: populate_string }, 
+        method,
         body
     } = req;
+    const populate: boolean = (populate_string) ? (populate_string as string).toLowerCase() === 'true' : false;
 
     try {
         switch (method) {
             case 'GET':
                 const revisions: Revision[] = (
-                    await api.Revision.get(GetRevisionTypes.REVISIONS_BY_PAGE_SLUG, SortType.RECENTLY_CREATED, { p_slug: slug as string }) as Revision[]
+                    await api.Revision.get(
+                        GetRevisionTypes.REVISIONS_BY_PAGE_SLUG,
+                        SortType.RECENTLY_CREATED,
+                        { 
+                            p_slug: slug as string,
+                            populate: populate
+                        }
+                    ) as Revision[]
                 );
 
                 if (!revisions) { throw new Error('Revisions not found.'); }
@@ -46,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const clientRequest: ClientRevisionRequest = {
                     content: body.content,
-                    rev_page_id: page.id as string
+                    page: page.id as string
                 }
 
                 const revision = await api.Revision.add(clientRequest);
