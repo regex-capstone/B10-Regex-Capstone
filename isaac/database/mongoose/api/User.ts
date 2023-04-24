@@ -13,11 +13,6 @@ export const UserModelAPI: ModelAPI<User, ServerUserRequest> = {
 
             const users = data.map((raw) => {
                 const user = {
-                    id: raw._id,
-                    role: raw.role,
-                    standing: raw.standing,
-                    major: raw.major,
-                    name: raw.name,
                     email: raw.email
                 };
                 return user;
@@ -39,17 +34,9 @@ export const UserModelAPI: ModelAPI<User, ServerUserRequest> = {
             const user = new MongooseModels.User(serverRequest);
             await user.validate();
             await user.save();
-
-            const newUser = {
-                ...user._doc,
-                id: user._id
-            }
-
-            delete newUser._id;
     
             return {
-                success: true,
-                payload: newUser
+                success: true
             }
         } catch (err: any) {
             return {
@@ -58,24 +45,7 @@ export const UserModelAPI: ModelAPI<User, ServerUserRequest> = {
         }
     },
 
-    update: async (u: any) => {
-        try {
-            const userId = u.id;
-            delete u.id;
-            
-            const updatedUser = await MongooseModels.User.findByIdAndUpdate(userId, u, { new: true });
-            
-            return {
-                success: true,
-                payload: updatedUser
-            }
-        } catch (err: any) {
-            return {
-                error: err
-            }
-        }
-    },
-
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented') },
-    delete: (id: string) => { throw new Error('Not implemented') }
+    update: async (u: any) => { throw new Error('Not implemented'); },
+    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented'); },
+    delete: (id: string) => { throw new Error('Not implemented'); }
 }

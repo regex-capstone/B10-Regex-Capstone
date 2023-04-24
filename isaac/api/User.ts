@@ -2,6 +2,7 @@ import { BaseOptions } from "../ISAACOptions";
 import { isErrorResponse } from "../database/DatabaseInterface";
 import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import { User } from "../models";
+import { ServerUserRequest } from "../models/User";
 
 export interface UserOptions extends BaseOptions {
     email?: string;
@@ -22,16 +23,16 @@ export const UserAPI = {
         return options.single ? payload[0] : payload;
     },
 
-    add: async (u: User) => {
-        const response = (await database.User.add(u));
+    add: async (serverRequest: ServerUserRequest) => {
+        const response = (await database.User.add(serverRequest));
     
         if (isErrorResponse(response)) throw response.error;
     
-        const resultUser = response.payload as User;
+        const acknowledgement = response.success as boolean;
     
-        if (!resultUser) throw new Error('Error adding new user.');
+        if (!acknowledgement) throw new Error('Error adding new user.');
     
-        return resultUser;
+        return acknowledgement;
     },
 
     update: async (u_id: string, attributes: Partial<User>) => {

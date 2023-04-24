@@ -1,11 +1,11 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { User } from "@/isaac/models";
+import { ClientUserRequest, ServerUserRequest } from "@/isaac/models/User";
 
 
 export default interface UserPublicAPIInterface {
     get(get_type: GetUserTypes, get_options?: GetUserOptions): Promise<User>,
-    add(u: User): Promise<User>,
-    update(u: User): Promise<User>
+    add(clientRequest: ClientUserRequest): Promise<boolean>
 }
 
 export enum GetUserTypes {
@@ -30,14 +30,16 @@ export const UserPublicAPI: UserPublicAPIInterface = {
         }
     },
 
-    add: async (u: User) => {
-        return (await isaac.User.add({
-            ...u,
+    add: async (clientRequest: ClientUserRequest) => {
+        const serverRequest: ServerUserRequest = {
+            ...clientRequest,
             created_at: Date.now()
-        })) as User;
-    },
+        };
 
-    update: async (u: User) => {
-        return (await isaac.User.update(u.id as string, { ...u }));
+        const acknowledgement: boolean = await (isaac.User.add(serverRequest));
+
+        if (!acknowledgement) throw new Error('Error adding new user.');
+
+        return acknowledgement;
     }
 }

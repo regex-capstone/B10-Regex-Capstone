@@ -63,21 +63,9 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Email is missing...'],
     },
-    role: {
-        type: String,
-        required: [true, 'Role is missing...'],
-    },
-    name: {
-        type: String,
-        required: [true, 'Name is missing...']
-    },
-    standing: {
-        type: String,
-        required: [true, 'Standing is missing...']
-    },
-    major: {
-        type: String,
-        required: [true, 'Major is missing...']
+    created_at: {
+        type: Date,
+        required: [true, 'Creation date is missing...']
     }
 }, { strict: true });
 

@@ -6,6 +6,7 @@ import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetUserTypes } from '@/isaac/public/api/User';
+import { ClientUserRequest } from '@/isaac/models/User';
 
 const api = PublicAPIEndpoint;
 
@@ -19,46 +20,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
-            case 'GET':
-                if (!session) {
-                    throw new Error('Not authenticated.');
+            case 'POST':
+                // if (!session) { throw new Error('Not authorized. >:('); }
+
+                if (!body) { throw new Error('No body provided'); }
+                if (!body.email) { throw new Error('No email provided'); }
+
+                const email = body.email as string;
+
+                const u: User = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email });
+
+                if (u) { throw new Error('User already exists'); }
+
+                const clientRequest: ClientUserRequest = {
+                    email: email
                 }
 
-                const email: string | null | undefined = session.user?.email;
-                
-                if (!email) {
-                    throw new Error('Not authenticated.');
-                }
+                const acknowledgement = await api.User.add(clientRequest);
 
-                const user: User = await api.User.get(
-                    GetUserTypes.USER_BY_EMAIL,
-                    { email: email }
-                );
-
-                if (!user) {
-                    throw new Error('User not found.');
-                }
+                console.log(acknowledgement);
 
                 res.status(200).json({
                     success: true,
-                    payload: user
-                });
-                    
-                break;
-            case 'PUT':
-                if (!body) throw new Error('PUT request has no body.');
+                    acknowledged: acknowledgement
+                })
 
-                const userId = await api.User.update(body);
 
-                res.status(200).json({
-                    success: true,
-                    payload: userId
-                });
-                    
                 break;
             default:
-                res.setHeader('Allow', ['GET', 'PUT'])
-                res.status(405).end(`Method ${method} Not Allowed`)
+                res.setHeader('Allow', ['POST']);
+                res.status(405).end(`Method ${method} Not Allowed`);
         }
     } catch (e) {
         res.status(500).json({
