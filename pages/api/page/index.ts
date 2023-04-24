@@ -7,7 +7,7 @@ import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import Page, { ClientPageRequest } from '@/isaac/models/Page';
 import { ClientRevisionRequest } from '@/isaac/models/Revision';
-import { SortType, parseSortType } from '@/isaac/public/SortType';
+import { parseSortType } from '@/isaac/public/SortType';
 
 const api = PublicAPIEndpoint;
 
@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     page: page.id as string
                 }
 
-                const revision = await api.Revision.add(initRevisionRequest);
+                await api.Revision.add(initRevisionRequest);
 
                 res.status(200).json({
                     success: true,

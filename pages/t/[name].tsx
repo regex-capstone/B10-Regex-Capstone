@@ -1,16 +1,13 @@
 import { Category, Page } from "@/isaac/models"
 import { SortType } from "@/isaac/public/SortType"
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next"
-import SearchBar from "@/client/SearchBar"
 import Head from "next/head"
 import { Box, Container, Stack } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2'
 import Link from "next/link"
-import Logo from "@/client/Logo"
-import Header from "@/client/Header"
 import PublicAPIEndpoint from "@/isaac/public/PublicAPI"
 import { GetCategoryTypes } from "@/isaac/public/api/Category"
 import { GetPageTypes } from "@/isaac/public/api/Page"
+import Header from "@/client/Header";
 
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
     const api = PublicAPIEndpoint;

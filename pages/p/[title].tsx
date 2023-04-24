@@ -1,11 +1,10 @@
-import { Box, Container, IconButton, Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Header from "@/client/Header";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import { useRouter } from "next/router";
-import { Edit, Analytics } from "@mui/icons-material";
 import Theme from "@/client/Theme";
 import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
@@ -69,9 +68,9 @@ export default function Page(props: PageProps) {
                     {/* <IconButton onClick={() => router.push(`/p/edit?page=${pageData.title}`)}>  // TODO Ryan handle
                         <Edit htmlColor={Theme.COLOR.PRIMARY} />
                     </IconButton> */}
-                    <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>
+                    {/* <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>    // TODO keith handle
                         <Analytics htmlColor={Theme.COLOR.PRIMARY} />
-                    </IconButton>
+                    </IconButton> */}
                 </Stack>
             } />
             <Container maxWidth="md">

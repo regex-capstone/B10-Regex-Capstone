@@ -1,9 +1,10 @@
-import { Autocomplete, Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Header from "@/client/Header";
+import { Page } from "@/isaac/models";
 
 
 export default function Index() {
@@ -157,6 +158,17 @@ function Card(props: any) {
 }
 
 function TrendingCard() {
+    const [pages, setPages] = useState<Page[]>();
+
+    useEffect(() => {
+        fetch("/api/page/trending")
+            .then(res => res.json())
+            .then(results => setPages(results.payload))
+            .catch(err => console.log(err));
+    }, [])
+
+    // TODO: Alan - set loading spinner until data is fetched?
+    // TODO: Alan - handle results
     return (
         <Card>
             <Box sx={{
@@ -165,17 +177,29 @@ function TrendingCard() {
             }}>
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
-            <Stack direction="column">
+            {pages ? JSON.stringify(pages) : "hi"} 
+            {/* <Stack direction="column">
                 <a href="#">A Really Long Title of Some Really Long Article</a>
                 <a href="#">Another Great Article, With A Shorter Title</a>
                 <a href="#">Some Good Stuff</a>
                 <a href="#">Somewhere Over The Rainbow</a>
-            </Stack>
+            </Stack> */}
         </Card>
     )
 }
 
 function RecentCard() {
+    const [pages, setPages] = useState<Page[]>();
+
+    useEffect(() => {
+        fetch("/api/page?sort_type=recently_created")
+            .then(res => res.json())
+            .then(results => setPages(results.payload))
+            .catch(err => console.log(err));
+    }, [])
+
+    // TODO: Alan - handle results
+    
     return (
         <Card>
             <Box sx={{
@@ -184,12 +208,13 @@ function RecentCard() {
             }}>
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
-            <Stack direction="column">
+            {pages ? JSON.stringify(pages) : "hi"} 
+            {/* <Stack direction="column">
                 <a href="#">Long Article</a>
                 <a href="#">Some Good Stuff</a>
                 <a href="#">Somewhere Over The Rainbow</a>
                 <a href="#">Another Great Article, With A Shorter Title</a>
-            </Stack>
+            </Stack> */}
         </Card>
     )
 }

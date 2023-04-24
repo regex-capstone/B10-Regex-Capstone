@@ -10,8 +10,7 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { 
         query: { slug, populate: populate_string }, 
-        method,
-        body
+        method
     } = req;
     const populate: boolean = (populate_string) ? (populate_string as string).toLowerCase() === 'true' : false;
 
