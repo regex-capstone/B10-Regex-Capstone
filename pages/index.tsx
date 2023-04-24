@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Header from "@/client/Header";
 import { Page } from "@/isaac/models";
+import Link from "next/link";
 
 
 export default function Index() {
@@ -167,8 +168,6 @@ function TrendingCard() {
             .catch(err => console.log(err));
     }, [])
 
-    // TODO: Alan - set loading spinner until data is fetched?
-    // TODO: Alan - handle results
     return (
         <Card>
             <Box sx={{
@@ -177,13 +176,9 @@ function TrendingCard() {
             }}>
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
-            {pages ? JSON.stringify(pages) : "hi"} 
-            {/* <Stack direction="column">
-                <a href="#">A Really Long Title of Some Really Long Article</a>
-                <a href="#">Another Great Article, With A Shorter Title</a>
-                <a href="#">Some Good Stuff</a>
-                <a href="#">Somewhere Over The Rainbow</a>
-            </Stack> */}
+            <Stack direction="column">
+                {pages ? pages.map(p => <Link href={`/p/${p.slug}/`} key={p.id}>{p.title}</Link>) : undefined}
+            </Stack>
         </Card>
     )
 }
@@ -198,8 +193,6 @@ function RecentCard() {
             .catch(err => console.log(err));
     }, [])
 
-    // TODO: Alan - handle results
-    
     return (
         <Card>
             <Box sx={{
@@ -208,13 +201,9 @@ function RecentCard() {
             }}>
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
-            {pages ? JSON.stringify(pages) : "hi"} 
-            {/* <Stack direction="column">
-                <a href="#">Long Article</a>
-                <a href="#">Some Good Stuff</a>
-                <a href="#">Somewhere Over The Rainbow</a>
-                <a href="#">Another Great Article, With A Shorter Title</a>
-            </Stack> */}
+            <Stack direction="column">
+                {pages ? pages.map(p => <Link href={`/p/${p.slug}/`} key={p.id}>{p.title}</Link>) : undefined}
+            </Stack>
         </Card>
     )
 }
