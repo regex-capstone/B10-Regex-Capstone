@@ -9,9 +9,11 @@ const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { 
-        query: { slug, populate }, 
-        method 
+        query: { slug, populate: populate_string }, 
+        method,
+        body
     } = req;
+    const populate: boolean = (populate_string) ? (populate_string as string).toLowerCase() === 'true' : false;
 
     try {
         switch (method) {
@@ -22,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         SortType.RECENTLY_CREATED,
                         { 
                             p_slug: slug as string,
-                            populate: (populate as string).toLowerCase() === 'true'
+                            populate: populate
                         }
                     ) as Revision[]
                 )[0];
