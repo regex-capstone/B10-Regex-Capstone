@@ -5,6 +5,6 @@ export enum SortType {
 }
 
 export const parseSortType = (str: string) => {
-    const type = SortType[str.toUpperCase() as keyof typeof SortType];
-    return (type === undefined) ? SortType.NONE : type;
+    if (!str) return SortType.NONE;
+    return SortType[str.toUpperCase() as keyof typeof SortType];
 }

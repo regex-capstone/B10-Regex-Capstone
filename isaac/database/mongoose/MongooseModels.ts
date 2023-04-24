@@ -12,7 +12,7 @@ const PageSchema = new mongoose.Schema({
          type: Array, 
         "default": []
     },
-    page_category_id: { 
+    category: { 
         type: mongoose.Schema.Types.ObjectId, 
         required: [true, 'Category reference is missing...'],
         ref: 'Category' 

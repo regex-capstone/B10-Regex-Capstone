@@ -6,7 +6,7 @@ import Head from "next/head";
 import ReactMarkdown from "react-markdown";
 import Logo from "@/client/Logo";
 import Header from "@/client/Header";
-import { SortType } from "@/isaac/public/PublicAPI";
+import { SortType } from "@/isaac/public/SortType";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import Link from "next/link";
 import { useRouter } from "next/router";

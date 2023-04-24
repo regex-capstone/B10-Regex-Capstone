@@ -23,12 +23,16 @@ export interface GetPageOptions {
     p_id?: string;
     p_title?: string;
     p_slug?: string;
+    populate?: boolean; // appending category data to page data
 }
 
 const isaac = ISAACAPI;
 
 export const PagePublicAPI: PagePublicAPIInterface = {
     get: async (get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions) => {
+        let options: any = {
+            populate: get_options?.populate ?? false
+        };
         let sort_options: any = {};
 
         switch (sort_type) {
@@ -46,23 +50,23 @@ export const PagePublicAPI: PagePublicAPIInterface = {
 
         switch (get_type) {
             case GetPageTypes.ALL_PAGES:
-                return (await isaac.Page.get({}, sort_options)) as Page[];
+                return (await isaac.Page.get({ ...options }, sort_options)) as Page[];
 
             case GetPageTypes.PAGES_BY_TITLE:
                 if (!get_options?.p_title) throw new Error('No page title provided.');
-                return (await isaac.Page.get({ title: get_options?.p_title }, sort_options)) as Page[];
+                return (await isaac.Page.get({ ...options, title: get_options?.p_title }, sort_options)) as Page[];
 
             case GetPageTypes.PAGES_BY_CATEGORY_ID:
                 if (!get_options?.c_id) throw new Error('No category id provided.');
-                return (await isaac.Page.get({ page_category_id: get_options?.c_id }, sort_options)) as Page[];
+                return (await isaac.Page.get({ ...options, page_category_id: get_options?.c_id }, sort_options)) as Page[];
 
             case GetPageTypes.PAGE_BY_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await isaac.Page.get({ id: get_options?.p_id, single: true }, sort_options)) as Page;
+                return (await isaac.Page.get({ ...options, id: get_options?.p_id, single: true }, sort_options)) as Page;
 
             case GetPageTypes.PAGE_BY_SLUG:
                 if (!get_options?.p_slug) throw new Error('No page slug provided.');
-                return (await isaac.Page.get({ slug: get_options?.p_slug, single: true }, sort_options)) as Page;
+                return (await isaac.Page.get({ ...options, slug: get_options?.p_slug, single: true }, sort_options)) as Page;
             default:
                 throw new Error('Invalid get type.');
         }

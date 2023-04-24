@@ -1,5 +1,5 @@
 import { Category, Page } from "@/isaac/models"
-import { SortType } from "@/isaac/public/PublicAPI"
+import { SortType } from "@/isaac/public/SortType"
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next"
 import SearchBar from "@/client/SearchBar"
 import Head from "next/head"

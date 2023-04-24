@@ -19,8 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const category: Category = (
-            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_id: category_id as string }
-        ) as Category);
+            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_id: category_id as string }) as Category
+        );
 
         if (!category) { throw new Error('Category not found.'); }
 
@@ -44,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     await api.Page.delete(page.id as string);
                 }
 
-                const success = await api.Category.delete(category_id);
+                const success = await api.Category.delete(category_id as string);
 
                 res.status(200).json({
                     success: success

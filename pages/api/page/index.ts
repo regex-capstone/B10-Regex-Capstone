@@ -14,7 +14,7 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const { 
-        query: { sort_type: raw_sort_type }, 
+        query: { sort_type: raw_sort_type, populate }, 
         body,
         method 
     } = req;
@@ -24,7 +24,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'GET':
                 const pages: Page[] = (
-                    await api.Page.get(GetPageTypes.ALL_PAGES, sort_type) as Page[]
+                    await api.Page.get(
+                        GetPageTypes.ALL_PAGES, sort_type, 
+                        { 
+                            populate: (populate as string).toLowerCase() === 'true'
+                        }
+                    ) as Page[]
                 );
 
                 res.status(200).json({
@@ -33,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'POST':
-                if (!session) throw new Error('You must be logged in.');
+                // if (!session) throw new Error('You must be logged in.');
 
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.title) throw new Error('POST request has no title.');
@@ -41,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const clientRequest: ClientPageRequest = {
                     title: body.title,
-                    page_category_id: body.page_category_id
+                    category: body.page_category_id
                 }
 
                 const page = await api.Page.add(clientRequest);

@@ -8,6 +8,7 @@ export interface PageOptions extends BaseOptions {
     title?: string;
     page_category_id?: string;
     slug?: string;
+    populate?: boolean;
 }
 
 export interface PageSortOptions {

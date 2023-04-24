@@ -8,15 +8,24 @@ import { ServerPageRequest } from '@/isaac/models/Page';
 export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
     get: async (options: any, sort: any) => {
         try {
-            const data = await MongooseModels.Page
-                .find(options)
-                .sort(sort);
+            const populate: boolean = options.populate ?? false;
+
+            delete options.populate;
+
+            const data = (populate) 
+                ? await MongooseModels.Page
+                    .find(options)
+                    .populate('category')
+                    .sort(sort)
+                : await MongooseModels.Page
+                    .find(options)
+                    .sort(sort);
 
             const pages = data.map((raw) => {
                 return {
                     id: (raw._id as mongoose.Types.ObjectId).toString(),
                     title: raw.title,
-                    page_category_id: raw.page_category_id,
+                    category: raw.category,
                     created_at: raw.created_at,
                     description: raw.description,
                     slug: raw.slug
@@ -38,7 +47,7 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
         try {
             const page = new MongooseModels.Page({
                 ...serverRequest,
-                page_category_id: new mongoose.Types.ObjectId(serverRequest.page_category_id)
+                category: new mongoose.Types.ObjectId(serverRequest.category)
             });
 
             page.slug = convert(`${page.title} ${page._id}`, {

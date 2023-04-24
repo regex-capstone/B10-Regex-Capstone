@@ -12,13 +12,20 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const { 
-        query: { slug },
+        query: { slug, populate },
         method 
     } = req;
 
     try {
         const page: Page = (
-            await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as Page
+            await api.Page.get(
+                GetPageTypes.PAGE_BY_SLUG,
+                SortType.NONE, 
+                { 
+                    p_slug: slug as string,
+                    populate: (populate as string).toLowerCase() === 'true'
+                }
+            ) as Page
         );
 
         if (!page) {
@@ -45,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             default:
                 res.setHeader('Allow', ['GET, DELETE'])
                 res.status(405).send(`Method ${method} Not Allowed`)
-            }
+        }
     } catch (e) {
         res.status(500).json({
             message: 'Something went wrong...',

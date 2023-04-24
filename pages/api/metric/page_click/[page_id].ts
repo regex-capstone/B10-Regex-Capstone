@@ -16,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         const page: Page = (
-            await api.Page.get(GetPageTypes.PAGE_BY_ID, SortType.NONE, { p_id: page_id as string }
-        ) as Page);
+            await api.Page.get(GetPageTypes.PAGE_BY_ID, SortType.NONE, { p_id: page_id as string }) as Page
+        );
 
         if (!page) {
             throw new Error('Page not found.');
@@ -26,8 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'GET':
                 const payload: MetricPageClick[] = (
-                    await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, { p_id: page_id as string}
-                ) as MetricPageClick[]);
+                    await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, { p_id: page_id as string}) as MetricPageClick[]
+                );
 
                 res.status(200).send({
                     success: true,

@@ -7,7 +7,7 @@ import { MetricPageClickAggType } from '@/isaac/public/api/MetricPageClick';
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-   const { 
+    const { 
         method 
     } = req;
 

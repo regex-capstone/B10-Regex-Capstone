@@ -1,4 +1,4 @@
-import { SortType } from "@/isaac/public/PublicAPI";
+import { SortType } from "@/isaac/public/SortType";
 import { Category } from "@/isaac/models";
 import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2'
