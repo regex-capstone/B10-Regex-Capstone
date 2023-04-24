@@ -2,6 +2,7 @@ import ISAACAPI from "@/isaac/ISAACAPI";
 import { SortType } from '@/isaac/public/SortType';
 import Revision, { ClientRevisionRequest, ServerRevisionRequest } from "@/isaac/models/Revision";
 import { Page } from "@/isaac/models";
+import parse from "node-html-parser";
 
 export default interface RevisionPublicAPIInterface {
     get(get_type: GetRevisionTypes, sort_type: SortType, get_options?: GetRevisionOptions): Promise<Revision | Revision[]>,
@@ -77,10 +78,22 @@ export const RevisionPublicAPI: RevisionPublicAPIInterface = {
 
         if (!rev) throw new Error('Error adding new revision.');
 
-        // TODO: handle page description update using HTML parser
+        const html = parse(rev.content);
+        const paragraphs = html.getElementsByTagName('p');
+        const characterCount = 148;
+        let description = "";
+
+        if (paragraphs.length === 0) {
+            description = html.textContent.substring(0, characterCount);
+            if (description.length === characterCount) description += '...';
+        } else {
+            description = paragraphs[0].textContent.substring(0, characterCount);
+            if (description.length === characterCount) description += '...';
+        }
+
         const page = (await isaac.Page.update(
             `id ${rev.page}`,
-            { description: 'a hotdog is a sandwich' }
+            { description: description }
         ));
 
         if (!page) throw new Error('Error updating page description.');
