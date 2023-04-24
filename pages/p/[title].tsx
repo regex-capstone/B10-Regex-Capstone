@@ -1,20 +1,17 @@
-import SearchBar from "@/client/SearchBar";
-import { Button, Container, Stack } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2';
+import { Box, Container, IconButton, Stack } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
-import Logo from "@/client/Logo";
 import Header from "@/client/Header";
-import { SortType } from "@/isaac/public/SortType";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import usePageEngagement from "@/client/hooks/usePageEngagement";
+import { Edit, Analytics } from "@mui/icons-material";
+import Theme from "@/client/Theme";
 import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
+import { SortType } from "@/isaac/public/SortType";
 import { GetRevisionTypes } from "@/isaac/public/api/Revision";
+
 
 const api = PublicAPIEndpoint;
 
@@ -33,7 +30,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-    const api = PublicAPIEndpoint;
     const { title } = context.params ?? {};
     const id = title?.toString().split('-').pop() ?? ""
     const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_ID, SortType.NONE, { p_id: id }) as PageData);
@@ -59,74 +55,47 @@ interface PageProps {
 export default function Page(props: PageProps) {
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
-    usePageEngagement(pageData.id as string);
-    const query = "";
+    const router = useRouter();
+    // const { data: session } = useSession();
+    // const { success, metId } = usePageEngagement(session?.user as User, pageData.id as string);
 
     return (
         <>
             <Head>
                 <title>{`${pageData.title} | ISAAC`}</title>
             </Head>
-            <Header />
-            <Container>
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={3}>
-                        <Stack direction={'column'} spacing={2}>
-                            <Logo />
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={6}>
-                        <Stack direction={'column'} spacing={2}>
-                            <SearchBar initialQuery={query} />
-                            <Content page={pageData} revision={revisionData} />
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={3} sx={{
-                        marginTop: 13,
-                    }}>
-                        <AdminTools page={pageData} />
-                    </Grid2>
-                </Grid2>
+            <Header actions={
+                <Stack direction="row">
+                    <IconButton onClick={() => router.push(`/p/edit?page=${pageData.title}`)}>
+                        <Edit htmlColor={Theme.COLOR.PRIMARY} />
+                    </IconButton>
+                    <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>
+                        <Analytics htmlColor={Theme.COLOR.PRIMARY} />
+                    </IconButton>
+                </Stack>
+            } />
+            <Container maxWidth="md">
+                <h1>{pageData.title}</h1>
+                <ReactMarkdown>
+                    {revisionData.content}
+                </ReactMarkdown>
+                <FeedbackForm />
             </Container>
         </>
     )
 }
 
-function Content(props: { page: PageData, revision: Revision }) {
-    const { revision } = props;
+function FeedbackForm() {
     return (
-        <Container>
-            <ReactMarkdown>
-                {revision.content}
-            </ReactMarkdown>
-        </Container>
-    )
-}
-
-function AdminTools(props: { page: PageData }) {
-    const { page } = props;
-    const router = useRouter();
-    const { data: session } = useSession();
-
-    if (!session || !session.isAdmin) {
-        return (<></>);
-    }
-
-    const onDelete = async (title: string) => {
-        await fetch(`/api/page/${title}`, {
-            method: 'DELETE'
-        })
-        router.push('/')
-    }   
-
-    return (
-        <>
-            <h3>Admin Tools</h3>
-            <Stack direction={'column'} spacing={2}>
-                <Link href={`/p/edit?page=${page.title}`}>Edit</Link>
-                <Link href={`/p/analytics?page=${page.title}`}>Analytics</Link>
-                <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
-            </Stack>
-        </>
+        <Box sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "50vh",
+            backgroundColor: Theme.COLOR.BACKGROUND_DARK,
+            color: Theme.COLOR.TEXT_LIGHT,
+        }}>
+            Feedback Form Goes Here
+        </Box>
     )
 }

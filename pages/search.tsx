@@ -1,19 +1,20 @@
 import { useRouter } from 'next/router';
-import { Box, Container, Stack, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2'
+import { Box, Container, Stack, FormControl, InputLabel, Select, OutlinedInput, Chip, MenuItem, Typography } from "@mui/material";
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
-import SearchBar from '@/client/SearchBar';
-import Logo from "@/client/Logo";
 import { roundOff } from "@/client/utils/TimeUtils";
-import useSearch from "@/client/hooks/useSearch";
-import LoadingSpinner from "@/client/LoadingSpinner";
-import useCategory from "@/client/hooks/useCategory";
+import useSearch from "@/hooks/useSearch";
+import useCategory from "@/hooks/useCategory";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { SearchResponse } from '@/isaac/services/search/SearchInterface';
+import Head from 'next/head';
+import Header from '@/client/Header';
+import React from 'react';
+import Link from 'next/link';
+import Theme from '@/client/Theme';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
 import { SortType } from '@/isaac/public/SortType';
+import { SearchResponse } from '@/isaac/services/search/SearchInterface';
 
 /**
  * Uses SSG to generate the search result page on the first load.
@@ -23,6 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
     const searchResponse: SearchResponse = await api.Search.search((context.query.q ?? "") as string);
     const categories: Category[] = (await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[]);
     const secondsElapsed: number = roundOff(searchResponse.time_elapsed / 1000);
+
     return {
         props: {
             results: JSON.stringify(searchResponse.results),
@@ -38,16 +40,12 @@ interface SearchProps {
     time_elapsed: number
 }
 
-/* (root)/search */
 export default function Search(props: SearchProps) {
-    // SSG states
     const [results, setResults] = useState<Page[]>(JSON.parse(props.results) as Page[]);
     const [categories, setCategories] = useState<Category[]>(JSON.parse(props.categories) as Category[]);
     const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
-
-    // CSG states
-    const [catFilter, setFilter] = useState([] as string[]);
     const [filteredResults, setFilteredResults] = useState<Page[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const router = useRouter();
     const { q } = router.query as { q: string };
@@ -56,9 +54,10 @@ export default function Search(props: SearchProps) {
     const [cachedQuery, setCachedQuery] = useState(q);
 
     useEffect(() => {
-        if (searchData && q !== cachedQuery) {
-            const freshPages = searchData.results;
-            const timeElapsed = roundOff(searchData.time_elapsed / 1000);
+        if (searchData && q !== cachedQuery) {  // handle re-search
+            const data = searchData.payload;
+            const freshPages = data.results;
+            const timeElapsed = roundOff(data.time_elapsed / 1000);
 
             setCachedQuery(q);
             setResults(freshPages);
@@ -68,148 +67,113 @@ export default function Search(props: SearchProps) {
 
     useEffect(() => {
         if (categoryData) {
-            setCategories(categoryData);
+            setCategories(categoryData.payload);
         }
     }, [categoryData])
 
     useEffect(() => {
-        setFilteredResults(filterResults(results, catFilter));
-    }, [results, catFilter]);
-    return (
-        <Container>
-            <Grid2 container spacing={2}>
-                <Grid2 xs={3}>
-                    <Stack direction={'column'} spacing={2}>
-                        <Logo />
-                        <Filters
-                            categories={categories}
-                            setFilter={setFilter}
-                            currFilter={catFilter}
-                        />
-                    </Stack>
-                </Grid2>
-                <Grid2 xs={6}>
-                    <Stack direction={'column'} spacing={2}>
-                        <SearchBar initialQuery={q} />
-                        <SearchResultList
-                            results={filteredResults}
-                            timeElapsed={timeElapsed}
-                            categories={categories}
-                        />
-                    </Stack>
-                </Grid2>
-            </Grid2>
-        </Container>
-    )
-}
-
-function SearchResultList(props: {
-    results: Page[],
-    timeElapsed: number,
-    categories: Category[]
-}) {
-    const { results, timeElapsed, categories } = props;
-
-    if (timeElapsed == -1) {
-        return (
-            <LoadingSpinner />
-        )
-    }
-
-    const createSearchResult = (result: Page, i: number) => {
-        const category = categories.find(c => c.id === result.page_category_id);
-        
-        if (!category) {
-            return <></>
-        }
-
-        return (
-            <SearchResult
-                result={result}
-                category={category}
-                key={i}
-            />
-        )
-    }
+        if (selectedCategories.length === 0) setFilteredResults(results)
+        // TODO: Perform filtering
+        // setFilteredResults(results.filter(page => selectedCategories.includes(/* page.category.name */)))
+        setFilteredResults(results)
+    }, [results, selectedCategories])
 
     return (
         <>
-            <div>
-                {
-                    !timeElapsed
-                        ? <></>
-                        : <i>
-                            {results.length} results ({timeElapsed} seconds)
-                        </i>
-                }
-            </div>
-            {
-                results.map((result, i) => createSearchResult(result, i))
-            }
+            <Head>
+                <title>ISAAC | {q}</title>
+            </Head>
+            <Header initialQuery={q} />
+            <Container maxWidth="xl">
+                <SearchFilters categories={categories} selected={selectedCategories} setSelected={setSelectedCategories} />
+                <i>{filteredResults.length} results ({timeElapsed} seconds)</i>
+                <SearchResults results={filteredResults} />
+                <FeedbackForm />
+            </Container>
         </>
-    );
+    )
 }
 
-function Filters(props: { categories: Category[], setFilter: Function, currFilter: string[] }) {
-    const { categories, setFilter, currFilter } = props;
-    const handleFilter = (event: React.ChangeEvent<HTMLInputElement>, category: Category) => {
-        if (event.target.checked) {
-            let newFilter = currFilter.concat(category.id as string);
-            setFilter(newFilter);
-        } else {
-            setFilter(currFilter.filter(i => i !== category.id as string));
-        }
-    }
-
+function SearchFilters(props: { categories: Category[], selected: string[], setSelected: (selected: string[]) => void }) {
+    const [selected, setSelected] = [props.selected, props.setSelected]
     return (
-        <Box>
-            <h3>Filters</h3>
-            <Stack direction={'column'} spacing={2}>
-                <FormGroup>
-                    {
-                        categories.map((category, i) => (
-                            <FormControlLabel
-                                key={i}
-                                control={<Checkbox onChange={(e) => handleFilter(e, category)} />} // handle when this changes
-                                label={JSON.parse(JSON.stringify(category.name as string))} // pull names from category
-                            />
-                        ))
-                    }
-                </FormGroup>
-            </Stack>
+        <Box sx={{
+            marginTop: 2,
+            marginBottom: 2,
+        }}>
+            <FormControl sx={{
+                width: "100%"
+            }}>
+                <InputLabel>Filters</InputLabel>
+                <Select
+                    multiple
+                    value={selected}
+                    onChange={(e) => {
+                        setSelected(e.target.value as string[]);
+                    }}
+                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                    renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {selected.map((name) => (
+                                <Chip key={name} label={name} />
+                            ))}
+                        </Box>
+                    )}
+                >
+                    {props.categories.map((cat) => (
+                        <MenuItem
+                            key={cat.name}
+                            value={cat.name}
+                        >
+                            {cat.name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
         </Box>
     )
 }
 
-function SearchResult(props: { result: Page, category: Category }) {
-    const { result, category } = props;
+function SearchResults(props: { results: Page[] }) {
     return (
-        <Box
-            sx={{
-                lineHeight: 1.25
-            }}
-        >
-            <h1>
-                <a href={`/p/${result.title}-${result.id}`}>{result.title}</a>  {/* TODO: update this page slug */}
-            </h1>
-            <p>
-                <em>
-                    {`${category.name}`}
-                </em>
-            </p>
-            <p>
-                {
-                    result.description
-                        ? <p>{result.description}</p>
-                        : <p>No description</p>
-                }
-            </p>
+        <Stack direction="column" spacing={2} sx={{
+            marginTop: 2,
+            marginBottom: 2,
+        }}>
+            {props.results.map((result) => <Result key={result.id} result={result} />)}
+        </Stack>
+    )
+}
+
+function Result(props: { result: Page }) {
+    return (
+        <Box>
+            <Link href={`/p/${props.result.title}`}>
+                <Typography fontSize="1.2rem" fontFamily="Encode Sans"><b>{props.result.title}</b></Typography>
+            </Link>
+            <Typography fontSize="0.8rem" color={Theme.COLOR.TEXT_DARK}>{props.result.description}</Typography>
+        </Box>
+    )
+}
+
+function FeedbackForm() {
+    return (
+        <Box sx={{
+            marginTop: 2,
+            marginBottom: 2,
+            height: 200,
+            backgroundColor: "gray",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+        }}>
+            <>Feedback</>
         </Box>
     )
 }
 
 function filterResults(results: Page[], catFilter: string[]) {
     return (results && catFilter.length != 0)
-        ? results.filter(result => catFilter.includes(result.page_category_id as string))
+        ? results.filter(result => catFilter.includes(result.category as string))
         : results;
 }

@@ -1,134 +1,195 @@
-import { SortType } from "@/isaac/public/SortType";
-import { Category } from "@/isaac/models";
-import { Box, Button, Card, CardContent, Container, Divider, Stack } from "@mui/material";
-import Grid2 from '@mui/material/Unstable_Grid2'
-import { GetStaticPropsResult } from "next";
-import SearchBar from "@/client/SearchBar";
-import Logo from "@/client/Logo";
-import Link from "next/link";
-import Header from "@/client/Header";
-import Theme from "@/client/Theme";
+import { Autocomplete, Box, Button, Container, Divider, Stack, TextField, Typography } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
-import { useSession } from "next-auth/react";
-import { GetCategoryTypes } from "@/isaac/public/api/Category";
-import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import Header from "@/client/Header";
 
-const api = PublicAPIEndpoint;
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<IndexProps>> {
-    const categories: Category[] = await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[];
-    // TODO: SERVER - handle trending pages again
-    
-    // const trendingPages: Page[] = await api.getTrendingPages();
-
-    // TODO: CLIENT - deal with trending pages
-
-    return {
-        props: {
-            // NextJS requires props to be serializable
-            categories: JSON.stringify(categories)
-        },
-        revalidate: 60,
-    }
-}
-
-interface IndexProps {
-    categories: string
-}
-
-/* (root)/ */
-export default function Index(props: IndexProps) {
-    const categories: Category[] = JSON.parse(props.categories) as Category[];
-
+export default function Index() {
     return (
         <>
             <Head>
                 <title>ISAAC</title>
             </Head>
-            <Header />
-            <AdminTools />
-            <Container sx={{
-                paddingTop: '2rem',
-            }}>
-                <Stack spacing={2} direction="column">
-                    <Stack
-                        spacing={2}
-                        direction="column"
-                        sx={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <Logo />
-                        <Box sx={{
-                            textAlign: 'center',
-                            letterSpacing: '0.15rem',
-                        }}>
-                            <p>Informatics Student Advising Automation Cyclopedia</p>
-                        </Box>
-                        <Box sx={{
-                            minWidth: "60%",
-                            width: "40rem",
-                            maxWidth: "100%"
-                        }}>
-                            <SearchBar />
-                        </Box>
-                    </Stack>
-                    <Divider />
-                    <Container>
-                        <Grid2 container>
-                            {categories.map((category, i) => (
-                                <Grid2 key={i} xs={6}>
-                                    <Link href={`/category/${category.name}`} style={{
-                                        textDecoration: 'none',
-                                        color: Theme.COLOR.TEXT_DARK,
-                                    }}>
-                                        <b>{category.name}</b>
-                                    </Link>
-                                </Grid2>
-                            ))}
-                        </Grid2>
-                    </Container>
-                </Stack>
-            </Container>
+            <Header disableSearchBar />
+            <Background />
+            <SearchModule />
+            <PageBody />
         </>
     )
 }
 
-function AdminTools() {
-    const { data: session } = useSession();
-
-    if (!session || !session.isAdmin) {  // not logged in or not admin user
-        return (<></>)
-    }
-
+function Background() {
     return (
-        <Card sx={{
-            position: 'fixed',
-            bottom: '10%',
-            right: -5,
-            paddingRight: 5,
+        <Box sx={{
+            position: "relative",
+            zIndex: -1,
+            height: "50vh",
+            backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            filter: "blur(2px)",
+        }} />
+    )
+}
+
+function SearchModule() {
+    const router = useRouter();
+    const [value, setValue] = useState<string>("");
+    const onSearch = (query: string) => {
+        router.push(`/search?q=${query}`);
+    }
+    return (
+        <Box sx={{
+            width: "100%",
+            zIndex: 0,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            marginTop: "15vh",
         }}>
-            <CardContent>
-                <Stack spacing={2} direction="column">
-                    <b>Admin Tools</b>
-                    <Link href="/p/new" passHref style={{
-                        textDecoration: 'none',
+            <Container maxWidth="md">
+                <Stack spacing={2} direction="column" alignItems="center">
+                    <Typography
+                        fontFamily="sans-serif"
+                        fontWeight="700"
+                        fontSize="32px"
+                        color="#FFF"
+                        letterSpacing="0.75em"
+                        sx={{
+                            textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)"
+                        }}
+                    >
+                        ISAAC
+                    </Typography>
+                    <Box sx={{
+                        minWidth: "60%",
                     }}>
-                        <Button variant="contained">Create Page</Button>
-                    </Link>
-                    <Link href="/#" passHref style={{
-                        textDecoration: 'none',
-                    }}>
-                        <Button variant="contained">Analytics</Button>
-                    </Link>
-                    <Link href="/category/create" passHref style={{
-                        textDecoration: 'none',
-                    }}>
-                        <Button variant="contained">Create Category</Button>
-                    </Link>
+                        <Autocomplete
+                            id="free-solo-demo"
+                            freeSolo
+                            options={["Suggestion 1", "Suggestion 2", "Suggestion 3"]}
+                            renderInput={(params) => <TextField
+                                {...params}
+                                value={value}
+                                onChange={(e) => setValue(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        onSearch(value)
+                                        e.preventDefault()
+                                    }
+                                }}
+                                variant="standard"
+                                InputProps={{
+                                    disableUnderline: true,
+                                    endAdornment: <SearchIcon />,
+                                }}
+                                sx={{
+                                    paddingLeft: "1em",
+                                    paddingRight: "1em",
+                                    paddingTop: "0.5em",
+                                    paddingBottom: "0.5em",
+                                    backgroundColor: "#FFF",
+                                    borderRadius: 30,
+                                    border: "none",
+                                }} />}
+                        />
+                    </Box >
+                    <Stack spacing={1} direction="row">
+                        <Button color="primary" variant="contained" onClick={(e) => onSearch(value)}>
+                            Search
+                        </Button>
+                        <Button color="secondary" variant="contained" onClick={(e) => router.push("/t/all")}>
+                            Browse Topics
+                        </Button>
+                    </Stack>
                 </Stack>
-            </CardContent>
+            </Container>
+        </Box>
+    )
+}
+
+function PageBody() {
+    return (
+        <Box sx={{
+            height: "100%",
+            backgroundColor: "#FFF",
+            padding: 2,
+            margin: 0,
+            position: "relative",
+            zIndex: 1,
+        }}>
+            <Container maxWidth="md">
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    marginTop: -5,
+                }}>
+                    <TrendingCard />
+                    <RecentCard />
+                </Box>
+            </Container>
+        </Box>
+    )
+}
+
+function Card(props: any) {
+    return (
+        <Box sx={{
+            // outline: "1px solid red",
+            backgroundColor: "#FFF",
+            boxShadow: 5,
+            padding: 2,
+            margin: 1,
+            borderRadius: 5,
+            flex: 1,
+            minWidth: "200px",
+        }}>
+            {props.children}
+        </Box>
+    )
+}
+
+function TrendingCard() {
+    return (
+        <Card>
+            <Box sx={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+            }}>
+                <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
+            </Box>
+            <Stack direction="column">
+                <a href="#">A Really Long Title of Some Really Long Article</a>
+                <a href="#">Another Great Article, With A Shorter Title</a>
+                <a href="#">Some Good Stuff</a>
+                <a href="#">Somewhere Over The Rainbow</a>
+            </Stack>
+        </Card>
+    )
+}
+
+function RecentCard() {
+    return (
+        <Card>
+            <Box sx={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+            }}>
+                <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
+            </Box>
+            <Stack direction="column">
+                <a href="#">Long Article</a>
+                <a href="#">Some Good Stuff</a>
+                <a href="#">Somewhere Over The Rainbow</a>
+                <a href="#">Another Great Article, With A Shorter Title</a>
+            </Stack>
         </Card>
     )
 }

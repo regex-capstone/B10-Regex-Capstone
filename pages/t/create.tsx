@@ -4,7 +4,6 @@ import Head from "next/head";
 import { Container, TextField, Stack, Button } from "@mui/material";
 import SearchBar from '@/client/SearchBar';
 import Header from "@/client/Header";
-import { UserRole } from '@/isaac/models/User';
 
 export default function createCategory() {
     return <>
@@ -60,11 +59,6 @@ export default function createCategory() {
         </Container>
     </>
 }
-
-createCategory.auth = {
-    role: UserRole.ADMIN
-}
-
 let categoryName = ""
 
 // This is a placeholder for the setTitle function in props

@@ -1,11 +1,12 @@
 import useSWR from 'swr';
-import { escapeHTML } from '../utils/EscapeUtils';
+import { escapeHTML } from '../client/utils/EscapeUtils';
 import { User } from '@/isaac/models';
 
 // @ts-ignore
+// TODO redo
 const fetcher = (...args: any[]) => fetch(...args).then(res => res.json())
 
-export function useUser() {
+export default function useUser(email: string) {
     const { data, error, isLoading } = useSWR(`/api/user`, fetcher);
 
     return {

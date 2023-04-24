@@ -46,8 +46,8 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
 }
 
 interface CategoryProps {
-  category: string
-  pages: string
+    category: string
+    pages: string
 }
 
 export default function Directory(props: CategoryProps) {
@@ -61,18 +61,8 @@ export default function Directory(props: CategoryProps) {
                 <title>{`${category.name} | ISAAC`}</title>
             </Head>
             <Header />
-            <Container>
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={3}>
-                        <Logo />
-                    </Grid2>
-                    <Grid2 xs={6}>
-                        <Stack direction={'column'} spacing={2}>
-                            <SearchBar initialQuery={query} />
-                            <Content name={category.name} pages={pages} />
-                        </Stack>
-                    </Grid2>
-                </Grid2>
+            <Container maxWidth="md">
+                <Content name={category.name} pages={pages} />
             </Container>
         </>
     )

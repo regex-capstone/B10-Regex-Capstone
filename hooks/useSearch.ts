@@ -1,6 +1,5 @@
 import useSWR from 'swr';
-import { escapeHTML } from '../utils/EscapeUtils';
-import { SearchResponse } from '../../isaac/services/search/SearchInterface';
+import { escapeHTML } from '../client/utils/EscapeUtils';
 
 // @ts-ignore
 const fetcher = (...args: any[]) => fetch(...args).then(res => res.json())
@@ -17,7 +16,7 @@ export default function useSearch(query: string) {
     const { data, error, isLoading } = useSWR(`/api/search/${cleanedInput}`, fetcher, options);
 
     return {
-        data: (data) ? data.results as SearchResponse : undefined,
+        data: data,
         error: error,
         isLoading: isLoading
     }
