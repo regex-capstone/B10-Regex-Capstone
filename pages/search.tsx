@@ -148,7 +148,7 @@ function SearchResults(props: { results: Page[] }) {
 function Result(props: { result: Page }) {
     return (
         <Box>
-            <Link href={`/p/${props.result.title}`}>
+            <Link href={`/p/${props.result.slug}`}>
                 <Typography fontSize="1.2rem" fontFamily="Encode Sans"><b>{props.result.title}</b></Typography>
             </Link>
             <Typography fontSize="0.8rem" color={Theme.COLOR.TEXT_DARK}>{props.result.description}</Typography>

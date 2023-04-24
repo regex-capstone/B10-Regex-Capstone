@@ -21,7 +21,7 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
         paths: pages.map(page => {
             return {
                 params: {
-                    title: `${page.title}-${page.id}`
+                    title: `${page.slug}`
                 }
             }
         }),
@@ -66,9 +66,9 @@ export default function Page(props: PageProps) {
             </Head>
             <Header actions={
                 <Stack direction="row">
-                    <IconButton onClick={() => router.push(`/p/edit?page=${pageData.title}`)}>
+                    {/* <IconButton onClick={() => router.push(`/p/edit?page=${pageData.title}`)}>  // TODO Ryan handle
                         <Edit htmlColor={Theme.COLOR.PRIMARY} />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>
                         <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                     </IconButton>
