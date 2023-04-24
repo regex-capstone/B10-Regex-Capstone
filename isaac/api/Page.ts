@@ -42,8 +42,8 @@ export const PageAPI = {
         return resultPage;
     },
 
-    update: async (p_id: string, attributes: Partial<Page>) => {
-        const response = (await database.Page.update(p_id, attributes));
+    update: async (slug: string, attributes: Partial<Page>) => {
+        const response = (await database.Page.update(slug, attributes));
 
         if (isErrorResponse(response)) throw response.error;
 

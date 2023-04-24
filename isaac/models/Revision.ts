@@ -4,7 +4,7 @@ export default interface Revision {
     id?: string;
     content: string;
     created_at: number;
-    page: string;
+    page: string | Revision;
     //TODO: make author?
 }
 

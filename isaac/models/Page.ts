@@ -18,3 +18,8 @@ export interface ServerPageRequest extends ClientPageRequest {
     created_at: number;
     description: string;
 }
+
+export interface ClientPageUpdateRequest extends Partial<Page> {
+    title?: string;
+    description?: string;
+}

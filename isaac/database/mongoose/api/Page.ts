@@ -89,14 +89,34 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
         }
     },
 
-    // TODO: verify that this works
-    update: async (id: string, attributes: Partial<Page>) => {
+    update: async (slug: string, attributes: Partial<Page>) => {
         try {
-            const page = await MongooseModels.Page.updateOne({ _id: id }, attributes);
+            // hack: i'm too lazy rn to figure this out if u wanna figure it out be my guest
+            const identifier = slug.split(" ");
+
+            if (attributes.title) { // update the slug
+                const getPage = await MongooseModels.Page
+                    .find({ slug: slug });
+                const page = getPage[0];
+
+                attributes.slug = convert(`${attributes.title} ${page._id}`, {
+                    separator: '-',
+                    transformer: LOWERCASE_TRANSFORMER
+                });
+            }
+
+            let updated;
+
+            if (identifier.length > 1) {
+                updated = await MongooseModels.Page.updateOne({ _id: identifier[1] }, attributes);
+
+            } else {
+                updated = await MongooseModels.Page.updateOne({ slug: slug }, attributes);
+            }
 
             return {
                 success: true,
-                payload: page
+                payload: updated
             }
         } catch (err: any) {
             return {

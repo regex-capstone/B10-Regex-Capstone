@@ -79,8 +79,8 @@ export const RevisionPublicAPI: RevisionPublicAPIInterface = {
 
         // TODO: handle page description update using HTML parser
         const page = (await isaac.Page.update(
-            rev.page.toString(),
-            { description: '<>' }
+            `id ${rev.page}`,
+            { description: 'a hotdog is a sandwich' }
         ));
 
         if (!page) throw new Error('Error updating page description.');

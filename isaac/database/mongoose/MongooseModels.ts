@@ -8,10 +8,6 @@ const PageSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Title is missing...'] 
     },
-    headings: {
-         type: Array, 
-        "default": []
-    },
     category: { 
         type: mongoose.Schema.Types.ObjectId, 
         required: [true, 'Category reference is missing...'],

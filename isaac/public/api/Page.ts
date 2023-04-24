@@ -1,11 +1,12 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
 import { Page } from "../../models";
-import { ClientPageRequest, ServerPageRequest } from "../../models/Page";
+import { ClientPageRequest, ClientPageUpdateRequest, ServerPageRequest, ServerPageUpdateRequest } from "../../models/Page";
 import { SortType } from '@/isaac/public/SortType';
 
 export default interface PagePublicAPIInterface {
     get(get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions): Promise<Page | Page[]>,
     add(p: ClientPageRequest): Promise<Page>,
+    update(slug: string, p: ClientPageUpdateRequest): Promise<Page>,
     delete(p_id: string): Promise<boolean>
 }
 
@@ -84,6 +85,16 @@ export const PagePublicAPI: PagePublicAPIInterface = {
         isaac.Search.resetCorpus();
 
         if (!page) throw new Error('Error adding new page.');
+
+        return page;
+    },
+
+    update: async (slug: string, clientRequest: ClientPageUpdateRequest) => {
+        const page: Page = await isaac.Page.update(slug, clientRequest);
+
+        isaac.Search.resetCorpus();
+        
+        if (!page) throw new Error('Error updating page.');
 
         return page;
     },
