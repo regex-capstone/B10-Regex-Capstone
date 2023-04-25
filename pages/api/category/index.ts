@@ -34,17 +34,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'POST':
                 if (!session) throw new Error('You must be logged in.');                
                 if (!body) throw new Error('POST request has no body.');
-                const data = JSON.parse(body);
-                if (!data.name) throw new Error('POST request has no name.');
 
                 const existingCat = (
-                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_NAME, SortType.NONE, { c_name: data.name }) as Category
+                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_NAME, SortType.NONE, { c_name: body.name }) as Category
                 );
 
                 if (existingCat) throw new Error('Category already exists.');
 
                 const clientRequest: ClientCategoryRequest = {
-                    name: data.name
+                    name: body.name
                 }
 
                 const category = await api.Category.add(clientRequest);

@@ -26,6 +26,9 @@ function CategoryTool() {
     e.preventDefault()
     await fetch("/api/category", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         name: e.target.categoryName.value
       })
