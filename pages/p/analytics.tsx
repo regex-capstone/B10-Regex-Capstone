@@ -3,51 +3,41 @@ import useDeepCompareEffect from 'use-deep-compare-effect'
 import { Card, Grid } from "@tremor/react";
 import { PlusCircleIcon } from '@heroicons/react/solid'
 import 'tailwindcss/tailwind.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { UserRole } from "@/isaac/models/User";
 
 // import all components
-import ViewsOverTime from "./analytic_components/ViewsOverTime";
+import ViewsOverTime from './analytic_components/ViewsOverTime';
 
 export interface MetricInterface {
     name: string | number;
     value: number;
 }
 
+// TODO add components here
+enum ComponentOptions {
+    ViewsOverTime = "ViewsOverTime"
+}
+
 /* /p/analytics?page=[pageId] */
 export default function Analytics() {
     const router = useRouter();
     const { page: title } = router.query;
+    
+    // TODO handle component delete by adding a unique ID for each component to reference too
+    // Maybe you can do `ComponentType-ComponentIndex` but I think that `ComponentType-HashCode` may be easier etc.
+    const [componentKeys, setComponentKeys] = useState<string[]>([]);   // TODO init user settings here <- DO NOT PRIORITIZE THIS YET, FINISH OUT THE BAREBONES THEN WE CAN TALK ABOUT STORING THIS INFORMATION
+    const [addComponentOption, setAddComponentOption] = useState<string>('');
 
-    // TODO: get set widgets from user settings
-    const [testComponents, setTestComponents] = useState(["ViewsOverTime"] as string[]);
-    const [components, setComponents] = useState([] as JSX.Element[]);
-
-    // add the component to this object
-    const ComponentList: any = {
-        "ViewsOverTime": ViewsOverTime({ title: title })
-    };
-
-    useDeepCompareEffect(() => {
-        const newComponents = testComponents.map((i) => {
-            console.log(i)
-            return ComponentList[i];
-        })
-        console.log(newComponents);
-        setComponents(newComponents);
-    }, [testComponents]);
-    // change when setTestComponents is fired
-    // since equalities for dependencies is reference based, and testComponents is an array
-    // it will always return false for reference equality (aka this effect runs forever)
-    // thats why we import the deep compare effect hook, which checks equivalency based on values
-
-    const addNewComponent = (event: any) => {
-        const newComponent = event.target.value;
-        setTestComponents(testComponents => [...testComponents, newComponent]);
-    }
+    useEffect(() => {
+        if (addComponentOption !== '') {
+            setComponentKeys(prev => [...prev, addComponentOption]);
+            setAddComponentOption('');
+        }
+    }, [addComponentOption])    // Rerun after the user selects an option
 
     return (
         <>
@@ -57,15 +47,28 @@ export default function Analytics() {
             <Container>
                 <h1>{ `Page Analytics | ${title}` }</h1>
                 <Grid numColsMd={2} className="mt-6 gap-6">
-                    {components}
+                    {
+                        componentKeys.map((i, index) => {
+                            switch (i) {
+                                case "ViewsOverTime":
+                                    return (<ViewsOverTime key={i + "-" + index} title={title} />)
+                            }
+                        })
+                    }
                     <Card className="h-50">
                         <PlusCircleIcon className="h-10 w-10 self-center absolute" />
-                        <Select className="opacity-0 absolute" onChange={addNewComponent}>
-                            {Object.keys(ComponentList).map((i, index) => {
-                                return (
-                                    <MenuItem value={i} key={i + "-" + index}>{i}</MenuItem>
-                                )
-                            })}
+                        <Select 
+                            className="opacity-0 absolute" 
+                            onChange={(e) => setAddComponentOption(e.target.value as string)}
+                            value={addComponentOption}
+                        >
+                            {
+                                Object.keys(ComponentOptions).map((i, index) => {
+                                    return (
+                                        <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
+                                    )
+                                })
+                            }
                         </Select>
                     </Card>
                 </Grid>
