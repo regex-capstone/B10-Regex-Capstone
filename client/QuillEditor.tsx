@@ -14,9 +14,9 @@ interface QuillTextEditorProps {
 }
 
 const loadingTextArr = [
-    'Redirecting you.',
-    'Redirecting you..',
-    'Redirecting you...'
+    'Saving.',
+    'Saving..',
+    'Saving...'
 ]
 
 export default function QuillTextEditor(props: QuillTextEditorProps) {
@@ -54,6 +54,7 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             let redirect = false;
 
             if (!pageData) {
+                // console.log("!pageData");
                 redirect = true;
                 const pageRequest: PageRequest = {
                     title: title as string,
@@ -78,6 +79,9 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
 
                 redirectTitle = title;
             } else {
+                // console.log("pageData");
+                // console.log("content: " + Editor?.innerHTML);
+                // console.log("page id: " + pageData.id as string);
                 request = {
                     content: Editor?.innerHTML,
                     rev_page_id: pageData.id as string
@@ -95,6 +99,8 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             }
 
             await fetch('/api/revision', options);
+            // Log the options
+            console.log("options: " + options.body);
             const pageId = pageData?.id || pagePayload.id;
             await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
 
@@ -107,21 +113,6 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
     }
 
     const CreateQuillEditor = (content: string) => {
-        const [value, setValue] = useState(content);
-
-        const { quill, quillRef } = useQuill();
-
-        React.useEffect(() => {
-            if (quill) {
-              quill.clipboard.dangerouslyPasteHTML(content);
-              quill.on('text-change', () => {
-                console.log('Text change!');
-                console.log(quill.root.innerHTML); // Get innerHTML using quill
-                // @TODO: handle save
-              });
-            }
-        }, [quill]);
-
         let modules = {
             toolbar: [
                 [{ 'header': [1, 2, false] }],
@@ -149,6 +140,23 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             'align',
             'link'
         ];
+
+        let placeholder = 'Create a new page...';
+
+        const [value, setValue] = useState(content);
+
+        const { quill, quillRef } = useQuill({modules, formats, placeholder});
+
+        React.useEffect(() => {
+            if (quill) {
+              quill.clipboard.dangerouslyPasteHTML(content);
+              quill.on('text-change', () => {
+                setValue;
+                console.log('Text change!');
+                console.log(quill.root.innerHTML); // Get innerHTML using quill
+              });
+            }
+        }, [quill]);
       
         return <>
             {/* <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} /> */}
@@ -170,7 +178,9 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             <header className="text-header">
                 {
                     (pageData)
-                        ? <p>Editing {pageData.title}...</p>
+                        ? <p style={{
+                            marginLeft: '1em'
+                        }}>Editing {pageData.title}...</p>
                         : <p>Create a new page...</p>
                 }
             </header>

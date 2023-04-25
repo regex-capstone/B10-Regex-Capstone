@@ -27,7 +27,7 @@ function QuillDialog(props: DialogProps) {
     };
 
     return <>
-        <Dialog fullWidth={true} maxWidth={'xl'} open={open} onClose={handleClose}>
+        <Dialog fullWidth={true} maxWidth={'lg'} open={open} onClose={handleClose}>
             <QuillTextEditor 
                 pageData={pageData}
                 revisionData={revisionData}
