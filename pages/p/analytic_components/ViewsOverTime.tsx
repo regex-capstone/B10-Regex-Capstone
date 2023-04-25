@@ -7,8 +7,8 @@ import useAnalytics from "@/client/hooks/useAnalytics";
 import LoadingSpinner from "@/client/LoadingSpinner";
 import { processMetric, MetricInterface } from "../analytics";
 
-export default function ViewsOverTime(title: string) {
-    const { data: analyticData, isLoading } = useAnalytics(title as string);
+export default function ViewsOverTime(props: any) {
+    const { data: analyticData, isLoading } = useAnalytics(props.title as string);
     const [dateRange, setDateRange] = useState(7 as number);
     const [timeData, setTimeData] = useState([] as MetricInterface[]);
     const [rawTimeData, setRawTimeData] = useState([] as MetricInterface[]);
