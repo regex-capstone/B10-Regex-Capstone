@@ -1,3 +1,4 @@
+// TODO: Ryan handle
 import { useEffect, useState } from "react";
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import dynamic from "next/dynamic";
@@ -8,7 +9,7 @@ import { stateToMarkdown } from 'draft-js-export-markdown';
 // @ts-ignore
 import { stateFromMarkdown } from 'draft-js-import-markdown';
 import { useRouter } from "next/router";
-import Page, { PageRequest } from "@/isaac/models/Page";
+import Page, { ClientPageRequest } from "@/isaac/models/Page";
 import { ContentState, EditorState } from "draft-js";
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
@@ -35,98 +36,98 @@ const loadingTextArr = [
 ]
 
 export default function RichTextEditor(props: RichTextEditorProps) {
-    const { pageData, revisionData, categoryId, title } = props;
-    const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
-    const [loading, setLoading] = useState(false);
-    const [editorState, setEditorState] = useState(initializeEditorState(revisionData?.content as string));
+    // const { pageData, revisionData, categoryId, title } = props;
+    // const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
+    // const [loading, setLoading] = useState(false);
+    // const [editorState, setEditorState] = useState(initializeEditorState(revisionData?.content as string));
 
-    const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
+    // const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
 
-    const router = useRouter();
+    // const router = useRouter();
 
-    useEffect(() => {
-        return () => {
-            if (textInterval) {
-                clearInterval(textInterval);
-            }
-        }
-    }, [])
+    // useEffect(() => {
+    //     return () => {
+    //         if (textInterval) {
+    //             clearInterval(textInterval);
+    //         }
+    //     }
+    // }, [])
 
-    useEffect(() => {
-        setEditorState(initializeEditorState(revisionData?.content as string));
-    }, [revisionData])
+    // useEffect(() => {
+    //     setEditorState(initializeEditorState(revisionData?.content as string));
+    // }, [revisionData])
 
 
-    const handleSave = async () => {
-        setLoading(true);
+    // const handleSave = async () => {
+    //     setLoading(true);
 
-        let textIndex = 0;
+    //     let textIndex = 0;
 
-        setTextInterval(setInterval(() => {
-            setLoadingText(loadingTextArr[textIndex % 3]);
-            textIndex++;
-        }, 200));
+    //     setTextInterval(setInterval(() => {
+    //         setLoadingText(loadingTextArr[textIndex % 3]);
+    //         textIndex++;
+    //     }, 200));
 
-        try {
-            let request;
-            let redirectTitle;
-            let pagePayload: any = {};
+    //     try {
+    //         let request;
+    //         let redirectTitle;
+    //         let pagePayload: any = {};
 
-            if (!pageData) {
-                const pageRequest: PageRequest = {
-                    title: title as string,
-                    page_category_id: categoryId as string
-                }
+    //         if (!pageData) {
+    //             const ClientPageRequest: ClientPageRequest = {
+    //                 title: title as string,
+    //                 page_category_id: categoryId as string
+    //             }
 
-                const pageOptions = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(pageRequest),
-                }
+    //             const pageOptions = {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //                 body: JSON.stringify(ClientPageRequest),
+    //             }
 
-                const fetchPage = (await fetch('/api/page', pageOptions));
-                pagePayload = (await fetchPage.json()).page;
+    //             const fetchPage = (await fetch('/api/page', pageOptions));
+    //             pagePayload = (await fetchPage.json()).page;
 
-                request = {
-                    content: getMarkdown(editorState),
-                    rev_page_id: pagePayload.id
-                }
+    //             request = {
+    //                 content: getMarkdown(editorState),
+    //                 rev_page_id: pagePayload.id
+    //             }
 
-                redirectTitle = title;
-            } else {
-                request = {
-                    content: getMarkdown(editorState),
-                    rev_page_id: pageData.id as string
-                }
+    //             redirectTitle = title;
+    //         } else {
+    //             request = {
+    //                 content: getMarkdown(editorState),
+    //                 rev_page_id: pageData.id as string
+    //             }
 
-                redirectTitle = pageData.title;
-            }
+    //             redirectTitle = pageData.title;
+    //         }
 
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(request),
-            }
+    //         const options = {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(request),
+    //         }
 
-            await fetch('/api/revision', options);
-            const pageId = (pagePayload) ? pagePayload.id : pageData?.id;
+    //         await fetch('/api/revision', options);
+    //         const pageId = (pagePayload) ? pagePayload.id : pageData?.id;
 
-            await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
-            router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
-        } catch (err) {
-            console.error(err); // @TODO: handle toast notifications
-        }
-    }
+    //         await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
+    //         router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
+    //     } catch (err) {
+    //         console.error(err); // @TODO: handle toast notifications
+    //     }
+    // }
 
-    if (loading) return <h1>{loadingText}</h1>
+    // if (loading) return <h1>{loadingText}</h1>
 
     return (
         <>
-            <header className="text-header">
+            {/* <header className="text-header">
                 {
                     (pageData)
                         ? <p>Editing {pageData.title}...</p>
@@ -164,7 +165,7 @@ export default function RichTextEditor(props: RichTextEditorProps) {
                 <em>
                     This editor uses Markdown. For a guide on how to use Markdown, click <a href="https://www.markdownguide.org/cheat-sheet/">here</a>.
                 </em>
-            </p>
+            </p> */}
         </>
     )
 }

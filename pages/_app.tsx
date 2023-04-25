@@ -1,12 +1,42 @@
 import { AppProps } from 'next/app'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import { SessionProvider, useSession } from 'next-auth/react';
-import { UserRole } from '@/isaac/models/User';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import NotAuthorizedPage from '@/client/NotAuthorizedPage';
+import Theme from '@/client/Theme';
+import './_app.css'
 
-// application theme, left intentionally empty (default)
-const theme = createTheme({})
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: Theme.COLOR.PRIMARY,
+        },
+        secondary: {
+            main: Theme.COLOR.BACKGROUND_LIGHT,
+        },
+    },
+    typography: {
+        fontFamily: "Open Sans, sans-serif",
+        h1: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h2: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h3: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h4: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h5: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+        h6: {
+            fontFamily: "Encode Sans, sans-serif",
+        },
+    }
+})
 
 /* (application root) */
 export default function App({
@@ -30,12 +60,13 @@ function AuthLayout(
 ) {
     const { data: session } = useSession();
 
-    const authProps = props.auth;
+    // TODO: Elbert - rehandle auth
+    // const authProps = props.auth;
 
-    // admin access only
-    if (authProps && authProps.role === UserRole.ADMIN && !session?.isAdmin) {
-        return <NotAuthorizedPage requireAdmin={true} />
-    }
+    // // admin access only
+    // if (authProps && authProps.role === UserRole.ADMIN && !session?.isAdmin) {
+    //     return <NotAuthorizedPage requireAdmin={true} />
+    // }
 
     return (
         <>{props.children}</>
