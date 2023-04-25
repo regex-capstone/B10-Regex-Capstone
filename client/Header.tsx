@@ -1,5 +1,5 @@
 import { Avatar, Box, Container, IconButton, Stack, TextField } from '@mui/material';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
 import { ReactNode, useState } from 'react';
@@ -43,7 +43,7 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                     }}>
                         <IconButton onClick={(e) => {
                             if (session) {
-                                // router.push("/profile") TODO deprecate profile
+                                signOut()
                             } else {
                                 signIn()
                             }
