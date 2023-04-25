@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 
 export default function Index() {
     const session = useSession();
+    const router = useRouter();
 
     return (
         <>
@@ -20,7 +21,7 @@ export default function Index() {
             { /* TODO: Disable Admin Buttons if user is not admin */ }
             <Header disableSearchBar actions={
                 <Stack direction="row">
-                    <IconButton onClick={() => alert('Create Page Button')}>
+                    <IconButton onClick={() => router.push('/p/new')}>
                         <LibraryAdd />
                     </IconButton>
                     <IconButton onClick={() => alert('Analytics Button')}>
