@@ -12,6 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         switch (method) {
+<<<<<<< HEAD
         case 'GET':
             res.status(200).json({
                 success: true,
@@ -34,6 +35,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         default:
             res.setHeader('Allow', ['GET', 'POST'])
             res.status(405).end(`Method ${method} Not Allowed`)
+=======
+            case 'GET':
+                const categories = await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, sort_type);
+
+                res.status(200).json({
+                    success: true,
+                    payload: categories
+                });
+
+                break;
+            case 'POST':
+                if (!session) throw new Error('You must be logged in.');                
+                if (!body) throw new Error('POST request has no body.');
+                const data = JSON.parse(body);
+                if (!data.name) throw new Error('POST request has no name.');
+
+                const existingCat = (
+                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_NAME, SortType.NONE, { c_name: data.name }) as Category
+                );
+
+                if (existingCat) throw new Error('Category already exists.');
+
+                const clientRequest: ClientCategoryRequest = {
+                    name: data.name
+                }
+
+                const category = await api.Category.add(clientRequest);
+
+                res.status(200).json({
+                    success: true,
+                    payload: category
+                });
+
+                break;
+            default:
+                res.setHeader('Allow', ['GET', 'POST'])
+                res.status(405).end(`Method ${method} Not Allowed`)
+>>>>>>> parent of 14ef6ee (fixed add category bug)
         }
     } catch (e) {
         res.status(500).json({
