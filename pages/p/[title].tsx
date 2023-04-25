@@ -78,7 +78,10 @@ export default function Page(props: PageProps) {
                         <Stack className="ql-snow" direction={'column'} spacing={2}>
                             <SearchBar initialQuery={query} />
                             <Content page={pageData} revision={revisionData} />
-                            <QuillEditorDialog />
+                            <QuillEditorDialog 
+                                revisionData={revisionData}
+                                pageData={pageData}
+                            />
                         </Stack>
                     </Grid2>
                     <Grid2 xs={3} sx={{

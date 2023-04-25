@@ -1,9 +1,9 @@
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
-import { Box, Button } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import Page, { PageRequest } from "@/isaac/models/Page";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from 'react';
-import ReactQuill from 'react-quill';
+import { useQuill } from 'react-quilljs';
 import 'react-quill/dist/quill.snow.css';
 
 interface QuillTextEditorProps {
@@ -35,41 +35,7 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             }
         }
     }, [])
-    
-    // var toolbarOptions = [
-    //     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    //     ['blockquote', 'code-block'],
-      
-    //     [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    //     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    //     [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-    //     [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-    //     [{ 'direction': 'rtl' }],                         // text direction
-      
-    //     [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    //     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      
-    //     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-    //     [{ 'font': [] }],
-    //     [{ 'align': [] }],
-      
-    //     ['clean']                                         // remove formatting button
-    // ];
-    // var options = {
-    //     // debug: 'info',
-    //     placeholder: 'Compose an epic...',
-    //     readOnly: false,
-    //     theme: 'snow',
-    //     modules: {
-    //     toolbar: toolbarOptions
-    //     }
-    // };
 
-    // @TODO: Handle Saved Content
-    // const handleSave = async () => {
-    //     let Editor = document.getElementsByClassName('ql-editor')[0];
-    //     console.log(Editor?.innerHTML);
-    // }
     const handleSave = async () => {
         let Editor = document.getElementsByClassName('ql-editor')[0];
         setLoading(true);
@@ -85,8 +51,10 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             let request;
             let redirectTitle;
             let pagePayload: any = {};
+            let redirect = false;
 
             if (!pageData) {
+                redirect = true;
                 const pageRequest: PageRequest = {
                     title: title as string,
                     page_category_id: categoryId as string
@@ -127,10 +95,12 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             }
 
             await fetch('/api/revision', options);
-            const pageId = (pagePayload) ? pagePayload.id : pageData?.id;
-
+            const pageId = pageData?.id || pagePayload.id;
             await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
-            router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
+
+            if (redirect) {
+                router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
+            }
         } catch (err) {
             console.error(err); // @TODO: handle toast notifications
         }
@@ -138,6 +108,19 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
 
     const CreateQuillEditor = (content: string) => {
         const [value, setValue] = useState(content);
+
+        const { quill, quillRef } = useQuill();
+
+        React.useEffect(() => {
+            if (quill) {
+              quill.clipboard.dangerouslyPasteHTML(content);
+              quill.on('text-change', () => {
+                console.log('Text change!');
+                console.log(quill.root.innerHTML); // Get innerHTML using quill
+                // @TODO: handle save
+              });
+            }
+        }, [quill]);
 
         let modules = {
             toolbar: [
@@ -168,12 +151,8 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
         ];
       
         return <>
-            <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} />
-            {/* <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats}>
-                <div className='editing-area' style={{
-                    height: '200px'
-                }} />
-            </ReactQuill> */}
+            {/* <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} /> */}
+            <Container ref={quillRef} />
             <Button onClick={handleSave}>
                 {
                     loading

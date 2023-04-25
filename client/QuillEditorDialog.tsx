@@ -1,31 +1,30 @@
 import QuillTextEditor from "@/client/QuillEditor";
-import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import { Button } from "@mui/material";
-import React, { useState, useEffect } from 'react';
-
-import { useRouter } from "next/router";
-import usePage from "@/client/hooks/usePage";
-import useRevision from "@/client/hooks/useRevision";
+import React from 'react';
 import { UserRole } from "@/isaac/models/User";
+import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 
-export interface SimpleDialogProps {
+
+interface DialogProps {
     open: boolean;
     onClose: () => void;
+    pageData: PageData;
+    revisionData: RevisionData;
 }
 
-function QuillDialog(props: SimpleDialogProps) {
-    const { onClose, open } = props;
+interface QuillTextEditorProps {
+    pageData: PageData;
+    revisionData: RevisionData;
+}
+
+
+function QuillDialog(props: DialogProps) {
+    const { onClose, open, revisionData, pageData } = props;
 
     const handleClose = () => {
         onClose();
     };
-
-    const router = useRouter();
-    const { page: title } = router.query;
-
-    const { data: pageData } = usePage(title as string);
-    const { data: revisionData } = useRevision(title as string);
 
     return <>
         <Dialog fullWidth={true} maxWidth={'xl'} open={open} onClose={handleClose}>
@@ -37,7 +36,9 @@ function QuillDialog(props: SimpleDialogProps) {
     </>
 }
 
-export default function QuillEditorDialog() {
+export default function QuillEditorDialog(props: QuillTextEditorProps) {
+    const { pageData, revisionData } = props;
+
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -55,6 +56,8 @@ export default function QuillEditorDialog() {
         <QuillDialog 
             open={open}
             onClose={handleClose}
+            revisionData={revisionData}
+            pageData={pageData}
         />
     </>
 }
