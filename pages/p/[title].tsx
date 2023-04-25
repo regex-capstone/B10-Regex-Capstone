@@ -1,4 +1,4 @@
-import { Box, Container, Stack } from "@mui/material";
+import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
@@ -10,6 +10,7 @@ import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
 import { SortType } from "@/isaac/public/SortType";
 import { GetRevisionTypes } from "@/isaac/public/api/Revision";
+import React, { useState } from 'react';
 
 
 const api = PublicAPIEndpoint;
@@ -94,7 +95,101 @@ function FeedbackForm() {
             backgroundColor: Theme.COLOR.BACKGROUND_DARK,
             color: Theme.COLOR.TEXT_LIGHT,
         }}>
-            Feedback Form Goes Here
+            <FeedbackSection />
         </Box>
     )
 }
+
+
+const FeedbackSection = () => {
+    const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
+    const [feedbackText, setFeedbackText] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const CHARACTER_LIMIT = 250;
+  
+    const handleYesButtonClick = () => {
+      setIsHelpful(true);
+    };
+  
+    const handleNoButtonClick = () => {
+      setIsHelpful(false);
+    };
+  
+    const handleSubmitFeedback = (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      // Do something with the feedback text, such as storing it in a database or displaying a confirmation message
+      setFeedbackText('');
+      setIsHelpful(null);
+      setIsSubmitted(true);
+    };
+  
+    return (
+        <div
+      style={{
+        backgroundColor: '#D3D3D3',
+        color: '#fff',
+        padding: '1rem',
+        position: 'fixed',
+        bottom: 1,
+        width: '30%',
+        height: '155px',
+        boxSizing: 'border-box',
+        zIndex: 9999,
+        marginBottom: '2rem',
+      }}
+    >
+      <>
+        <Stack direction={'column'} spacing={2}>
+            <Typography color="textPrimary">Did you find this helpful?</Typography>
+            <Stack direction={'row'} spacing={2}>
+            {isHelpful === null ? (
+        <ButtonGroup>
+          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
+            Yes
+          </Button>
+          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0 }} onClick={handleNoButtonClick}>
+            No
+          </Button>
+        </ButtonGroup>
+            ) : isHelpful ? (
+                <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
+            ) : isSubmitted ? (
+                <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
+            ) : (
+                <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <TextField
+                    type="text"
+                    label="Please provide additional feedback"
+                    variant="outlined"
+                    multiline
+                    rows={2}
+                    value={feedbackText}
+                    onChange={(event) => setFeedbackText(event.target.value)}
+                    inputProps={{ 
+                        style: { fontSize: '1rem' }, 
+                        maxLength: CHARACTER_LIMIT
+                    }}
+                    style={{ marginRight: '1rem', width: '400px' }}
+                    helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
+ 
+                />
+                <Button type="submit" variant="contained" color="primary" 
+                    style={{
+                        width: '80px',
+                        height: 'fit-content',
+                        backgroundColor: 'black',
+                        borderRadius:0,
+                        margin: '1.5rem' 
+                    }} 
+                    onClick={handleYesButtonClick}>
+                    
+                    Submit
+                </Button>
+                </form>
+            )}
+            </Stack>
+        </Stack>
+      </>
+      </div>
+    );
+  };
