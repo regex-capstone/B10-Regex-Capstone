@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -6,15 +6,28 @@ import { useRouter } from "next/router";
 import Header from "@/client/Header";
 import { Page } from "@/isaac/models";
 import Link from "next/link";
-
+import { Analytics, LibraryAdd } from "@mui/icons-material";
+import { useSession } from "next-auth/react";
 
 export default function Index() {
+    const session = useSession();
+
     return (
         <>
             <Head>
                 <title>ISAAC</title>
             </Head>
-            <Header disableSearchBar />
+            { /* TODO: Disable Admin Buttons if user is not admin */ }
+            <Header disableSearchBar actions={
+                <Stack direction="row">
+                    <IconButton onClick={() => alert('Create Page Button')}>
+                        <LibraryAdd />
+                    </IconButton>
+                    <IconButton onClick={() => alert('Analytics Button')}>
+                        <Analytics />
+                    </IconButton>
+                </Stack>
+            }/>
             <Background />
             <SearchModule />
             <PageBody />
