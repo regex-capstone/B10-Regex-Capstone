@@ -179,7 +179,7 @@ const FeedbackSection = () => {
     const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
     const [feedbackText, setFeedbackText] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const CHARACTER_LIMIT = 100;
+    const CHARACTER_LIMIT = 250;
   
     const handleYesButtonClick = () => {
       setIsHelpful(true);
@@ -243,7 +243,7 @@ const FeedbackSection = () => {
                         style: { fontSize: '1rem' }, 
                         maxLength: CHARACTER_LIMIT
                     }}
-                    style={{ marginRight: '1rem', width: 'max-content' }}
+                    style={{ marginRight: '1rem', width: '400px' }}
                     helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
  
                 />
