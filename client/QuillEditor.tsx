@@ -1,10 +1,10 @@
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import { Box, Button, Container } from "@mui/material";
-import Page, { PageRequest } from "@/isaac/models/Page";
+import { PageRequest } from "@/isaac/models/Page";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from 'react';
 import { useQuill } from 'react-quilljs';
-import 'react-quill/dist/quill.snow.css';
+import 'quill/dist/quill.snow.css';
 
 interface QuillTextEditorProps {
     pageData?: PageData;
@@ -35,82 +35,6 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             }
         }
     }, [])
-
-    const handleSave = async () => {
-        let Editor = document.getElementsByClassName('ql-editor')[0];
-        setLoading(true);
-
-        let textIndex = 0;
-
-        setTextInterval(setInterval(() => {
-            setLoadingText(loadingTextArr[textIndex % 3]);
-            textIndex++;
-        }, 200));
-
-        try {
-            let request;
-            let redirectTitle;
-            let pagePayload: any = {};
-            let redirect = false;
-
-            if (!pageData) {
-                // console.log("!pageData");
-                redirect = true;
-                const pageRequest: PageRequest = {
-                    title: title as string,
-                    page_category_id: categoryId as string
-                }
-
-                const pageOptions = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(pageRequest),
-                }
-
-                const fetchPage = (await fetch('/api/page', pageOptions));
-                pagePayload = (await fetchPage.json()).page;
-
-                request = {
-                    content: Editor?.innerHTML,
-                    rev_page_id: pagePayload.id
-                }
-
-                redirectTitle = title;
-            } else {
-                // console.log("pageData");
-                // console.log("content: " + Editor?.innerHTML);
-                // console.log("page id: " + pageData.id as string);
-                request = {
-                    content: Editor?.innerHTML,
-                    rev_page_id: pageData.id as string
-                }
-
-                redirectTitle = pageData.title;
-            }
-
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(request),
-            }
-
-            await fetch('/api/revision', options);
-            // Log the options
-            console.log("options: " + options.body);
-            const pageId = pageData?.id || pagePayload.id;
-            await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
-
-            if (redirect) {
-                router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
-            }
-        } catch (err) {
-            console.error(err); // @TODO: handle toast notifications
-        }
-    }
 
     const CreateQuillEditor = (content: string) => {
         let modules = {
@@ -152,14 +76,83 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
               quill.clipboard.dangerouslyPasteHTML(content);
               quill.on('text-change', () => {
                 setValue;
-                console.log('Text change!');
-                console.log(quill.root.innerHTML); // Get innerHTML using quill
               });
             }
         }, [quill]);
+
+        const handleSave = async () => {
+            let Editor = document.getElementsByClassName('ql-editor')[0];
+            setLoading(true);
+    
+            let textIndex = 0;
+    
+            setTextInterval(setInterval(() => {
+                setLoadingText(loadingTextArr[textIndex % 3]);
+                textIndex++;
+            }, 200));
+    
+            try {
+                let request;
+                let redirectTitle;
+                let pagePayload: any = {};
+                let redirect = false;
+    
+                if (!pageData) {
+                    redirect = true;
+                    const pageRequest: PageRequest = {
+                        title: title as string,
+                        page_category_id: categoryId as string
+                    }
+    
+                    const pageOptions = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(pageRequest),
+                    }
+    
+                    const fetchPage = (await fetch('/api/page', pageOptions));
+                    pagePayload = (await fetchPage.json()).page;
+    
+                    request = {
+                        content: quill?.root.innerHTML,
+                        rev_page_id: pagePayload.id
+                    }
+    
+                    redirectTitle = title;
+                } else {
+                    request = {
+                        content: quill?.root.innerHTML,
+                        rev_page_id: pageData.id as string
+                    }
+    
+                    redirectTitle = pageData.title;
+                }
+    
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(request),
+                }
+    
+                await fetch('/api/revision', options);
+                const pageId = pageData?.id || pagePayload.id;
+                await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${redirectTitle}-${pageId}`);
+    
+                if (redirect) {
+                    router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
+                } else {
+                    window.location.reload();
+                }
+            } catch (err) {
+                console.error(err); // @TODO: handle toast notifications
+            }
+        }
       
         return <>
-            {/* <ReactQuill theme="snow" value={value} onChange={setValue} modules={modules} formats={formats} /> */}
             <Container ref={quillRef} />
             <Button onClick={handleSave}>
                 {

@@ -2,7 +2,6 @@ import QuillTextEditor from "@/client/QuillEditor";
 import Dialog from '@mui/material/Dialog';
 import { Button } from "@mui/material";
 import React from 'react';
-import { UserRole } from "@/isaac/models/User";
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 
 
@@ -60,9 +59,4 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             pageData={pageData}
         />
     </>
-}
-
-// ADMIN only
-QuillEditorDialog.auth = {
-    role: UserRole.ADMIN
 }
