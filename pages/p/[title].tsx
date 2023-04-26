@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import usePageEngagement from "@/client/hooks/usePageEngagement";
 import QuillEditorDialog from "@/client/QuillEditorDialog";
-import 'react-quill/dist/quill.snow.css';
+import 'quill/dist/quill.snow.css';
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint

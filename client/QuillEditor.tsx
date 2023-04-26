@@ -81,7 +81,6 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
         }, [quill]);
 
         const handleSave = async () => {
-            let Editor = document.getElementsByClassName('ql-editor')[0];
             setLoading(true);
     
             let textIndex = 0;
