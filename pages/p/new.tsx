@@ -32,7 +32,6 @@ export default function CreatePage() {
             <Head>
                 <title>{`Create New Page | ISAAC`}</title>
             </Head>
-            { `${categories}` }
             <Container>
                 <Grid2 container spacing={2}>
                     <Grid2 xs={3}>
