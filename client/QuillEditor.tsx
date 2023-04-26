@@ -176,7 +176,7 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                 }
             </header>
             <Box id="editor">
-                {CreateQuillEditor(revisionData?.content as string)}
+                {CreateQuillEditor(revisionData ? revisionData.content : '')}
             </Box>
         </>
     )
