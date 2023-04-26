@@ -1,5 +1,4 @@
 import { Button, Container, Select, MenuItem } from "@mui/material";
-import useDeepCompareEffect from 'use-deep-compare-effect'
 import { Card, Grid } from "@tremor/react";
 import { PlusCircleIcon } from '@heroicons/react/solid'
 import 'tailwindcss/tailwind.css'
@@ -7,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import sha256 from "crypto-js";
 import { UserRole } from "@/isaac/models/User";
 
 // import all components
@@ -17,7 +17,7 @@ export interface MetricInterface {
     value: number;
 }
 
-// TODO add components here
+// add new components to this enum to list them on the add component select
 enum ComponentOptions {
     ViewsOverTime = "ViewsOverTime"
 }
@@ -26,11 +26,10 @@ enum ComponentOptions {
 export default function Analytics() {
     const router = useRouter();
     const { page: title } = router.query;
-    
-    // TODO handle component delete by adding a unique ID for each component to reference too
-    // Maybe you can do `ComponentType-ComponentIndex` but I think that `ComponentType-HashCode` may be easier etc.
+
     const [componentKeys, setComponentKeys] = useState<string[]>([]);   // TODO init user settings here <- DO NOT PRIORITIZE THIS YET, FINISH OUT THE BAREBONES THEN WE CAN TALK ABOUT STORING THIS INFORMATION
     const [addComponentOption, setAddComponentOption] = useState<string>('');
+    const [deleteComponentOption, setDeleteComponentOption] = useState<string>('');
 
     useEffect(() => {
         if (addComponentOption !== '') {
@@ -39,6 +38,16 @@ export default function Analytics() {
         }
     }, [addComponentOption])    // Rerun after the user selects an option
 
+    useEffect(() => {
+        if (deleteComponentOption !== '') {
+            const compToDelete = document.getElementById(deleteComponentOption);
+            if(compToDelete) { // ensure compToDelete is not null
+                compToDelete.remove();
+            }
+            setDeleteComponentOption('');
+        }
+    }, [deleteComponentOption])
+
     return (
         <>
             <Head>
@@ -46,19 +55,22 @@ export default function Analytics() {
             </Head>
             <Container>
                 <h1>{ `Page Analytics | ${title}` }</h1>
-                <Grid numColsMd={2} className="mt-6 gap-6">
+                <Grid numColsMd={3} className="mt-6 gap-6">
                     {
                         componentKeys.map((i, index) => {
+                            // to add a new component, you need to pass in a case for the name as string,
+                            // then return the component with whatever props it may need
                             switch (i) {
-                                case "ViewsOverTime":
-                                    return (<ViewsOverTime key={i + "-" + index} title={title} />)
+                            case "ViewsOverTime":
+                                const key = i + "-" + sha256.SHA256(i + index.toString())
+                                return (<ViewsOverTime key={key} id={key} title={title} delete={setDeleteComponentOption}/>)
                             }
                         })
                     }
                     <Card className="h-50">
                         <PlusCircleIcon className="h-10 w-10 self-center absolute" />
-                        <Select 
-                            className="opacity-0 absolute" 
+                        <Select
+                            className="opacity-0 absolute"
                             onChange={(e) => setAddComponentOption(e.target.value as string)}
                             value={addComponentOption}
                         >

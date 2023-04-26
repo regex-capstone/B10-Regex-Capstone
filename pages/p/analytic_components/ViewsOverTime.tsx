@@ -50,9 +50,10 @@ export default function ViewsOverTime(props: any) {
     }
 
     return (
-        <Card>
+        <Card id={props.id}>
             <XCircleIcon
                 className="absolute top-2 right-2 h-7 w-7"
+                onClick={(e) => props.delete(props.id)}
             />
             <div className="flex">
                 <Title>Page views last {dateRange} days</Title>
