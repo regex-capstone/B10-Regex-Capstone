@@ -1,10 +1,11 @@
 import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import Grid2 from '@mui/material/Unstable_Grid2';
 import SearchBar from "@/client/SearchBar";
 import Head from "next/head";
 import Logo from "@/client/Logo";
 import Header from "@/client/Header";
+import Link from "next/link";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import { useRouter } from "next/router";
 import Theme from "@/client/Theme";
@@ -75,17 +76,17 @@ export default function Page(props: PageProps) {
                     <Grid2 xs={3}>
                         <Stack direction={'column'} spacing={2}>
                             <Logo />
-                            <ContentTable page={pageData} />
                         </Stack>
                     </Grid2>
                     <Grid2 xs={6}>
                         <Stack className="ql-snow" direction={'column'} spacing={2}>
-                            <SearchBar initialQuery={query} />
+                            <SearchBar />
                             <Content page={pageData} revision={revisionData} />
                             <QuillEditorDialog 
                                 revisionData={revisionData}
                                 pageData={pageData}
                             />
+                            <FeedbackForm />
                         </Stack>
                     </Grid2>
                     <Grid2 xs={3} sx={{
@@ -109,7 +110,7 @@ function FeedbackForm() {
             backgroundColor: Theme.COLOR.BACKGROUND_DARK,
             color: Theme.COLOR.TEXT_LIGHT,
         }}>
-            <FeedbackSection />
+        <FeedbackSection />
         </Box>
     )
 }
@@ -137,6 +138,72 @@ const FeedbackSection = () => {
       setIsSubmitted(true);
     };
 
+    return(
+        <div style={{
+            backgroundColor: '#D3D3D3',
+            color: '#fff',
+            padding: '1rem',
+            position: 'fixed',
+            bottom: 1,
+            width: '30%',
+            height: '155px',
+            boxSizing: 'border-box',
+            zIndex: 9999,
+            marginBottom: '2rem',
+        }} >
+            <Stack direction={'column'} spacing={2}>
+                <Typography color="textPrimary">Did you find this helpful?</Typography>
+                <Stack direction={'row'} spacing={2}>
+                {isHelpful === null ? (
+            <ButtonGroup>
+            <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
+                Yes
+            </Button>
+            <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0 }} onClick={handleNoButtonClick}>
+                No
+            </Button>
+            </ButtonGroup>
+                ) : isHelpful ? (
+                    <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
+                ) : isSubmitted ? (
+                    <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
+                ) : (
+                    <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                    <TextField
+                        type="text"
+                        label="Please provide additional feedback"
+                        variant="outlined"
+                        multiline
+                        rows={2}
+                        value={feedbackText}
+                        onChange={(event) => setFeedbackText(event.target.value)}
+                        inputProps={{ 
+                            style: { fontSize: '1rem' }, 
+                            maxLength: CHARACTER_LIMIT
+                        }}
+                        style={{ marginRight: '1rem', width: '400px' }}
+                        helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
+    
+                    />
+                    <Button type="submit" variant="contained" color="primary" 
+                        style={{
+                            width: '80px',
+                            height: 'fit-content',
+                            backgroundColor: 'black',
+                            borderRadius:0,
+                            margin: '1.5rem' 
+                        }} 
+                        onClick={handleYesButtonClick}>
+                        
+                        Submit
+                    </Button>
+                    </form>
+                )}
+                </Stack>
+            </Stack>
+        </div>
+    )
+
 }
   
 function Content(props: { page: PageData, revision: Revision }) {
@@ -163,72 +230,13 @@ function AdminTools(props: { page: PageData }) {
     }   
 
     return (
-        <div
-      style={{
-        backgroundColor: '#D3D3D3',
-        color: '#fff',
-        padding: '1rem',
-        position: 'fixed',
-        bottom: 1,
-        width: '30%',
-        height: '155px',
-        boxSizing: 'border-box',
-        zIndex: 9999,
-        marginBottom: '2rem',
-      }}
-    >
-      <>
-        <Stack direction={'column'} spacing={2}>
-            <Typography color="textPrimary">Did you find this helpful?</Typography>
-            <Stack direction={'row'} spacing={2}>
-            {isHelpful === null ? (
-        <ButtonGroup>
-          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
-            Yes
-          </Button>
-          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0 }} onClick={handleNoButtonClick}>
-            No
-          </Button>
-        </ButtonGroup>
-            ) : isHelpful ? (
-                <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
-            ) : isSubmitted ? (
-                <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
-            ) : (
-                <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
-                <TextField
-                    type="text"
-                    label="Please provide additional feedback"
-                    variant="outlined"
-                    multiline
-                    rows={2}
-                    value={feedbackText}
-                    onChange={(event) => setFeedbackText(event.target.value)}
-                    inputProps={{ 
-                        style: { fontSize: '1rem' }, 
-                        maxLength: CHARACTER_LIMIT
-                    }}
-                    style={{ marginRight: '1rem', width: '400px' }}
-                    helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
- 
-                />
-                <Button type="submit" variant="contained" color="primary" 
-                    style={{
-                        width: '80px',
-                        height: 'fit-content',
-                        backgroundColor: 'black',
-                        borderRadius:0,
-                        margin: '1.5rem' 
-                    }} 
-                    onClick={handleYesButtonClick}>
-                    
-                    Submit
-                </Button>
-                </form>
-            )}
+        <>
+            <h3>Admin Tools</h3>
+            <Stack direction={'column'} spacing={2}>
+                <Link href={`/p/edit?page=${page.title}`}>Edit</Link>
+                <Link href={`/p/analytics?page=${page.title}`}>Analytics</Link>
+                <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
             </Stack>
-        </Stack>
-      </>
-      </div>
+        </>
     );
   };

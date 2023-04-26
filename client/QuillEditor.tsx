@@ -1,6 +1,5 @@
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import { Box, Button, Container } from "@mui/material";
-import { PageRequest } from "@/isaac/models/Page";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from 'react';
 import { useQuill } from 'react-quilljs';
@@ -98,7 +97,7 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
     
                 if (!pageData) {
                     redirect = true;
-                    const pageRequest: PageRequest = {
+                    const pageRequest = {
                         title: title as string,
                         page_category_id: categoryId as string
                     }
@@ -144,7 +143,7 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                 if (redirect) {
                     router.push(`/p/${title}-${pageId}`);   // TODO: handle page slug change
                 } else {
-                    window.location.reload();
+                    // window.location.reload();
                 }
             } catch (err) {
                 console.error(err); // @TODO: handle toast notifications
