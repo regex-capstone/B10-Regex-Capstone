@@ -5,7 +5,6 @@ import Logo from "@/client/Logo";
 import Head from "next/head";
 import QuillTextEditor from "@/client/QuillEditor";
 import { useState } from "react";
-import useCategory from "@/client/hooks/useCategory";
 import LoadingSpinner from "@/client/LoadingSpinner";
 import useCategory from "@/hooks/useCategory";
 import Category from '../../isaac/models/Category';
