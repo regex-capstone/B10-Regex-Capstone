@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Open%20Sans');
+@import url('https://fonts.googleapis.com/css?family=Encode%20Sans');
+
+a {
+  color: #4b2e83;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #85754D;
+  text-decoration: underline;
+}

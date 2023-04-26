@@ -1,36 +1,44 @@
-import type { Page, Revision, Category, User } from '../models/index';
-import type Metric from '../analytics/model'
+import { ServerCategoryRequest } from '../models/Category';
+import { ServerMetricPageClickRequest } from '../models/MetricPageClick';
+import { ServerMetricPageFeedbackRequest } from '../models/MetricPageFeedback';
+import { ServerMetricSearchQueryRequest } from '../models/MetricSearchQuery';
+import { ServerPageRequest } from '../models/Page';
+import { ServerRevisionRequest } from '../models/Revision';
+import { ServerUserRequest } from '../models/User';
+import type { Page, Revision, Category, User, MetricPageClick, MetricSearchQuery, MetricPageFeedback } from '../models/index';
 
-export default interface Database {
-    getLatestPages(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    getLatestRevisions(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    getLatestCategories(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
+/**
+ * The database API interface for the ISAAC API.
+ * Can use other databases as long as they adhere with this
+ * interface.
+ * 
+ * CURRENT: MongoDB w/ Mongoose
+ */
+export default interface DatabaseAPI {
+    Page: ModelAPI<Page, ServerPageRequest>,
+    Revision: ModelAPI<Revision, ServerRevisionRequest>,
+    Category: ModelAPI<Category, ServerCategoryRequest>,
+    User: ModelAPI<User, ServerUserRequest>,
+    MetricPageClick: ModelAPI<MetricPageClick, ServerMetricPageClickRequest>,
+    MetricSearchQuery: ModelAPI<MetricSearchQuery, ServerMetricSearchQueryRequest>,
+    MetricPageFeedback: ModelAPI<MetricPageFeedback, ServerMetricPageFeedbackRequest>
+}
 
-    addPage(page: Page): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addRevision(rev: Revision): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addCategory(cat: Category): Promise<SuccessDBResponse | ErrorDBResponse>,
-    
-    updatePage(id: string, query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    
-    deletePage(id: string): Promise<SuccessDBResponse | ErrorDBResponse>,
-
-    getAnalytics(query: Object): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addAnalytic(metric: Metric): Promise<SuccessDBResponse | ErrorDBResponse>
-    
-    // only needed for the firebase auth flavor
-    getLatestUsers(query: any): Promise<SuccessDBResponse | ErrorDBResponse>,
-    addNewUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>,
-    updateUser(user: User): Promise<SuccessDBResponse | ErrorDBResponse>
+/**
+ * Each database model should have the following methods
+ * at least initialized in the code.
+ */
+export interface ModelAPI<K, T> {
+    get: (options: any, sort: any) => Promise<SuccessDBResponse | ErrorDBResponse>,
+    add: (serverRequest: T) => Promise<SuccessDBResponse | ErrorDBResponse>,
+    delete: (id: string) => Promise<SuccessDBResponse | ErrorDBResponse>,
+    update: (id: string, attributes: Partial<K>) => Promise<SuccessDBResponse | ErrorDBResponse>,
+    aggregate: (...agg_args: any[]) => Promise<SuccessDBResponse | ErrorDBResponse>
 }
 
 interface SuccessDBResponse {
     success: boolean,
-    payload?: string |
-        Page | Page[] |
-        Revision | Revision[] |
-        Category | Category[] |
-        Metric | Metric[] |
-        User | User[]
+    payload?: any
 }
 
 interface ErrorDBResponse {

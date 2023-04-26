@@ -1,23 +1,25 @@
+import Category from "./Category";
+
 export default interface Page {
     id?: string;
     title: string;
-    page_category_id: string;
+    category: string | Category;
     created_at: number;
     description: string;
-    headings: Heading[];    // @TODO handle headings
+    slug?: string;
 }
 
-export interface PageRequest {
+export interface ClientPageRequest {
     title: string;
-    page_category_id: string;
+    category: string;
 }
 
-interface Heading {
-    text: string;
-    level: number;
-    slug: string;   // 150 characters max for slug
+export interface ServerPageRequest extends ClientPageRequest {
+    created_at: number;
+    description: string;
 }
 
-
-
-
+export interface ClientPageUpdateRequest extends Partial<Page> {
+    title?: string;
+    description?: string;
+}

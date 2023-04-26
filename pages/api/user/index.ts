@@ -1,58 +1,55 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
-import API from '@/isaac/api/APIInterface';
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
 import { User } from '@/isaac/models';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
+import { GetUserTypes } from '@/isaac/public/api/User';
+import { ClientUserRequest } from '@/isaac/models/User';
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
+// TODO: double check this works
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
-    const method = req.method;
-    const body = req.body;
+    const { 
+        body,
+        method 
+    } = req;
 
     try {
         switch (method) {
-        case 'GET':
-            if (!session) {
-                throw new Error('Not authenticated.');
-            }
+            case 'POST':
+                // if (!session) { throw new Error('Not authorized. >:('); }
 
-            const email: string | null | undefined = session.user?.email;
-            
-            if (!email) {
-                throw new Error('Not authenticated.');
-            }
+                if (!body) { throw new Error('No body provided'); }
+                if (!body.email) { throw new Error('No email provided'); }
 
-            const user: User = await api.getUserByEmail(email);
+                const email = body.email as string;
 
-            if (!user) {
-                throw new Error('User not found.');
-            }
+                const u: User = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email });
 
-            res.status(200).json({
-                success: true,
-                user: user
-            });
-                
-            break;
-        case 'PUT':
-            if (!body) throw new Error('PUT request has no body.');
+                if (u) { throw new Error('User already exists'); }
 
-            const userId = await api.updateUser(body);
+                const clientRequest: ClientUserRequest = {
+                    email: email
+                }
 
-            res.status(200).json({
-                success: true,
-                user_id: userId
-            });
-                
-            break;
-        default:
-            res.setHeader('Allow', ['GET', 'PUT'])
-            res.status(405).end(`Method ${method} Not Allowed`)
+                const acknowledgement = await api.User.add(clientRequest);
+
+                console.log(acknowledgement);
+
+                res.status(200).json({
+                    success: true,
+                    acknowledged: acknowledgement
+                })
+
+
+                break;
+            default:
+                res.setHeader('Allow', ['POST']);
+                res.status(405).end(`Method ${method} Not Allowed`);
         }
     } catch (e) {
         res.status(500).json({

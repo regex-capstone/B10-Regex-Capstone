@@ -1,41 +1,27 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
-import API from '@/isaac/api/APIInterface';
-import ApiEndpoint from '@/isaac/api/APIEndpoint';
+import { getServerSession } from 'next-auth';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import { Category } from '@/isaac/models';
+import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
+import { GetCategoryTypes } from '@/isaac/public/api/Category';
+import { ClientCategoryRequest } from '@/isaac/models/Category';
+import { SortType, parseSortType } from '@/isaac/public/SortType';
 
-const api: API = ApiEndpoint;
+const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const method = req.method
-    const body = req.body;
+    const session = await getServerSession(req, res, AuthOptions);
+    const { 
+        query: { sort_type: raw_sort_type }, 
+        body,
+        method 
+    } = req;
+    const sort_type = parseSortType(raw_sort_type as string);
 
     try {
         switch (method) {
-<<<<<<< HEAD
-        case 'GET':
-            res.status(200).json({
-                success: true,
-                categories: await api.getAllCategories()
-            });
-            
-            break;
-        case 'POST':
-            if (!body) throw new Error('POST request has no body.');
-            if (!body.name) throw new Error('POST request has no name.');
-                
-            res.status(200).json({
-                success: true,
-                category_id: await api.addNewCategory({
-                    name: body.name
-                })
-            });
-                
-            break;
-        default:
-            res.setHeader('Allow', ['GET', 'POST'])
-            res.status(405).end(`Method ${method} Not Allowed`)
-=======
             case 'GET':
                 const categories = await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, sort_type);
 
@@ -48,17 +34,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'POST':
                 if (!session) throw new Error('You must be logged in.');                
                 if (!body) throw new Error('POST request has no body.');
-                const data = JSON.parse(body);
-                if (!data.name) throw new Error('POST request has no name.');
 
                 const existingCat = (
-                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_NAME, SortType.NONE, { c_name: data.name }) as Category
+                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_NAME, SortType.NONE, { c_name: body.name }) as Category
                 );
 
                 if (existingCat) throw new Error('Category already exists.');
 
                 const clientRequest: ClientCategoryRequest = {
-                    name: data.name
+                    name: body.name
                 }
 
                 const category = await api.Category.add(clientRequest);
@@ -72,7 +56,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             default:
                 res.setHeader('Allow', ['GET', 'POST'])
                 res.status(405).end(`Method ${method} Not Allowed`)
->>>>>>> parent of 14ef6ee (fixed add category bug)
         }
     } catch (e) {
         res.status(500).json({
