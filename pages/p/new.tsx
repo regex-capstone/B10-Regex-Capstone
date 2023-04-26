@@ -4,10 +4,11 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import Logo from "@/client/Logo";
 import Head from "next/head";
 import QuillTextEditor from "@/client/QuillEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "@/client/LoadingSpinner";
 import useCategory from "@/hooks/useCategory";
 import Category from '../../isaac/models/Category';
+import { curveNatural } from "d3";
 
 /*
     Path: /p/new
@@ -16,19 +17,22 @@ import Category from '../../isaac/models/Category';
 */
 export default function CreatePage() {
     const [categoryId, setCategoryId] = useState('');
-    const [categories, setCategories] = useState();
+    const [categories, setCategories] = useState<Category[]>([]);
     const [title, setTitle] = useState('');
-    const { data: categoriesData } = useCategory();
+    const { data: categoryData } = useCategory();
 
-    if (!categoriesData) {
-        return <LoadingSpinner />
-    }
+    useEffect(() => {
+        if (categoryData) {
+            setCategories(categoryData.payload)
+        }
+    }, [categoryData])
 
     return (
         <>
             <Head>
                 <title>{`Create New Page | ISAAC`}</title>
             </Head>
+            { `${categories}` }
             <Container>
                 <Grid2 container spacing={2}>
                     <Grid2 xs={3}>
@@ -66,14 +70,10 @@ export default function CreatePage() {
                                 label="What is the page title?"
                                 onChange={(e: SelectChangeEvent) => setCategoryId(e.target.value)}
                             >
-                                {   // TODO: rehandle
-                                    // (!categories) 
-                                    //     ? <></>
-                                    //     : categories.map(cat: Category => {
-                                    //     return (
-                                    //         <MenuItem key={cat.id} value={cat.id}>{cat.name}</MenuItem>
-                                    //     )
-                                    // })
+                                {   
+                                    categories.map((category: Category) => (
+                                        <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                                    ))
                                 }
                             </Select>
                         </FormControl>
