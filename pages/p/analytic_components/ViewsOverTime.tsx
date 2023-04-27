@@ -6,31 +6,9 @@ import 'tailwindcss/tailwind.css'
 import { useEffect, useState } from 'react';
 import LoadingSpinner from "@/client/LoadingSpinner";
 import { processMetric, MetricInterface } from "../analytics";
-import { SortType } from '@/isaac/public/SortType';
-import { GetMetricPageClickTypes, GetMetricPageClickOptions } from '@/isaac/public/api/MetricPageClick'
-import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
-
-const api = PublicAPIEndpoint;
-
-interface ClicksProps {
-    analyticData: string
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<ClicksProps>> {
-    const { title } = context.params ?? {};
-    const id = title?.toString().split('-').pop() ?? ""
-    const analyticData: MetricPageClick[] = (await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, {p_id: id} as GetMetricPageClickOptions)) as MetricPageClick[];
-
-    return {
-        props: {
-            analyticData: JSON.stringify(analyticData ?? {})
-        }
-    }
-}
 
 export default function ViewsOverTime(props: any) {
-    const analyticData: MetricPageClick[] = JSON.parse(props.analyticData);
+    const analyticData: MetricPageClick[] = JSON.parse(props.data);
     const [dateRange, setDateRange] = useState(7 as number);
     const [timeData, setTimeData] = useState([] as MetricInterface[]);
     const [rawTimeData, setRawTimeData] = useState([] as MetricInterface[]);

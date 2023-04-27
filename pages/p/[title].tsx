@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography } from "@mui/material";
+import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography, IconButton } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Head from "next/head";
 import ReactMarkdown from "react-markdown";
@@ -69,9 +69,9 @@ export default function Page(props: PageProps) {
                     {/* <IconButton onClick={() => router.push(`/p/edit?page=${pageData.title}`)}>  // TODO Ryan handle
                         <Edit htmlColor={Theme.COLOR.PRIMARY} />
                     </IconButton> */}
-                    {/* <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>    // TODO keith handle
-                        <Analytics htmlColor={Theme.COLOR.PRIMARY} />
-                    </IconButton> */}
+                    <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>
+                        
+                    </IconButton>
                 </Stack>
             } />
             <Container maxWidth="md">
