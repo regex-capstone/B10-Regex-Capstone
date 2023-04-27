@@ -5,19 +5,15 @@ import SearchBar from "@/client/SearchBar";
 import Head from "next/head";
 import Logo from "@/client/Logo";
 import Header from "@/client/Header";
-import Link from "next/link";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import { useRouter } from "next/router";
-import Theme from "@/client/Theme";
 import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
 import { SortType } from "@/isaac/public/SortType";
 import { GetRevisionTypes } from "@/isaac/public/api/Revision";
-import React, { useState } from 'react';
-import { useSession } from "next-auth/react";
-// import usePageEngagement from "@/client/hooks/usePageEngagement";
-import QuillEditorDialog from "@/client/QuillEditorDialog";
+import React, { useEffect, useState } from 'react';
 import 'quill/dist/quill.snow.css';
+import QuillEditorDialog from "@/client/QuillEditorDialog";
 
 const api = PublicAPIEndpoint;
 
@@ -61,9 +57,20 @@ interface PageProps {
 export default function Page(props: PageProps) {
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
-    const router = useRouter();
-    // const { data: session } = useSession();
-    // const { success, metId } = usePageEngagement(session?.user as User, pageData.id as string);
+
+    useEffect(() => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        }
+        fetch(`/api/metric/page_click/${pageData.id}`, options)
+            .then(response => response.json())
+            .then(data => console.log(data));
+    }, []);
+
     return (
         <>
             <Head>

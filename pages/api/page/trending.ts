@@ -18,12 +18,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'GET':
                 const return_pages_amount = 5;
-                const aggregation: any[] = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES));
+                const aggregation: Page[] = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES)).map((agg: any) => agg.page[0]);
 
                 if (aggregation.length < return_pages_amount) {   // If there are less than 5 trending pages, append the most recent pages
                     const recent_pages: Page[] = await api.Page.get(GetPageTypes.ALL_PAGES, SortType.RECENTLY_CREATED) as Page[];
-                    const diff = return_pages_amount - aggregation.length;
-                    aggregation.push(...recent_pages.slice(0, diff));
+                    let index = 0;
+                    
+                    while (index < recent_pages.length && aggregation.length < return_pages_amount) {
+                        const page = recent_pages[index];
+
+                        if (!aggregation.find((p: Page) => p.slug === page.slug)) {
+                            aggregation.push(page);
+                        }
+                        index++;
+                    }
                 }
 
                 res.status(200).json({
