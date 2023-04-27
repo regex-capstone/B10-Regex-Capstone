@@ -205,7 +205,7 @@ function RecentCard() {
     const [pages, setPages] = useState<Page[]>();
 
     useEffect(() => {
-        fetch("/api/page?sort_type=recently_created")
+        fetch("/api/page?sort_type=recently_created&limit=5")
             .then(res => res.json())
             .then(results => setPages(results.payload))
             .catch(err => console.log(err));

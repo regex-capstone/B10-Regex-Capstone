@@ -14,7 +14,7 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const { 
-        query: { sort_type: raw_sort_type, populate: populate_string }, 
+        query: { sort_type: raw_sort_type, populate: populate_string, limit }, 
         body,
         method 
     } = req;
@@ -33,9 +33,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     ) as Page[]
                 );
 
+                const payload = pages.splice(0, limit ? parseInt(limit as string) : pages.length);
+
                 res.status(200).json({
                     success: true,
-                    payload: pages
+                    payload: payload
                 });
                 break;
             case 'POST':
