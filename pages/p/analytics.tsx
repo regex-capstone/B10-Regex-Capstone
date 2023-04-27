@@ -7,7 +7,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import sha256 from "crypto-js";
-import { UserRole } from "@/isaac/models/User";
 
 // import all components
 import ViewsOverTime from './analytic_components/ViewsOverTime';
@@ -61,9 +60,9 @@ export default function Analytics() {
                             // to add a new component, you need to pass in a case for the name as string,
                             // then return the component with whatever props it may need
                             switch (i) {
-                            case "ViewsOverTime":
-                                const key = i + "-" + sha256.SHA256(i + index.toString())
-                                return (<ViewsOverTime key={key} id={key} title={title} delete={setDeleteComponentOption}/>)
+                                case "ViewsOverTime":
+                                    const key = i + "-" + sha256.SHA256(i + index.toString());
+                                    return (<ViewsOverTime key={key} id={key} title={title} delete={setDeleteComponentOption}/>);
                             }
                         })
                     }
@@ -109,9 +108,4 @@ export function processMetric(tempArr: MetricInterface[], metricName: any) {
             value: 1
         });
     }
-}
-
-// ADMIN only
-Analytics.auth = {
-    role: UserRole.ADMIN
 }

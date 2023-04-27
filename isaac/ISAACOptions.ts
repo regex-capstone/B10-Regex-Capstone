@@ -1,33 +1,25 @@
 export interface BaseOptions {
-    id?: string,
-    single?: boolean
+    id?: string;
+    single?: boolean;
 }
 
-export interface PageOptions extends BaseOptions {
-    title?: string,
-    page_category_id?: string
-}
+export function cleanOptions(options: BaseOptions) {
+    const id = options.id;
 
-export interface UpdatePageOptions extends BaseOptions {
-    description?: string;
-}
+    let query = {}
 
-export interface RevisionOptions extends BaseOptions {
-    rev_page_id?: string;
-}
+    // Because MongoDB uses '_id' instead of just 'id', we need to do change
+    // the property here.
+    if (id) {
+        delete options.id;
 
-export interface CategoryOptions extends BaseOptions {
-    name?: string
-}
+        query = {
+            _id: id
+        }
+    }
 
-export interface MetricsOptions extends BaseOptions {
-    met_page_id?: string,
-    major?: string,
-    standing?: string,
-    single?: boolean
-}
-
-// only needed for the firebase auth flavor
-export interface UserOptions extends BaseOptions {
-    email?: string
+    return {
+        ...query,
+        ...options
+    }
 }

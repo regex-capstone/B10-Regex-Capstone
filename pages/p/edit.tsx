@@ -1,3 +1,5 @@
+// TODO: Ryan's work
+
 import SearchBar from "@/client/SearchBar";
 import { Container, Stack, Button } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
@@ -5,21 +7,15 @@ import Head from "next/head";
 import Logo from "@/client/Logo";
 import RichTextEditor from "@/client/RichTextEditor";
 import { useRouter } from "next/router";
-import usePage from "@/client/hooks/usePage";
-import useRevision from "@/client/hooks/useRevision";
-import { UserRole } from "@/isaac/models/User";
 
 /* /p/edit?page=[title] */
 export default function Edit() {
     const router = useRouter();
     const { page: title } = router.query;
 
-    const { data: pageData } = usePage(title as string);
-    const { data: revisionData } = useRevision(title as string);
-
     return (
         <>
-            <Head>
+            {/* <Head>
                 <title>{`Editing ${title} | ISAAC`}</title>
             </Head>
             { !pageData || !revisionData ? <h1>Loading...</h1> :
@@ -47,13 +43,8 @@ export default function Edit() {
                         <Grid2 xs={3}>
                         </Grid2>
                     </Grid2>
-                </Container>
-            }
+                </Container> */}
         </>
     )
 }
 
-// ADMIN only
-Edit.auth = {
-    role: UserRole.ADMIN
-}
