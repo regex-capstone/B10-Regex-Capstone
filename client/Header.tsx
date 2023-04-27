@@ -6,7 +6,6 @@ import { ReactNode, useState } from 'react';
 
 export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean, initialQuery?: string }) {
     const router = useRouter()
-    const { data: session } = useSession()
     return (
         <Box sx={{
             top: 0,
@@ -36,21 +35,7 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                     }}>
                         {props.disableSearchBar ? null : <SearchBar initialQuery={props.initialQuery} />}
                     </Box>
-                    <Box sx={{
-                        flex: 1,
-                        display: "flex",
-                        justifyContent: "right",
-                    }}>
-                        <IconButton onClick={(e) => {
-                            if (session) {
-                                signOut()
-                            } else {
-                                signIn()
-                            }
-                        }}>
-                            <Avatar src={session?.picture} />
-                        </IconButton>
-                    </Box>
+                    <ProfileIcon />
                 </Stack>
             </Container>
         </Box>
@@ -82,5 +67,30 @@ function SearchBar(props: { initialQuery?: string }) {
                 width: "100%",
             }}
         />
+    )
+}
+
+function ProfileIcon() {
+    const { data: session } = useSession()
+    if (!session) {
+        return null
+    }
+    
+    return (
+        <Box sx={{
+            flex: 1,
+            display: "flex",
+            justifyContent: "right",
+        }}>
+            <IconButton onClick={(e) => {
+                if (session) {
+                    signOut()
+                } else {
+                    signIn()
+                }
+            }}>
+                <Avatar src={session?.picture} />
+            </IconButton>
+        </Box>
     )
 }
