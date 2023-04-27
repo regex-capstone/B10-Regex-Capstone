@@ -9,6 +9,7 @@ import LoadingSpinner from "@/client/LoadingSpinner";
 import useCategory from "@/hooks/useCategory";
 import Category from '../../isaac/models/Category';
 import { curveNatural } from "d3";
+import { useRouter } from "next/router";
 
 /*
     Path: /p/new
@@ -32,6 +33,8 @@ export default function CreatePage() {
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
     const [isSaving, setSaving] = useState(false);
+
+    const router = useRouter();
 
     useEffect(() => {
         if (categoryData) {
@@ -102,8 +105,12 @@ export default function CreatePage() {
             console.error("ERROR CREATING REVISION.");  // TODO handle with toast?
         }
 
-        // TODO: alan - revalidate
-        // TODO: redirect to the new page
+        await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${createdPage.slug}`);
+
+        await router.push({
+            pathname: '/redirect',
+            query: { path: `p/${createdPage.slug}`}
+        });
 
         setSaving(false);
     }
