@@ -43,11 +43,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.title) throw new Error('POST request has no title.');
-                if (!body.page_category_id) throw new Error('POST request has no page_category_id.');
+                if (!body.category) throw new Error('POST request has no page_category_id.');
 
                 const clientRequest: ClientPageRequest = {
                     title: body.title,
-                    category: body.page_category_id
+                    category: body.category
                 }
 
                 const page = await api.Page.add(clientRequest);

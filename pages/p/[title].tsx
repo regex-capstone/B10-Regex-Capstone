@@ -1,8 +1,11 @@
 import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
+import Grid2 from '@mui/material/Unstable_Grid2';
+import SearchBar from "@/client/SearchBar";
 import Head from "next/head";
-import ReactMarkdown from "react-markdown";
+import Logo from "@/client/Logo";
 import Header from "@/client/Header";
+import Link from "next/link";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import { useRouter } from "next/router";
 import Theme from "@/client/Theme";
@@ -10,8 +13,11 @@ import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
 import { SortType } from "@/isaac/public/SortType";
 import { GetRevisionTypes } from "@/isaac/public/api/Revision";
-import React, { useEffect, useState } from 'react';
-
+import React, { useState } from 'react';
+import { useSession } from "next-auth/react";
+// import usePageEngagement from "@/client/hooks/usePageEngagement";
+import QuillEditorDialog from "@/client/QuillEditorDialog";
+import 'quill/dist/quill.snow.css';
 
 const api = PublicAPIEndpoint;
 
@@ -30,11 +36,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-    const { title } = context.params ?? {};
-    const id = title?.toString().split('-').pop() ?? ""
-    const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_ID, SortType.NONE, { p_id: id }) as PageData);
+    const { title: slug } = context.params ?? {};
+    // const id = slug?.toString().split('-').pop() ?? ""
+    const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as PageData);
     // TODO: why is this Revision and not RevisionData - is the *Data suffix a needed convention?
-    const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID, SortType.NONE, { p_id: pageData.id as string }) as Revision);
+    const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.REVISIONS_BY_PAGE_SLUG, SortType.RECENTLY_CREATED, { p_slug: slug as string }) as Revision[])[0];
 
     return {
         props: {
@@ -63,22 +69,30 @@ export default function Page(props: PageProps) {
             <Head>
                 <title>{`${pageData.title} | ISAAC`}</title>
             </Head>
-            <Header actions={
-                <Stack direction="row">
-                    {/* <IconButton onClick={() => router.push(`/p/edit?page=${pageData.title}`)}>  // TODO Ryan handle
-                        <Edit htmlColor={Theme.COLOR.PRIMARY} />
-                    </IconButton> */}
-                    {/* <IconButton onClick={() => router.push(`/p/analytics?page=${pageData.id}`)}>    // TODO keith handle
-                        <Analytics htmlColor={Theme.COLOR.PRIMARY} />
-                    </IconButton> */}
-                </Stack>
-            } />
-            <Container maxWidth="md">
-                <h1>{pageData.title}</h1>
-                <ReactMarkdown>
-                    {revisionData.content}
-                </ReactMarkdown>
-                <FeedbackSection pageId={pageData.id as string} />
+            <Header />
+            <Container>
+                <Grid2 container spacing={2}>
+                    <Grid2 xs={3}>
+                        <Stack direction={'column'} spacing={2}>
+                            <Logo />
+                        </Stack>
+                    </Grid2>
+                    <Grid2 xs={6}>
+                        <Stack className="ql-snow" direction={'column'} spacing={2}>
+                            <SearchBar />
+                            <Content page={pageData} revision={revisionData} />
+                            <QuillEditorDialog 
+                                revisionData={revisionData}
+                                pageData={pageData}
+                            />
+                            <FeedbackSection pageId={pageData.id as string} />
+                        </Stack>
+                    </Grid2>
+                    <Grid2 xs={3} sx={{
+                        marginTop: 13,
+                    }}>
+                    </Grid2>
+                </Grid2>
             </Container>
         </>
     )
@@ -209,5 +223,13 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
                 </Stack>
             </>
         </div>
-    );
-};
+    )
+
+}
+  
+function Content(props: { page: PageData, revision: Revision }) {
+    const { revision } = props;
+    return (
+        <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: revision.content }} />
+    )
+}

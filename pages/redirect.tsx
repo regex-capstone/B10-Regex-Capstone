@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import LoadingSpinner from '@/client/LoadingSpinner';
 
-// TODO redo
+/**
+ * Redirects to the page specified within `path`
+ */
 export default function RedirectComponent() {
-    const { data: session } = useSession();
     const router = useRouter();
+    const { path } = router.query;
 
     useEffect(() => {
-        router.push('/');
+        if (!path) router.push('/');
+        router.push(`/${path}`);
     });
 
     return (
