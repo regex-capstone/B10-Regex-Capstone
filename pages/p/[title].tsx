@@ -10,7 +10,7 @@ import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
 import { GetPageTypes } from "@/isaac/public/api/Page";
 import { SortType } from "@/isaac/public/SortType";
 import { GetRevisionTypes } from "@/isaac/public/api/Revision";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 const api = PublicAPIEndpoint;
@@ -58,7 +58,6 @@ export default function Page(props: PageProps) {
     const router = useRouter();
     // const { data: session } = useSession();
     // const { success, metId } = usePageEngagement(session?.user as User, pageData.id as string);
-
     return (
         <>
             <Head>
@@ -79,23 +78,42 @@ export default function Page(props: PageProps) {
                 <ReactMarkdown>
                     {revisionData.content}
                 </ReactMarkdown>
-                <FeedbackSection />
+                <FeedbackSection pageId={pageData.id as string} />
             </Container>
         </>
     )
 }
 
+interface FeedbackSectionProps {
+    pageId: string;
+}
 
-const FeedbackSection = () => {
+const FeedbackSection = (props: FeedbackSectionProps) => {
     const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
     const [feedbackText, setFeedbackText] = useState('');
     const [isSubmitted, setIsSubmitted] = useState(false);
     const CHARACTER_LIMIT = 250;
 
+    // TODO maybe cookie to save the user's response on an article?
     const handleYesButtonClick = () => {
-        setIsHelpful(true);
+        const clientRequest = {
+            is_helpful: true
+        }
+
+        const fetchOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(clientRequest)
+        }
+
+        fetch(`/api/metric/page_feedback/${props.pageId}`, fetchOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+
+        setIsHelpful(true); // Technically not needed
         setIsSubmitted(true);
-        // submit
     };
 
     const handleNoButtonClick = () => {
@@ -103,8 +121,23 @@ const FeedbackSection = () => {
     };
 
     const handleSubmitFeedback = () => {
-        console.log(feedbackText);
-        console.log(isHelpful);
+        const clientRequest = {
+            user_feedback: feedbackText,
+            is_helpful: isHelpful
+        }
+
+        const fetchOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(clientRequest)
+        }
+
+        fetch(`/api/metric/page_feedback/${props.pageId}`, fetchOptions)
+            .then(response => response.json())
+            .then(data => console.log(data));
+
         setIsSubmitted(true);
     };
 
@@ -127,7 +160,7 @@ const FeedbackSection = () => {
                 <Stack direction={'column'} spacing={2}>
                     <Typography color="textPrimary">Did you find this helpful?</Typography>
                     <Stack direction={'row'} spacing={2}>
-                        {isHelpful === null ? (
+                        {isHelpful === null ? ( // TODO clean this logic up
                             <ButtonGroup>
                                 <Button variant="contained" style={{ width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
                                     Yes

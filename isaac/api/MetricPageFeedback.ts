@@ -4,7 +4,7 @@ import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import MetricPageFeedback, { ServerMetricPageFeedbackRequest } from "../models/MetricPageFeedback";
 
 export interface MetricPageFeedbackOptions extends BaseOptions {
-    p_id?: string;  // TODO: change options
+    page?: string;  // TODO: change options
 }
 
 export interface MetricPageFeedbackSortOptions {
