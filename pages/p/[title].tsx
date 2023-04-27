@@ -138,7 +138,7 @@ function AdminTools(props: { page: PageData }) {
             <h3>Admin Tools</h3>
             <Stack direction={'column'} spacing={2}>
                 <Link href={`/p/edit?page=${page.title}`}>Edit</Link>
-                <Link href={`/p/analytics?page=${page.title}`}>Analytics</Link>
+                <Link href={`/p/analytics?page=${page.title}`}>Analytics for this page</Link>
                 <Button onClick={e => onDelete(page.title as string)}>Delete</Button>
             </Stack>
         </>

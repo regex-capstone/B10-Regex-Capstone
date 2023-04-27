@@ -111,10 +111,10 @@ function AdminTools() {
                     }}>
                         <Button variant="contained">Create Page</Button>
                     </Link>
-                    <Link href="/#" passHref style={{
+                    <Link href="/analytics" passHref style={{
                         textDecoration: 'none',
                     }}>
-                        <Button variant="contained">Analytics</Button>
+                        <Button variant="contained">Overall Analytics</Button>
                     </Link>
                     <Link href="/category/create" passHref style={{
                         textDecoration: 'none',
