@@ -7,37 +7,14 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import sha256 from "crypto-js";
-import { MetricPageClick } from "@/isaac/models";
-import { SortType } from '@/isaac/public/SortType';
-import { GetMetricPageClickTypes, GetMetricPageClickOptions } from '@/isaac/public/api/MetricPageClick'
-import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+
 
 // import all components
 import ViewsOverTime from './analytic_components/ViewsOverTime';
 
-const api = PublicAPIEndpoint;
-
 export interface MetricInterface {
     name: string | number;
     value: number;
-}
-
-interface ClicksProps {
-    analyticData: string
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<ClicksProps>> {
-    console.log(context.query.page);
-    const { page } = context.query ?? {};
-    const id = page?.toString() ?? ""
-    const analyticData: MetricPageClick[] = (await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, {p_id: id} as GetMetricPageClickOptions)) as MetricPageClick[];
-
-    return {
-        props: {
-            analyticData: JSON.stringify(analyticData ?? {})
-        }
-    }
 }
 
 // add new components to this enum to list them on the add component select
@@ -46,7 +23,7 @@ enum ComponentOptions {
 }
 
 /* /p/analytics?page=[pageId] */
-export default function Analytics(props: ClicksProps) {
+export default function Analytics() {
     const router = useRouter();
     const { page: title } = router.query;
 
@@ -86,7 +63,7 @@ export default function Analytics(props: ClicksProps) {
                             switch (i) {
                                 case "ViewsOverTime":
                                     const key = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<ViewsOverTime key={key} id={key} data={props.analyticData} delete={setDeleteComponentOption}/>);
+                                    return (<ViewsOverTime key={key} id={key} delete={setDeleteComponentOption}/>);
                             }
                         })
                     }
