@@ -36,11 +36,11 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
-    const { title } = context.params ?? {};
-    const id = title?.toString().split('-').pop() ?? ""
-    const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_ID, SortType.NONE, { p_id: id }) as PageData);
+    const { title: slug } = context.params ?? {};
+    // const id = slug?.toString().split('-').pop() ?? ""
+    const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as PageData);
     // TODO: why is this Revision and not RevisionData - is the *Data suffix a needed convention?
-    const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID, SortType.NONE, { p_id: pageData.id as string }) as Revision);
+    const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.REVISIONS_BY_PAGE_SLUG, SortType.RECENTLY_CREATED, { p_slug: slug as string }) as Revision[])[0];
 
     return {
         props: {
