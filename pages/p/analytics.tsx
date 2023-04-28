@@ -12,6 +12,7 @@ import sha256 from "crypto-js";
 // import all components
 import ViewsOverTime from './analytic_components/ViewsOverTime';
 import Feedback from './analytic_components/Feedback';
+import NegativeFeedbackMessages from './analytic_components/NegativeFeedbackMessages';
 
 export interface MetricInterface {
     name: string | number;
@@ -21,7 +22,8 @@ export interface MetricInterface {
 // add new components to this enum to list them on the add component select
 enum ComponentOptions {
     ViewsOverTime = "ViewsOverTime",
-    Feedback = "Feedback"
+    Feedback = "Feedback",
+    NegativeFeedbackMessages = "NegativeFeedbackMessages"
 }
 
 /* /p/analytics?page=[pageId] */
@@ -69,6 +71,9 @@ export default function Analytics() {
                                 case "Feedback":
                                     const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
                                     return (<Feedback key={feedbackKey} id={title} delete={setDeleteComponentOption}/>);
+                                case "NegativeFeedbackMessages":
+                                    const feedbackMessageKey = i + "-" + sha256.SHA256(i + index.toString());
+                                    return (<NegativeFeedbackMessages key={feedbackMessageKey} id={title} delete={setDeleteComponentOption}/>);
                             }
                         })
                     }
@@ -94,7 +99,8 @@ export default function Analytics() {
                         justifyContent: "left",
                         width: 126,
                         border: "1px solid black",
-                        color: "black"
+                        color: "black",
+                        mt: "20px"
                     }}>Back to Page</Button>
                 </Link>
             </Container>
