@@ -23,24 +23,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     payload: metricPageClicks
                 });
                 break;
-
-            case 'POST':
-                if (!body) throw new Error('No body provided.');
-                if (!body.page_id) throw new Error('No page id provided.');
-
-                const clientRequest: ClientMetricPageClickRequest = {
-                    page_id: body.page_id
-                }
-
-                const payload = await api.MetricPageClick.add(clientRequest);
-
-                res.status(200).json({
-                    success: true,
-                    payload: payload
-                });
-                break;
             default:
-                res.setHeader('Allow', ['GET', 'POST'])
+                res.setHeader('Allow', ['GET'])
                 res.status(405).end(`Method ${method} Not Allowed`)
         }
     } catch (e) {

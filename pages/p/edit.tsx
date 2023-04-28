@@ -5,7 +5,7 @@ import { Container, Stack, Button } from "@mui/material";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
 import Logo from "@/client/Logo";
-import RichTextEditor from "@/client/RichTextEditor";
+import QuillTextEditor from "@/client/QuillEditor";
 import { useRouter } from "next/router";
 
 /* /p/edit?page=[title] */
@@ -34,7 +34,7 @@ export default function Edit() {
                         <Grid2 xs={6}>
                             <Stack direction={'column'} spacing={2}>
                                 <SearchBar initialQuery={""} />
-                                <RichTextEditor
+                                <QuillTextEditor
                                     pageData={pageData}
                                     revisionData={revisionData}
                                 />

@@ -44,7 +44,7 @@ function CategoryTool() {
         <input type="text" name="categoryName" />
         <button type="submit">Create</button>
       </form>
-      <>{categories.length === 0 ? "None" : categories.map(c => <div>{c.name}</div>)}</>
+      <>{categories.length === 0 ? "None" : categories.map(c => <div key={c.id}>{c.name}</div>)}</>
     </>
   )
 }

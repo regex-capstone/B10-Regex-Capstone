@@ -25,17 +25,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         switch (method) {
             case 'GET':
-                const payload: MetricPageClick[] = (
-                    await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, { p_id: page_id as string}) as MetricPageClick[]
-                );
-
                 res.status(200).send({
+                    success: true,
+                    payload: (
+                        await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, { p_id: page_id as string}) as MetricPageClick[]
+                    )
+                });
+                break;
+
+            case 'POST':
+                const payload = (
+                    await api.MetricPageClick.add({
+                        page_id: page_id as string
+                    })
+                );
+                res.status(200).json({
                     success: true,
                     payload: payload
                 });
                 break;
             default:
-                res.setHeader('Allow', ['GET'])
+                res.setHeader('Allow', ['GET', 'POST'])
                 res.status(405).send(`Method ${method} Not Allowed`)
         }
     } catch (e) {

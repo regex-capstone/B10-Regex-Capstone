@@ -12,7 +12,7 @@ export default interface RevisionPublicAPIInterface {
 
 export enum GetRevisionTypes {
     ALL_REVISIONS_OF_PAGE_ID,
-    RECENT_REVISION_OF_PAGE_ID,
+    RECENT_REVISION_OF_PAGE_ID, // TODO deprecate?
     REVISION_BY_REVISION_ID,
     REVISIONS_BY_PAGE_SLUG
 }

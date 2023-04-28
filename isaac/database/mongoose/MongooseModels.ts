@@ -93,7 +93,7 @@ const MetricPageFeedbackSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Feedback is missing...']
     },
-    page_id: {
+    page: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'Page reference ID is missing...']
     }

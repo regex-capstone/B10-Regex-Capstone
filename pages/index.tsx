@@ -10,7 +10,7 @@ import { Analytics, LibraryAdd } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 
 export default function Index() {
-    const session = useSession();
+    const { data: session } = useSession();
     const router = useRouter();
 
     return (
@@ -18,17 +18,21 @@ export default function Index() {
             <Head>
                 <title>ISAAC</title>
             </Head>
-            { /* TODO: Disable Admin Buttons if user is not admin */ }
-            <Header disableSearchBar actions={
-                <Stack direction="row">
-                    <IconButton onClick={() => router.push('/p/new')}>
-                        <LibraryAdd />
-                    </IconButton>
-                    <IconButton onClick={() => alert('Analytics Button')}>
-                        <Analytics />
-                    </IconButton>
-                </Stack>
-            }/>
+            {
+                session ?
+                    <Header disableSearchBar actions={
+                        <Stack direction="row">
+                            <IconButton onClick={() => router.push('/p/new')}>
+                                <LibraryAdd />
+                            </IconButton>
+                            <IconButton onClick={() => alert('Analytics Button')}>
+                                <Analytics />
+                            </IconButton>
+                        </Stack>
+                    } />
+                    :
+                    undefined
+            }
             <Background />
             <SearchModule />
             <PageBody />
@@ -41,7 +45,7 @@ function Background() {
         <Box sx={{
             position: "relative",
             zIndex: -1,
-            height: "50vh",
+            height: "40vh",
             backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
@@ -67,7 +71,7 @@ function SearchModule() {
             position: "absolute",
             top: 0,
             left: 0,
-            marginTop: "15vh",
+            marginTop: "10vh",
         }}>
             <Container maxWidth="md">
                 <Stack spacing={2} direction="column" alignItems="center">
@@ -201,7 +205,7 @@ function RecentCard() {
     const [pages, setPages] = useState<Page[]>();
 
     useEffect(() => {
-        fetch("/api/page?sort_type=recently_created")
+        fetch("/api/page?sort_type=recently_created&limit=5")
             .then(res => res.json())
             .then(results => setPages(results.payload))
             .catch(err => console.log(err));

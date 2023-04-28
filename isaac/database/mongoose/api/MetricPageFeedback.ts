@@ -4,7 +4,6 @@ import MongooseModels from "../MongooseModels";
 import mongoose from "mongoose";
 import { ServerMetricPageFeedbackRequest } from "@/isaac/models/MetricPageFeedback";
 
-// TODO handle
 export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback, ServerMetricPageFeedbackRequest> = {
     get: async (options: any, sort: any) => {
         try {
@@ -17,7 +16,7 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback, ServerMetricPag
                     created_at: raw.created_at,
                     is_helpful: raw.is_helpful,
                     user_feedback: raw.user_feedback,
-                    page_id: raw.page_id
+                    page: raw.page
                 };
             });
 
@@ -36,7 +35,7 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback, ServerMetricPag
         try {
             const payload = new MongooseModels.MetricPageFeedback({
                 ...serverRequest,
-                page_id: new mongoose.Types.ObjectId(serverRequest.page_id)
+                page: new mongoose.Types.ObjectId(serverRequest.page)
             });
             await payload.validate();
             await payload.save();
