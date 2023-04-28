@@ -9,10 +9,13 @@ import { useRouter } from "next/router";
 import sha256 from "crypto-js";
 
 
+// TODO move these analytics components to like `/client/analytics` or something
 // import all components
 import ViewsOverTime from './analytic_components/ViewsOverTime';
 import Feedback from './analytic_components/Feedback';
 import NegativeFeedbackMessages from './analytic_components/NegativeFeedbackMessages';
+import { Page } from "@/isaac/models";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 
 export interface MetricInterface {
     name: string | number;
@@ -29,9 +32,30 @@ enum ComponentOptions {
 /* /p/analytics?page=[pageId] */
 export default function Analytics() {
     const router = useRouter();
-    const { page: title } = router.query;
+    const { slug } = router.query;
 
-    const [componentKeys, setComponentKeys] = useState<string[]>([]);   // TODO init user settings here <- DO NOT PRIORITIZE THIS YET, FINISH OUT THE BAREBONES THEN WE CAN TALK ABOUT STORING THIS INFORMATION
+    const [pageData, setPageData] = useState<Page>();
+
+    useEffect(() => {
+        if (slug) {
+            fetch('/api/page/slug/' + slug)
+                .then(res => res.json())
+                .then(data => setPageData(data.payload));
+        }
+    }, [slug])
+
+    return (
+        <>
+            {
+                pageData ? <AnalyticsContainer pageData={pageData} /> : <></>
+            }
+        </>
+    )
+}
+
+function AnalyticsContainer(props: any) {
+    const { pageData } = props;
+    const [componentKeys, setComponentKeys] = useState<string[]>([]);
     const [addComponentOption, setAddComponentOption] = useState<string>('');
     const [deleteComponentOption, setDeleteComponentOption] = useState<string>('');
 
@@ -45,7 +69,7 @@ export default function Analytics() {
     useEffect(() => {
         if (deleteComponentOption !== '') {
             const compToDelete = document.getElementById(deleteComponentOption);
-            if(compToDelete) { // ensure compToDelete is not null
+            if (compToDelete) { // ensure compToDelete is not null
                 compToDelete.remove();
             }
             setDeleteComponentOption('');
@@ -55,10 +79,10 @@ export default function Analytics() {
     return (
         <>
             <Head>
-                <title>{`${title} Analytics | ISAAC`}</title>
+                <title>{`"${pageData.title}" Analytics | ISAAC`}</title>
             </Head>
             <Container>
-                <h1>{ `Page Analytics | ${title}` }</h1>
+                <h1>{`Page Analytics | ${pageData.title}`}</h1>
                 <Grid numColsMd={3} className="mt-6 gap-6">
                     {
                         componentKeys.map((i, index) => {
@@ -67,13 +91,13 @@ export default function Analytics() {
                             switch (i) {
                                 case "ViewsOverTime":
                                     const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<ViewsOverTime key={viewsKey} id={title} delete={setDeleteComponentOption}/>);
+                                    return (<ViewsOverTime key={viewsKey} id={pageData.id} delete={setDeleteComponentOption} />);
                                 case "Feedback":
                                     const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<Feedback key={feedbackKey} id={title} delete={setDeleteComponentOption}/>);
+                                    return (<Feedback key={feedbackKey} id={pageData.id} delete={setDeleteComponentOption} />);
                                 case "NegativeFeedbackMessages":
                                     const feedbackMessageKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<NegativeFeedbackMessages key={feedbackMessageKey} id={title} delete={setDeleteComponentOption}/>);
+                                    return (<NegativeFeedbackMessages key={feedbackMessageKey} id={pageData.id} delete={setDeleteComponentOption} />);
                             }
                         })
                     }
@@ -94,7 +118,7 @@ export default function Analytics() {
                         </Select>
                     </Card>
                 </Grid>
-                <Link href={`/p/${title}`}> {/* Fix the title shit after title refactor */}
+                <Link href={`/p/${pageData.slug}`}>
                     <Button sx={{
                         justifyContent: "left",
                         width: 126,
