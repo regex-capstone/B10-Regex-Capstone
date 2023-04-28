@@ -15,7 +15,7 @@ import QuillEditorDialog from "@/client/QuillEditorDialog";
 import { Edit, Analytics } from "@mui/icons-material";
 import Theme from "@/client/Theme";
 import { useSession } from "next-auth/react";
-import * as DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 const api = PublicAPIEndpoint;
 

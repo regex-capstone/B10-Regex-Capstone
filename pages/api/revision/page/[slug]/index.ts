@@ -8,7 +8,7 @@ import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { ClientRevisionRequest } from '@/isaac/models/Revision';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import { SortType } from '@/isaac/public/SortType';
-import * as DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 const api = PublicAPIEndpoint;
 
