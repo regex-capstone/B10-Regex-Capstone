@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
@@ -182,39 +182,36 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
     };
 
     return (
-        <div
-            style={{
-                backgroundColor: '#D3D3D3',
+        <Box sx={{
                 color: '#fff',
                 padding: '1rem',
                 position: 'fixed',
-                bottom: 1,
                 width: '30%',
                 height: '155px',
                 boxSizing: 'border-box',
                 zIndex: 9999,
-                marginBottom: '2rem',
-            }}
-        >
+                bottom: 1,
+                boxShadow: 5
+            }}>
             <>
                 <Stack direction={'column'} spacing={2}>
                     <Typography color="textPrimary">Did you find this helpful?</Typography>
                     <Stack direction={'row'} spacing={2}>
                         {isHelpful === null ? ( // TODO clean this logic up
-                            <ButtonGroup>
-                                <Button variant="contained" style={{ width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
+                            <Stack spacing={1} direction="row">
+                                <Button color="primary" variant="contained" style={{ width: '60px', height: 'fit-content', borderRadius: 5, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
                                     Yes
                                 </Button>
-                                <Button variant="contained" style={{ width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0 }} onClick={handleNoButtonClick}>
+                                <Button color="primary" variant="contained" style={{ width: '60px', height: 'fit-content', borderRadius: 5 }} onClick={handleNoButtonClick}>
                                     No
                                 </Button>
-                            </ButtonGroup>
+                            </Stack>
                         ) : isHelpful ? (
                             <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
                         ) : isSubmitted ? (
                             <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
                         ) : (
-                            <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
                                 <TextField
                                     type="text"
                                     label="Please provide additional feedback"
@@ -223,32 +220,33 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
                                     rows={2}
                                     value={feedbackText}
                                     onChange={(event) => setFeedbackText(event.target.value)}
-                                    inputProps={{
-                                        style: { fontSize: '1rem' },
+                                    inputProps={{ 
+                                        style: { fontSize: '1rem' }, 
                                         maxLength: CHARACTER_LIMIT
                                     }}
-                                    style={{ marginRight: '1rem', width: '400px' }}
+                                    style={{ marginRight: '1rem', flex: 1 }}
                                     helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
-
                                 />
-                                <Button type="submit" variant="contained" color="primary"
-                                    style={{
-                                        width: '80px',
-                                        height: 'fit-content',
-                                        backgroundColor: 'black',
-                                        borderRadius: 0,
-                                        margin: '1.5rem'
-                                    }}
-                                    onClick={handleSubmitFeedback}>
-
-                                    Submit
-                                </Button>
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', width: 'fit-content' }}>
+                                    <Button type="submit" variant="contained" color="primary" 
+                                        style={{
+                                            width: '80px',
+                                            height: 'fit-content',
+                                            borderRadius: 5,
+                                            marginLeft: '1rem',
+                                            marginBottom: '2rem'
+                                        }} 
+                                        onClick={handleYesButtonClick}>
+                                        
+                                        Submit
+                                    </Button>
+                                </div>
                             </form>
                         )}
                     </Stack>
                 </Stack>
             </>
-        </div>
+        </Box>
     )
 
 }
