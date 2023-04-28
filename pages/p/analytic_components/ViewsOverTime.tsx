@@ -8,8 +8,8 @@ import LoadingSpinner from "@/client/LoadingSpinner";
 import { processMetric, MetricInterface } from "../analytics";
 
 export default function ViewsOverTime(props: any) {
-    const [analyticData, setAnalyticData] = useState({} as MetricPageClick[])
-    const [loading, setLoading] = useState(false as boolean)
+    const [analyticData, setAnalyticData] = useState({} as MetricPageClick[]);
+    const [loading, setLoading] = useState(false as boolean);
     const [dateRange, setDateRange] = useState(7 as number);
     const [timeData, setTimeData] = useState([] as MetricInterface[]);
     const [rawTimeData, setRawTimeData] = useState([] as MetricInterface[]);
