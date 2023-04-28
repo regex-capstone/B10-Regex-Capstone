@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import usePageEngagement from "@/client/hooks/usePageEngagement";
 import React, { useState } from 'react';
+import { ThemeProvider } from "@emotion/react";
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
     const api: API = ApiEndpoint
@@ -149,31 +150,7 @@ function AdminTools(props: { page: PageData }) {
     )
 }
 
-function UserFeedback() {
-    // const { data: session } = useSession();
-    // const router = useRouter();
-    // const { title } = router.query;
-
-    // useEffect(() => {
-    //     if (!session) {
-    //         router.push(`/api/auth/signin?callbackUrl=/p/${title}`)
-    //     }
-    // }, [session])
-
-    return (
-        <>
-            <h3>User Feedback</h3>
-            <Stack direction={'column'} spacing={2}>
-                <p>Did you find this helpful?</p>
-                <Stack direction={'row'} spacing={2}>
-                    <Button>Yes</Button>
-                    <Button>No</Button>
-
-                </Stack>
-            </Stack>
-        </>
-    )
-}
+  
 
 const FeedbackSection = () => {
     const [isHelpful, setIsHelpful] = useState<boolean | null>(null);
@@ -201,7 +178,7 @@ const FeedbackSection = () => {
         <div
       style={{
         backgroundColor: '#D3D3D3',
-        color: '#fff',
+        color: '#ffeff',
         padding: '1rem',
         position: 'fixed',
         bottom: 1,
@@ -218,10 +195,10 @@ const FeedbackSection = () => {
             <Stack direction={'row'} spacing={2}>
             {isHelpful === null ? (
         <ButtonGroup>
-          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
+          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
             Yes
           </Button>
-          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius:0 }} onClick={handleNoButtonClick}>
+          <Button variant="contained" style={{width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0 }} onClick={handleNoButtonClick}>
             No
           </Button>
         </ButtonGroup>
@@ -230,7 +207,7 @@ const FeedbackSection = () => {
             ) : isSubmitted ? (
                 <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
             ) : (
-                <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', width: '100%' }}>
                 <TextField
                     type="text"
                     label="Please provide additional feedback"
@@ -243,23 +220,26 @@ const FeedbackSection = () => {
                         style: { fontSize: '1rem' }, 
                         maxLength: CHARACTER_LIMIT
                     }}
-                    style={{ marginRight: '1rem', width: '400px' }}
+                    style={{ marginRight: '1rem', flex: 1, flexGrow: 7 }}
                     helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
- 
                 />
-                <Button type="submit" variant="contained" color="primary" 
-                    style={{
-                        width: '80px',
-                        height: 'fit-content',
-                        backgroundColor: 'black',
-                        borderRadius:0,
-                        margin: '1.5rem' 
-                    }} 
-                    onClick={handleYesButtonClick}>
-                    
-                    Submit
-                </Button>
-                </form>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', width: 'fit-content' }}>
+                    <Button type="submit" variant="contained" color="primary" 
+                        style={{
+                            width: '80px',
+                            height: 'fit-content',
+                            backgroundColor: 'black',
+                            borderRadius:0,
+                            marginLeft: '1rem',
+                            marginBottom: '1rem'
+                        }} 
+                        onClick={handleYesButtonClick}>
+                        
+                        Submit
+                    </Button>
+                </div>
+            </form>
+
             )}
             </Stack>
         </Stack>
@@ -267,3 +247,8 @@ const FeedbackSection = () => {
       </div>
     );
   };
+
+
+
+
+  
