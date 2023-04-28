@@ -65,14 +65,14 @@ export default function Analytics() {
                             switch (i) {
                                 case "ViewsOverTime":
                                     const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<ViewsOverTime key={viewsKey} id={viewsKey} delete={setDeleteComponentOption}/>);
+                                    return (<ViewsOverTime key={viewsKey} id={title} delete={setDeleteComponentOption}/>);
                                 case "Feedback":
                                     const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<Feedback key={feedbackKey} id={feedbackKey} delete={setDeleteComponentOption}/>);
+                                    return (<Feedback key={feedbackKey} id={title} delete={setDeleteComponentOption}/>);
                             }
                         })
                     }
-                    <Card className="h-50">
+                    <Card>
                         <PlusCircleIcon className="h-10 w-10 self-center absolute" />
                         <Select
                             className="opacity-0 absolute"
