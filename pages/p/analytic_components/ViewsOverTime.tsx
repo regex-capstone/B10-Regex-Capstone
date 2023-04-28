@@ -74,17 +74,18 @@ export default function ViewsOverTime(props: any) {
                 onClick={(e) => props.delete(props.id)}
             />
             <div className="flex">
-                <Title>Page views last {dateRange} days</Title>
+                <Title>Page views last</Title>
                 <Select
                     value={dateRange}
                     label="Date Range"
                     onChange={(e) => setDateRange(e.target.value as any)}
-                    className="self-end"
+                    className="self-end px-5"
                 >
                     <MenuItem value={7}>7</MenuItem>
                     <MenuItem value={14}>14</MenuItem>
                     <MenuItem value={30}>30</MenuItem>
                 </Select>
+                <Title> days</Title>
             </div>
             <LineChart
                 data={timeData}

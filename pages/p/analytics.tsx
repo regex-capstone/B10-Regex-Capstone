@@ -11,6 +11,7 @@ import sha256 from "crypto-js";
 
 // import all components
 import ViewsOverTime from './analytic_components/ViewsOverTime';
+import Feedback from './analytic_components/Feedback';
 
 export interface MetricInterface {
     name: string | number;
@@ -19,7 +20,8 @@ export interface MetricInterface {
 
 // add new components to this enum to list them on the add component select
 enum ComponentOptions {
-    ViewsOverTime = "ViewsOverTime"
+    ViewsOverTime = "ViewsOverTime",
+    Feedback = "Feedback"
 }
 
 /* /p/analytics?page=[pageId] */
@@ -62,8 +64,11 @@ export default function Analytics() {
                             // then return the component with whatever props it may need
                             switch (i) {
                                 case "ViewsOverTime":
-                                    const key = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<ViewsOverTime key={key} id={key} delete={setDeleteComponentOption}/>);
+                                    const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
+                                    return (<ViewsOverTime key={viewsKey} id={viewsKey} delete={setDeleteComponentOption}/>);
+                                case "Feedback":
+                                    const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
+                                    return (<Feedback key={feedbackKey} id={feedbackKey} delete={setDeleteComponentOption}/>);
                             }
                         })
                     }
