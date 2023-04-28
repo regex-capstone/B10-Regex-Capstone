@@ -88,7 +88,6 @@ export default function Search(props: SearchProps) {
                 <SearchFilters categories={categories} selected={selectedCategories} setSelected={setSelectedCategories} />
                 <i>{filteredResults.length} results ({timeElapsed} seconds)</i>
                 <SearchResults results={filteredResults} />
-                <FeedbackForm />
             </Container>
         </>
     )
@@ -152,22 +151,6 @@ function Result(props: { result: Page }) {
                 <Typography fontSize="1.2rem" fontFamily="Encode Sans"><b>{props.result.title}</b></Typography>
             </Link>
             <Typography fontSize="0.8rem" color={Theme.COLOR.TEXT_DARK}>{props.result.description}</Typography>
-        </Box>
-    )
-}
-
-function FeedbackForm() {
-    return (
-        <Box sx={{
-            marginTop: 2,
-            marginBottom: 2,
-            height: 200,
-            backgroundColor: "gray",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-        }}>
-            <>Feedback</>
         </Box>
     )
 }
