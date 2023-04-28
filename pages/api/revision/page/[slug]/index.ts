@@ -8,6 +8,7 @@ import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { ClientRevisionRequest } from '@/isaac/models/Revision';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import { SortType } from '@/isaac/public/SortType';
+import * as DOMPurify from 'dompurify';
 
 const api = PublicAPIEndpoint;
 
@@ -53,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (!page) throw new Error('Page not found.');
 
                 const clientRequest: ClientRevisionRequest = {
-                    content: body.content,
+                    content: DOMPurify.sanitize(body.content),
                     page: page.id as string
                 }
 

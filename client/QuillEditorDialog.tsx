@@ -1,11 +1,14 @@
 import QuillTextEditor from "@/client/QuillEditor";
 import Dialog from '@mui/material/Dialog';
-import { Button } from "@mui/material";
-import React, { useState } from 'react';
+import { Button, Stack } from "@mui/material";
+import React, { useEffect, useState } from 'react';
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
 import { useRouter } from "next/router";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
 interface QuillTextEditorProps {
+    openDialog: boolean;
+    setOpenDialogCallback: (open: boolean) => void;
     pageData: PageData;
     revisionData: RevisionData;
 }
@@ -17,9 +20,8 @@ const loadingTextArr = [
 ]
 
 export default function QuillEditorDialog(props: QuillTextEditorProps) {
-    const { pageData, revisionData } = props;
+    const { pageData, revisionData, openDialog, setOpenDialogCallback } = props;
     const [content, setContent] = useState<string>('');
-    const [open, setOpen] = useState(false);
 
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
@@ -27,13 +29,13 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
 
     const router = useRouter();
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
+    useEffect(() => {
+        return () => {
+            if (textInterval) {
+                clearInterval(textInterval);
+            }
+        }
+    });
 
     const handleSave = async () => {
         // handle loading text
@@ -76,22 +78,23 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
 
     return (
         <>
-            <Button onClick={handleClickOpen}>
-                Open Editor
-            </Button>
-            <Dialog fullWidth={true} maxWidth={'lg'} open={open} onClose={handleClose}>
+            <Dialog fullWidth={true} maxWidth={'lg'} open={openDialog} onClose={setOpenDialogCallback}>
                 <QuillTextEditor
                     setContentCallback={setContent}
                     pageData={pageData}
                     revisionData={revisionData}
                 />
-                <Button onClick={handleSave}>
-                    {
-                        isSaving
-                            ? loadingText
-                            : 'SAVE'
-                    }
-                </Button>
+                    {/* {// TODO Alan - CAN YOU MAKE THIS SIDE BY SIDE FOR ME PLZ THANKS} */}
+                    <Button onClick={handleSave}>
+                        {
+                            isSaving
+                                ? loadingText
+                                : 'SAVE'
+                        }
+                    </Button>
+                    <Button onClick={() => setOpenDialogCallback(false)}>
+                        CLOSE
+                    </Button>
             </Dialog>
         </>
     );
