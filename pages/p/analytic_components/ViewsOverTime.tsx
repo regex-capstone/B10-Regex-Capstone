@@ -18,7 +18,6 @@ interface ClicksProps {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<ClicksProps>> {
-    console.log(context);
     const { page } = context.params ?? {};
     const id = page?.toString() ?? ""
     const analyticData: MetricPageClick[] = (await api.MetricPageClick.get(GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE, SortType.RECENTLY_CREATED, {p_id: id} as GetMetricPageClickOptions)) as MetricPageClick[];
