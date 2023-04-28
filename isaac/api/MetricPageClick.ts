@@ -4,7 +4,7 @@ import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import MetricPageClick, { ServerMetricPageClickRequest } from "../models/MetricPageClick";
 
 export interface MetricPageClickOptions extends BaseOptions {
-    p_id?: string;
+    page_id?: string;
 }
 
 export interface MetricPageClickSortOptions {

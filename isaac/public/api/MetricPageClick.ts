@@ -46,7 +46,7 @@ export const MetricPageClickPublicAPI: MetricPageClickPublicAPIInterface = {
                 
             case GetMetricPageClickTypes.METRIC_PAGE_CLICKS_BY_PAGE:
                 if (!get_options?.p_id) throw new Error('No page id provided.');
-                return (await isaac.MetricPageClick.get({ p_id: get_options?.p_id }, sort_options)) as MetricPageClick[];
+                return (await isaac.MetricPageClick.get({ page_id: get_options?.p_id }, sort_options)) as MetricPageClick[];
 
             default:
                 throw new Error('Invalid get type.');
