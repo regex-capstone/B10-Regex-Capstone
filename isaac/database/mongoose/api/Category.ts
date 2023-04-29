@@ -75,6 +75,24 @@ export const CategoryModelAPI: ModelAPI<Category, ServerCategoryRequest> = {
         }
     },
 
-    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented'); },
-    update: (id: string, attributes: Partial<Category>) => { throw new Error('Not implemented'); }
+    update: async (id: string, attributes: Partial<Category>) => {
+        try {
+            attributes.slug = convert(`${attributes.name} ${id}`, {
+                separator: '-',
+                transformer: LOWERCASE_TRANSFORMER
+            });
+            
+            const updated = await MongooseModels.Category.updateOne({ _id: id }, attributes);
+            return {
+                success: true,
+                payload: updated
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
+
+    aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented'); }
 }

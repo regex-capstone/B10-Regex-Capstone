@@ -7,6 +7,7 @@ export default interface CategoryPublicAPIInterface {
     get(get_type: GetCategoryTypes, sort_type: SortType, get_options?: GetCategoryOptions): Promise<Category | Category[]>,
     add(c: ClientCategoryRequest): Promise<Category>,
     delete(c_id: string): Promise<boolean>,
+    update(c_id: string, c: ClientCategoryRequest): Promise<boolean>
 }
 
 export enum GetCategoryTypes {
@@ -72,5 +73,14 @@ export const CategoryPublicAPI: CategoryPublicAPIInterface = {
 
     delete: async (c_id: string): Promise<boolean> => {
         return (await isaac.Category.delete(c_id)) as boolean;
+    },
+
+    update: async (c_id: string, clientRequest: ClientCategoryRequest): Promise<boolean> => {
+        const serverRequest: ServerCategoryRequest = {
+            ...clientRequest,
+            created_at: Date.now()
+        }
+
+        return (await isaac.Category.update(c_id, serverRequest)) as boolean;
     }
 } 
