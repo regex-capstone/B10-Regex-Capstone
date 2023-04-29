@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from 'react';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
+import DOMPurify from 'isomorphic-dompurify';
 
 interface QuillTextEditorProps {
     setContentCallback: (content: string) => void;
@@ -54,9 +55,9 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
 
         useEffect(() => {
             if (quill) {
-                quill.clipboard.dangerouslyPasteHTML(content);
+                quill.clipboard.dangerouslyPasteHTML(DOMPurify.sanitize(content));
             }
-        }, []);
+        });
 
         useEffect(() => {
             if (quill) {

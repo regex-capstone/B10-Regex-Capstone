@@ -5,7 +5,8 @@ import {
     UserAPI, 
     SearchAPI, 
     MetricPageClickAPI,
-    MetricPageFeedbackAPI
+    MetricPageFeedbackAPI,
+    MetricSearchQueryAPI
 } from "./api";
 
 /**
@@ -20,5 +21,6 @@ export default {
     User: UserAPI,
     Search: SearchAPI,
     MetricPageClick: MetricPageClickAPI,
-    MetricPageFeedback: MetricPageFeedbackAPI
+    MetricPageFeedback: MetricPageFeedbackAPI,
+    MetricSearchQuery: MetricSearchQueryAPI
 };

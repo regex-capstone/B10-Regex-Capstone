@@ -53,19 +53,7 @@ export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery, ServerMetricSearc
         }
     },
     
-    aggregate: async (...agg_args: any[]) => {
-        try {
-            return {
-                success: true,
-                payload: await MongooseModels.MetricSearchQuery.aggregate(agg_args)
-            }
-        } catch (err: any) {
-            return {
-                error: err
-            }
-        }
-    },
-
+    aggregate: async (...agg_args: any[]) => { throw new Error('Not implemented'); },
     update: async (id: string, attributes: Partial<MetricSearchQuery>) => { throw new Error('Not implemented'); },
     delete: async (id: string) => { throw new Error('Not implemented'); }
 }
