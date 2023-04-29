@@ -41,16 +41,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'POST':
-                if (!session) throw new Error('You must be logged in.');
+                // if (!session) throw new Error('You must be logged in.');
 
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.title) throw new Error('POST request has no title.');
-                if (!body.category) throw new Error('POST request has no page_category_id.');
 
                 const clientRequest: ClientPageRequest = {
-                    title: body.title,
-                    category: body.category
+                    title: body.title
                 }
+                
+                if (body.category) clientRequest.category = body.category;
 
                 const page = await api.Page.add(clientRequest);
 

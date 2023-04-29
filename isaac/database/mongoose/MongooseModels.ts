@@ -9,9 +9,13 @@ const PageSchema = new mongoose.Schema({
         required: [true, 'Title is missing...'] 
     },
     category: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        required: [true, 'Category reference is missing...'],
-        ref: 'Category' 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        validate: {
+            validator: (val: any) => {
+                return true;
+            }
+        }
     },
     created_at: { 
         type: Date, 
