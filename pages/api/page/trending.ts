@@ -18,25 +18,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'GET':
                 const return_pages_amount = 5;
-                const aggregation: Page[] = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES)).map((agg: any) => agg.page[0]);
+                const aggregation = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES));
 
-                if (aggregation.length < return_pages_amount) {   // If there are less than 5 trending pages, append the most recent pages
+                let pages = aggregation.map((e: any) => e.page[0]);
+                const views = aggregation.map((e: any) => {
+                    return {
+                        id: e._id,
+                        views: e.count
+                    }
+                });
+
+                // If there are less than 5 trending pages, append the most recent pages
+                if (pages.length < return_pages_amount) { 
                     const recent_pages: Page[] = await api.Page.get(GetPageTypes.ALL_PAGES, SortType.RECENTLY_CREATED) as Page[];
                     let index = 0;
                     
-                    while (index < recent_pages.length && aggregation.length < return_pages_amount) {
+                    while (index < recent_pages.length && pages.length < return_pages_amount) {
                         const page = recent_pages[index];
 
-                        if (!aggregation.find((p: Page) => p.slug === page.slug)) {
-                            aggregation.push(page);
+                        if (!pages.find((p: Page) => p.slug === page.slug)) {
+                            pages.push(page);
+                            views.push({
+                                id: page.id,
+                                views: 0
+                            });
                         }
                         index++;
                     }
-                }
+                } 
 
                 res.status(200).json({
                     success: true,
-                    payload: aggregation
+                    payload: {
+                        pages: pages,
+                        views: views
+                    }
                 });
                 break;
             default:
