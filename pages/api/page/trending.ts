@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const aggregation = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES));
 
                 let pages = aggregation.map((e: any) => e.page[0]);
-                const views = aggregation.map((e: any) => {
+                const views = aggregation.map((e: any) => { 
                     return {
                         id: e._id,
                         views: e.count
@@ -50,8 +50,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 res.status(200).json({
                     success: true,
                     payload: {
-                        pages: pages,
-                        views: views
+                        pages: pages.slice(0, return_pages_amount),
+                        views: views.slice(0, return_pages_amount)
                     }
                 });
                 break;
