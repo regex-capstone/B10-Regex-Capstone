@@ -1,4 +1,4 @@
-import { Button, Container, Select, MenuItem } from "@mui/material";
+import { Button, Container, Select, MenuItem, Box } from "@mui/material";
 import { Card, Grid } from "@tremor/react";
 import { PlusCircleIcon } from '@heroicons/react/solid'
 import 'tailwindcss/tailwind.css'
@@ -58,6 +58,7 @@ function AnalyticsContainer(props: any) {
     const [componentKeys, setComponentKeys] = useState<string[]>([]);
     const [addComponentOption, setAddComponentOption] = useState<string>('');
     const [deleteComponentOption, setDeleteComponentOption] = useState<string>('');
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         if (addComponentOption !== '') {
@@ -102,20 +103,27 @@ function AnalyticsContainer(props: any) {
                         })
                     }
                     <Card>
-                        <PlusCircleIcon className="h-10 w-10 self-center absolute" />
-                        <Select
-                            className="opacity-0 absolute"
-                            onChange={(e) => setAddComponentOption(e.target.value as string)}
-                            value={addComponentOption}
-                        >
-                            {
-                                Object.keys(ComponentOptions).map((i, index) => {
-                                    return (
-                                        <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
-                                    )
-                                })
-                            }
-                        </Select>
+                        <Grid>
+                            <PlusCircleIcon
+                                className="opacity-100 hover:opacity-50 m-auto cursor-pointer h-10 w-10 self-center"
+                                onClick={() => setMenuOpen(prev => !prev)}
+                            />
+                                <Select
+                                    className="opacity-0 absolute"
+                                    onChange={(e) => setAddComponentOption(e.target.value as string)}
+                                    value={addComponentOption}
+                                    onClick={() => setMenuOpen(prev => !prev)}
+                                    open={menuOpen}
+                                >
+                                    {
+                                        Object.keys(ComponentOptions).map((i, index) => {
+                                            return (
+                                                <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                        </Grid>
                     </Card>
                 </Grid>
                 <Link href={`/p/${pageData.slug}`}>
