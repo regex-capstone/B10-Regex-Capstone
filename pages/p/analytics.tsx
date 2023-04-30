@@ -16,6 +16,7 @@ import Feedback from './analytic_components/Feedback';
 import NegativeFeedbackMessages from './analytic_components/NegativeFeedbackMessages';
 import { Page } from "@/isaac/models";
 import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import Header from "@/client/Header";
 
 export interface MetricInterface {
     name: string | number;
@@ -82,59 +83,66 @@ function AnalyticsContainer(props: any) {
             <Head>
                 <title>{`"${pageData.title}" Analytics | ISAAC`}</title>
             </Head>
+            <Header />
             <Container>
-                <h1>{`Page Analytics | ${pageData.title}`}</h1>
-                <Grid numColsMd={3} className="mt-6 gap-6">
-                    {
-                        componentKeys.map((i, index) => {
-                            // to add a new component, you need to pass in a case for the name as string,
-                            // then return the component with whatever props it may need
-                            switch (i) {
-                                case "ViewsOverTime":
-                                    const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<ViewsOverTime key={viewsKey} id={pageData.id} delete={setDeleteComponentOption} />);
-                                case "Feedback":
-                                    const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<Feedback key={feedbackKey} id={pageData.id} delete={setDeleteComponentOption} />);
-                                case "NegativeFeedbackMessages":
-                                    const feedbackMessageKey = i + "-" + sha256.SHA256(i + index.toString());
-                                    return (<NegativeFeedbackMessages key={feedbackMessageKey} id={pageData.id} delete={setDeleteComponentOption} />);
-                            }
-                        })
-                    }
-                    <Card>
-                        <Grid>
-                            <PlusCircleIcon
-                                className="opacity-100 hover:opacity-50 m-auto cursor-pointer h-10 w-10 self-center"
-                                onClick={() => setMenuOpen(prev => !prev)}
-                            />
-                                <Select
-                                    className="opacity-0 absolute"
-                                    onChange={(e) => setAddComponentOption(e.target.value as string)}
-                                    value={addComponentOption}
+                <Box
+                    justifyContent="center"
+                    alignItems="center"
+                    borderRadius="5%"
+                >
+                    <h1>{`"${pageData.title}" Analytics Dashboard`}</h1>
+                    <Grid numColsMd={3} className="mt-6 gap-6">
+                        {
+                            componentKeys.map((i, index) => {
+                                // to add a new component, you need to pass in a case for the name as string,
+                                // then return the component with whatever props it may need
+                                switch (i) {
+                                    case "ViewsOverTime":
+                                        const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
+                                        return (<ViewsOverTime key={viewsKey} id={pageData.id} delete={setDeleteComponentOption} />);
+                                    case "Feedback":
+                                        const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
+                                        return (<Feedback key={feedbackKey} id={pageData.id} delete={setDeleteComponentOption} />);
+                                    case "NegativeFeedbackMessages":
+                                        const feedbackMessageKey = i + "-" + sha256.SHA256(i + index.toString());
+                                        return (<NegativeFeedbackMessages key={feedbackMessageKey} id={pageData.id} delete={setDeleteComponentOption} />);
+                                }
+                            })
+                        }
+                        <Card>
+                            <Grid>
+                                <PlusCircleIcon
+                                    className="opacity-100 hover:opacity-50 m-auto cursor-pointer h-10 w-10 self-center"
                                     onClick={() => setMenuOpen(prev => !prev)}
-                                    open={menuOpen}
-                                >
-                                    {
-                                        Object.keys(ComponentOptions).map((i, index) => {
-                                            return (
-                                                <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                        </Grid>
-                    </Card>
-                </Grid>
-                <Link href={`/p/${pageData.slug}`}>
-                    <Button sx={{
-                        justifyContent: "left",
-                        width: 126,
-                        border: "1px solid black",
-                        color: "black",
-                        mt: "20px"
-                    }}>Back to Page</Button>
-                </Link>
+                                />
+                                    <Select
+                                        className="opacity-0 absolute"
+                                        onChange={(e) => setAddComponentOption(e.target.value as string)}
+                                        value={addComponentOption}
+                                        onClick={() => setMenuOpen(prev => !prev)}
+                                        open={menuOpen}
+                                    >
+                                        {
+                                            Object.keys(ComponentOptions).map((i, index) => {
+                                                return (
+                                                    <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                            </Grid>
+                        </Card>
+                    </Grid>
+                    <Link href={`/p/${pageData.slug}`}>
+                        <Button sx={{
+                            justifyContent: "left",
+                            width: 126,
+                            border: "1px solid black",
+                            color: "black",
+                            mt: "20px"
+                        }}>Back to Page</Button>
+                    </Link>
+                </Box>
             </Container>
         </>
     )
