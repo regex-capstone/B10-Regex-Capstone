@@ -8,6 +8,7 @@ import { Page } from "@/isaac/models";
 import Link from "next/link";
 import { Analytics, LibraryAdd } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
+import moment from 'moment';
 
 export default function Index() {
     const { data: session } = useSession();
@@ -235,18 +236,44 @@ function CardRow(props: any) {
     const { page, view } = props;
 
     if (!view) {
+        let time = page.created_at;
+        console.log(time)
+        console.log(typeof(time))
         return (
             <>
-                <Link href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
-                <p>{page.created_at}</p>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                }}>
+                    <Link style={{
+                        flex: '1'
+                    }} href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                    <p style={{
+                        marginTop: '0',
+                        fontSize: '.75em'
+                    }}>{moment(page.created_at).fromNow()}</p>
+                </Box>
             </>
         )
     }
 
     return (
         <>
-            <Link href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
-            <p>{view}</p>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+            }}>
+                <Link style={{
+                    flex: '1'
+                }} href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                <p style={{
+                    marginTop: '0',
+                    fontSize: '.75em'
+                }}>{Intl.NumberFormat('en-US', {
+                    notation: "compact",
+                    maximumFractionDigits: 1
+                  }).format(view)} views</p>
+            </Box>
         </>
     )
 }
