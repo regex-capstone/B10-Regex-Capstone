@@ -178,11 +178,16 @@ function Card(props: any) {
 
 function TrendingCard() {
     const [pages, setPages] = useState<Page[]>();
+    const [views, setViews] = useState<any>();
 
     useEffect(() => {
         fetch("/api/page/trending")
             .then(res => res.json())
-            .then(results => setPages(results.payload))
+            .then(results => {
+                setPages(results.payload.pages);
+                setViews(results.payload.views)
+                console.log(results);
+            })
             .catch(err => console.log(err));
     }, [])
 
@@ -195,7 +200,7 @@ function TrendingCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages ? pages.map(p => <Link href={`/p/${p.slug}/`} key={p.id}>{p.title}</Link>) : undefined}
+                {pages && views ? pages.map((p, i) => <CardRow page={p} view={views[i].views} />) : undefined}
             </Stack>
         </Card>
     )
@@ -220,8 +225,28 @@ function RecentCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages ? pages.map(p => <Link href={`/p/${p.slug}/`} key={p.id}>{p.title}</Link>) : undefined}
+                {pages ? pages.map((p, i) => <CardRow page={p} />) : undefined}
             </Stack>
         </Card>
+    )
+}
+
+function CardRow(props: any) {
+    const { page, view } = props;
+
+    if (!view) {
+        return (
+            <>
+                <Link href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                <p>{page.created_at}</p>
+            </>
+        )
+    }
+
+    return (
+        <>
+            <Link href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+            <p>{view}</p>
+        </>
     )
 }
