@@ -25,7 +25,7 @@ export default function Index() {
                             <IconButton onClick={() => router.push('/p/new')}>
                                 <LibraryAdd />
                             </IconButton>
-                            <IconButton onClick={() => alert('Analytics Button')}>
+                            <IconButton onClick={() => router.push('/analytics')}>
                                 <Analytics />
                             </IconButton>
                         </Stack>

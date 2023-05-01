@@ -7,17 +7,15 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import sha256 from "crypto-js";
-
+import { Page } from "@/isaac/models";
+import { GetStaticPropsContext, GetStaticPropsResult } from "next";
+import Header from "@/client/Header";
 
 // TODO move these analytics components to like `/client/analytics` or something
 // import all components
 import ViewsOverTime from './analytic_components/ViewsOverTime';
 import Feedback from './analytic_components/Feedback';
 import NegativeFeedbackMessages from './analytic_components/NegativeFeedbackMessages';
-import { Page } from "@/isaac/models";
-import { GetStaticPropsContext, GetStaticPropsResult } from "next";
-import Header from "@/client/Header";
-
 export interface MetricInterface {
     name: string | number;
     value: number;
@@ -115,21 +113,21 @@ function AnalyticsContainer(props: any) {
                                     className="opacity-100 hover:opacity-50 m-auto cursor-pointer h-10 w-10 self-center"
                                     onClick={() => setMenuOpen(prev => !prev)}
                                 />
-                                    <Select
-                                        className="opacity-0 absolute"
-                                        onChange={(e) => setAddComponentOption(e.target.value as string)}
-                                        value={addComponentOption}
-                                        onClick={() => setMenuOpen(prev => !prev)}
-                                        open={menuOpen}
-                                    >
-                                        {
-                                            Object.keys(ComponentOptions).map((i, index) => {
-                                                return (
-                                                    <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
-                                                )
-                                            })
-                                        }
-                                    </Select>
+                                <Select
+                                    className="opacity-0 absolute"
+                                    onChange={(e) => setAddComponentOption(e.target.value as string)}
+                                    value={addComponentOption}
+                                    onClick={() => setMenuOpen(prev => !prev)}
+                                    open={menuOpen}
+                                >
+                                    {
+                                        Object.keys(ComponentOptions).map((i, index) => {
+                                            return (
+                                                <MenuItem key={i + "-" + index} value={i}>{i}</MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
                             </Grid>
                         </Card>
                     </Grid>
