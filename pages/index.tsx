@@ -201,7 +201,7 @@ function TrendingCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages && views ? pages.map((p, i) => <CardRow page={p} view={views[i].views} />) : undefined}
+                {pages && views ? pages.map((p, i) => <CardRow key={p.id} page={p} view={views[i].views} />) : undefined}
             </Stack>
         </Card>
     )
@@ -226,7 +226,7 @@ function RecentCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages ? pages.map((p, i) => <CardRow page={p} />) : undefined}
+                {pages ? pages.map((p, i) => <CardRow key={p.id} page={p} />) : undefined}
             </Stack>
         </Card>
     )
