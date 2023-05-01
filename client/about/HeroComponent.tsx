@@ -10,10 +10,10 @@ export default function Hero() {
             style={{
                 width: '100%',
                 display: 'flex',
-                minHeight: '600px',
+                minHeight: '700px',
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: '#f5f5f5'
+                backgroundColor: '#d2bc86'
             }}
         >
             <Grid
@@ -33,12 +33,12 @@ export default function Hero() {
                             paddingBottom: '15px'
                         }}
                     >
-                        { CONTENT.hero.title }
+                        <b>{ CONTENT.hero.title }</b>
                     </Typography>
                     <Typography 
                         variant="h6"
                         style={{
-                            opacity: '0.4',
+                            opacity: '0.6',
                             paddingBottom: '30px',
                         }}
                     >

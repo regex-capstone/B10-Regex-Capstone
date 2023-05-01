@@ -6,27 +6,60 @@ export default function Why() {
 
     return (
         <>
-            <Box sx={{ 
-                flexGrow: 1, 
+            <Box sx={{
+                flexGrow: 1,
                 minHeight: '400px',
-                backgroundColor: '#d2bc86',
+                backgroundColor: '#f5f5f5'
             }}>
-                <Grid 
-                    container 
+                <Grid
+                    container
                     style={{
                         display: 'flex',
-                        flexDirection: 'row',
+                        flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
                         width: '100%',
-                        minHeight: '500px',
+                        padding: '50px'
                     }}
                 >
-                    {CONTENT.why.features.map((item) => (
+                    <Typography
+                        variant="h3"
+                        style={{
+                            paddingBottom: '20px'
+                        }}
+                    >
+                        {
+                            CONTENT.why.title
+                        }
+                    </Typography>
+                    <Section />
+                </Grid>
+            </Box>
+        </>
+    )
+}
+
+function Section() {
+    const CONTENT = ABOUT_JSON;
+    return (
+        <>
+            <Grid
+                container
+                style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    minHeight: '500px',
+                }}
+            >
+                {
+                    CONTENT.why.features.map((item) => (
                         <Grid
                             item
                             xs={12}
-                            md={4}
+                            md={3}
                             minHeight={300}
                             key={item.text}
                             style={{
@@ -36,17 +69,19 @@ export default function Why() {
                                 margin: '10px !important',
                             }}
                         >
-                            <img 
+                            <img
                                 src={item.icon}
                                 style={{
                                     width: '150px'
                                 }}
                             />
-                            <Typography>{item.text}</Typography>
+                            <Typography
+                                variant="h5"
+                            >{item.text}</Typography>
                         </Grid>
-                    ))}
-                </Grid>
-            </Box>
+                    ))
+                }
+            </Grid>
         </>
     )
 }
