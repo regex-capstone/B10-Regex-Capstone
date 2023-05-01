@@ -84,8 +84,10 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
                     pageData={pageData}
                     revisionData={revisionData}
                 />
-                    {/* {// TODO Alan - CAN YOU MAKE THIS SIDE BY SIDE FOR ME PLZ THANKS} */}
-                    <Button onClick={handleSave}>
+                    <Button 
+                        variant="contained"
+                        onClick={handleSave}
+                    >
                         {
                             isSaving
                                 ? loadingText
