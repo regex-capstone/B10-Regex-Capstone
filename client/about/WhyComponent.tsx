@@ -1,5 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { ABOUT_JSON } from "./content";
+import { AnimationOnScroll } from 'react-animation-on-scroll';
 
 export default function Why() {
     const CONTENT = ABOUT_JSON;
@@ -32,6 +33,18 @@ export default function Why() {
                             CONTENT.why.title
                         }
                     </Typography>
+                    <Typography
+                        style={{
+                            textAlign: 'center',
+                            marginLeft: 300,
+                            marginRight: 300
+                        }}
+                        variant="h6"
+                    >
+                        {
+                            CONTENT.why.subtitle
+                        }
+                    </Typography>
                     <Section />
                 </Grid>
             </Box>
@@ -55,29 +68,32 @@ function Section() {
                 }}
             >
                 {
-                    CONTENT.why.features.map((item) => (
+                    CONTENT.why.features.map((item, i) => (
                         <Grid
                             item
                             xs={12}
-                            md={3}
+                            md={2}
                             minHeight={300}
                             key={item.text}
                             style={{
                                 textAlign: 'center',
-                                padding: '70px',
+                                padding: '30px',
                                 borderRadius: '10px',
                                 margin: '10px !important',
                             }}
                         >
-                            <img
-                                src={item.icon}
-                                style={{
-                                    width: '150px'
-                                }}
-                            />
-                            <Typography
-                                variant="h5"
-                            >{item.text}</Typography>
+
+                            <AnimationOnScroll initiallyVisible={true} delay={1500 * i} duration={1} animateIn="animate__tada">
+                                <img
+                                    src={item.icon}
+                                    style={{
+                                        width: '125px'
+                                    }}
+                                />
+                                <Typography
+                                    variant="h6"
+                                >{item.text}</Typography>
+                            </AnimationOnScroll>
                         </Grid>
                     ))
                 }

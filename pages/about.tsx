@@ -1,3 +1,4 @@
+import "animate.css/animate.min.css";
 import Header from "@/client/Header";
 import Hero from "@/client/about/HeroComponent";
 import Who from "@/client/about/WhoComponent";

@@ -1,5 +1,6 @@
 import { ABOUT_JSON } from "./content";
 import { Box, Grid, Typography } from "@mui/material";
+import {AnimationOnScroll} from 'react-animation-on-scroll';
 
 export default function Who() {
     const CONTENT = ABOUT_JSON;
@@ -46,7 +47,8 @@ export default function Who() {
                     {
                         CONTENT.who.team.map((member) => {
                             return (
-                                <Grid
+                                <AnimationOnScroll animateIn="animate__fadeInLeftBig">
+                                    <Grid
                                     style={{
                                         alignContent: 'center',
                                         justifyContent: 'center',
@@ -93,6 +95,7 @@ export default function Who() {
                                         })
                                     }
                                 </Grid>
+                                </AnimationOnScroll>
                             )
                         })
                     }
