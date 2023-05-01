@@ -10,7 +10,7 @@ export default function Hero() {
             style={{
                 width: '100%',
                 display: 'flex',
-                minHeight: '700px',
+                minHeight: '750px',
                 alignItems: 'center',
                 justifyContent: 'center',
                 backgroundColor: '#d2bc86'
