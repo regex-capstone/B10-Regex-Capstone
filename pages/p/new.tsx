@@ -5,10 +5,7 @@ import Logo from "@/client/Logo";
 import Head from "next/head";
 import QuillTextEditor from "@/client/QuillEditor";
 import { useEffect, useState } from "react";
-import LoadingSpinner from "@/client/LoadingSpinner";
-import useCategory from "@/hooks/useCategory";
 import Category from '../../isaac/models/Category';
-import { curveNatural } from "d3";
 import { useRouter } from "next/router";
 
 /*
@@ -25,7 +22,6 @@ const loadingTextArr = [
 export default function CreatePage() {
     const [categoryId, setCategoryId] = useState('');
     const [categories, setCategories] = useState<Category[]>([]);
-    const { data: categoryData } = useCategory();
 
     const [content, setContent] = useState('');
     const [title, setTitle] = useState('');
@@ -37,12 +33,10 @@ export default function CreatePage() {
     const router = useRouter();
 
     useEffect(() => {
-        if (categoryData) {
-            setCategories(categoryData.payload)
-        }
-    }, [categoryData]);
+        fetch('/api/category?sort_type=alphabetical')
+            .then(res => res.json())
+            .then(data => setCategories(data.payload));
 
-    useEffect(() => {
         return () => {
             if (textInterval) {
                 clearInterval(textInterval);
