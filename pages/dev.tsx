@@ -13,7 +13,6 @@ export default function DevTools() {
 function CategoryTool() {
   const [categories, setCategories] = useState<Category[]>([])
 
-
   useEffect(() => {
     fetch('/api/category?sort_type=alphabetical')
         .then(res => res.json())
