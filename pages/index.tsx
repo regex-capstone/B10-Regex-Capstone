@@ -25,10 +25,10 @@ export default function Index() {
                     <Header disableSearchBar actions={
                         <Stack direction="row">
                             <IconButton onClick={() => router.push('/p/new')}>
-                                <LibraryAdd />
+                                <LibraryAdd htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                             <IconButton onClick={() => alert('Analytics Button')}>
-                                <Analytics />
+                                <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
                     } />
@@ -274,9 +274,9 @@ function CardRow(props: any) {
                     marginTop: '0',
                     fontSize: '.75em'
                 }}>{Intl.NumberFormat('en-US', {
-                    notation: "compact",
-                    maximumFractionDigits: 1
-                }).format(view)} views</p>
+                        notation: "compact",
+                        maximumFractionDigits: 1
+                    }).format(view)} views</p>
             </Box>
         </>
     )
