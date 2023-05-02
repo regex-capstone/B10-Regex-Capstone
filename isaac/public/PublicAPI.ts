@@ -5,6 +5,7 @@ import RevisionPublicAPIInterface, { RevisionPublicAPI } from "./api/Revision";
 import SearchPublicAPIInterface, { SearchPublicAPI } from "./api/Search";
 import UserPublicAPIInterface, { UserPublicAPI } from "./api/User";
 import MetricPageFeedbackPublicAPIInterface, { MetricPageFeedbackPublicAPI } from './api/MetricPageFeedback';
+import MetricSearchQueryPublicAPIInterface, { MetricSearchQueryPublicAPI } from "./api/MetricSearchQuery";
 
 /**
  * The public API endpoint for the ISAAC API.
@@ -19,8 +20,8 @@ interface PublicAPIInterface {
     Search: SearchPublicAPIInterface,
     User: UserPublicAPIInterface,
     MetricPageClick: MetricPageClickPublicAPIInterface,
-    MetricPageFeedback: MetricPageFeedbackPublicAPIInterface
-
+    MetricPageFeedback: MetricPageFeedbackPublicAPIInterface,
+    MetricSearchQuery: MetricSearchQueryPublicAPIInterface
 }
 
 const PublicAPIEndpoint: PublicAPIInterface = {
@@ -30,7 +31,8 @@ const PublicAPIEndpoint: PublicAPIInterface = {
     Search: SearchPublicAPI,
     User: UserPublicAPI,
     MetricPageClick: MetricPageClickPublicAPI,
-    MetricPageFeedback: MetricPageFeedbackPublicAPI
+    MetricPageFeedback: MetricPageFeedbackPublicAPI,
+    MetricSearchQuery: MetricSearchQueryPublicAPI
 }
 
 export default PublicAPIEndpoint;
