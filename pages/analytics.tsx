@@ -12,7 +12,7 @@ import LoadingSpinner from "@/client/LoadingSpinner";
 interface MetricInterfaceBar {
     name: string,
     value: number,
-    created_at?: string
+    created_at?: number
 }
 
 export default function OverallAnalytics() {
@@ -25,8 +25,8 @@ export default function OverallAnalytics() {
     const [searchTimeData, setSearchTimeData] = useState([] as MetricInterfaceBar[]);
     const [clickTimeData, setClickTimeData] = useState([] as MetricInterfaceBar[]);
 
-    const [totalClicks, setTotalClicks] = useState<number>();
-    const [totalSearches, setTotalSearches] = useState<number>();
+    const [totalClicks, setTotalClicks] = useState<number>(0);
+    const [totalSearches, setTotalSearches] = useState<number>(0);
 
     const [dateRange, setDateRange] = useState(7 as number);
     const [loading, setLoading] = useState(false as boolean);
@@ -55,7 +55,12 @@ export default function OverallAnalytics() {
             for (let i = 0; i < metrics.length; i++) {
                 const focusMetric = metrics[i];
 
-                processMetric(tempSearchData, focusMetric.search_query);
+                // no need to process, it will be processed later
+                tempSearchData.push({
+                    name: focusMetric.search_query,
+                    value: 1,
+                    created_at: focusMetric.created_at
+                });
             }
             setRawSearchData(tempSearchData);
         }
@@ -77,25 +82,28 @@ export default function OverallAnalytics() {
         }
     }, [clickData])
 
-    // TODO: change search data based on date range
-    /* useEffect(() => {
+    // change search data based on date range
+    useEffect(() => {
         const tempSearchData: MetricInterfaceBar[] = [];
-
-        fillSearchArray(tempSearchData, dateRange, new Date());
 
         if (rawSearchData.length > 0) {
             for (let i = 0; i < rawSearchData.length; i++) {
                 const queryName = rawSearchData[i].name
-                const focusTime = new Date(rawSearchData[i].created_at as string);
-                const focusDateTime = focusTime.toISOString().slice(0, 10);
+                const focusTime = new Date(rawSearchData[i].created_at as number);
+                const threshold = new Date(new Date().setDate(new Date().getDate() - dateRange));
 
-                processSearchMetric(tempSearchData, queryName, focusDateTime);
+                if(focusTime >= threshold) {
+                    processMetric(tempSearchData, queryName);
+                }
             }
+            // only run if array is not empty
+            if(tempSearchData.length !== 0) {
+                setTotalSearches(sumData(tempSearchData));
+            }
+            setSearchTimeData(tempSearchData);
         }
-
-        setTotalSearches(sumData(tempSearchData))
         setSearchTimeData(tempSearchData);
-    }, [dateRange, rawSearchData]); */
+    }, [dateRange, rawSearchData]);
 
     // change click data based on date range
     useEffect(() => {
@@ -110,9 +118,11 @@ export default function OverallAnalytics() {
 
                 processMetric(tempTimeData, focusDateTime);
             }
+            // only run if array is not empty
+            if(tempTimeData.length !== 0) {
+                setTotalClicks(sumData(tempTimeData));
+            }
         }
-
-        setTotalClicks(sumData(tempTimeData));
         setClickTimeData(tempTimeData);
     }, [dateRange, rawClickData])
 
@@ -129,7 +139,7 @@ export default function OverallAnalytics() {
                 <Col numColSpanLg={4}>
                     <Card className="h-full">
                         <Title>Top 10 search queries last {dateRange} days</Title>
-                        <BarList data={rawSearchData} className="mt-2" />
+                        <BarList data={searchTimeData} className="mt-2" />
                     </Card>
 
                     <Card className="h-full">
@@ -159,8 +169,8 @@ export default function OverallAnalytics() {
                                 <MenuItem value={7}>7 days</MenuItem>
                                 <MenuItem value={14}>14 days</MenuItem>
                                 <MenuItem value={30}>30 days</MenuItem>
-                                <MenuItem value={60}>30 days</MenuItem>
-                                <MenuItem value={90}>30 days</MenuItem>
+                                <MenuItem value={60}>60 days</MenuItem>
+                                <MenuItem value={90}>90 days</MenuItem>
                             </Select>
                         </Card>
                         <Card>
@@ -187,31 +197,13 @@ const fillClickArray = (timeArr: MetricInterfaceBar[], dateRange: number, today:
     }
 };
 
-const fillSearchArray = (timeArr: MetricInterfaceBar[], dateRange: number, today: Date) => {
-    for (let i = dateRange; i > 0; i--) {
-        const newDate = new Date(today);
-        newDate.setDate(newDate.getDate() - i);
-        const dateName = newDate.toISOString().slice(0, 10);
-        timeArr.push({ name: dateName, value: 0 });
-    }
-};
-
+// summarizes values for totals
 const sumData = (rawData: MetricInterfaceBar[]) => {
     return rawData.map(i => i.value).reduce((prev, next) => prev + next);
 };
 
 // processMetric from page analytics wont work for search since it needs created_by,
 // so we make a new processing fucntion
-const processSearchMetric = (tempArr: MetricInterfaceBar[], metricName: any, creationDate: string) => {
-    const indexCheck = tempArr.findIndex(e => e.name === metricName);
-
-    if (indexCheck > -1) {
-        tempArr[indexCheck].value += 1;
-    } else {
-        tempArr.push({
-            name: metricName,
-            value: 1,
-            created_at: creationDate
-        });
-    }
+const processSearchMetric = (tempArr: MetricInterfaceBar[], metricName: any, creationDate: number) => {
+        
 };
