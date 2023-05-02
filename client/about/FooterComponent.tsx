@@ -14,7 +14,7 @@ export default function Footer() {
                     opacity: 0.5,
                 }}
             >
-                &#169; Team Regex 2023
+                &#169; Team REGEX 2023
             </Typography>
         </Box>
     )

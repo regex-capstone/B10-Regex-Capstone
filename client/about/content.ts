@@ -5,7 +5,7 @@ export const ABOUT_JSON = {
         button: 'CHECK IT OUT'
     },
     why: {
-        title: 'Why Should You Choose ISAAC?',
+        title: 'Why should you choose ISAAC?',
         subtitle: 'We have upgraded upon the current experience for the advisers to easily maintain and distribute information to students, and for the students to consume information in a quick, searchable manner.',
         features: [
             {
@@ -30,34 +30,101 @@ export const ABOUT_JSON = {
             }
         ]
     },
-    who: {
-        title: 'Who are We?',
-        subtitle: 'We’re built by our history as Informatics students who have asked many questions to the iSchool Advising Team.',
+    how: {
+        title: 'How did WE get here?',
+        subtitle: 'Meet the development team, Team REGEX, as it all started with our personal experiences as undergraduate students of the iSchool...',
         team: [
             {
                 name: 'Elbert Cheng',
-                roles: ['INFO Student', 'Project Director'],
+                roles: ['Project Director'],
                 picture: '/img/team/elbert.png'
             },
             {
                 name: 'Alan Wen',
-                roles: ['INFO Student', 'Project Engineer'],
+                roles: ['Project Engineer'],
                 picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
             },
             {
                 name: 'Keith Ellingwood',
-                roles: ['INFO Student', 'Data Engineer'],
+                roles: ['Data Engineer'],
                 picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
             },
             {
                 name: 'Ryan Langford',
-                roles: ['INFO Student', 'Front-end Engineer'],
+                roles: ['Front-end Engineer'],
                 picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
             },
             {
                 name: 'Brian Park',
-                roles: ['INFO Student', 'Front-end Engineer'],
+                roles: ['Front-end Engineer'],
                 picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
             }
-        ],}
+        ],
+        introduction: 'We extensively interviewed iSchool advisers and students with varying statuses (prospective and current) to understand the current landscape of the iSchool academic advising experience. Our findings helped us identify these following pain points on two fronts.'
+    },
+    stakeholders: {
+        title: 'Who is ISAAC trying to help?',
+        advisers: {
+            title: 'iSchool Advising Team',
+            members: [
+                {
+                    name: 'Dowell Eugenio',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+                {
+                    name: 'Elisa Tran',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+                {
+                    name: 'Matt Trease',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+                {
+                    name: 'Kathy Mitchell',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+            ],
+            title_2: 'Adviser Pain Points:',
+            aspects: [
+                'Post-COVID, email inquiries for simple, objective questions that don\'t require human interaction have increased exponentially.',
+                'In 2022, the iSchool enrolled 839 students and plans to admit up to 1,400 annually in the future, which will result in a heavier workload for the advising team.',
+                'The existing Canvas Informatics Resource Site... TODO',
+            ]
+        },
+        students: {
+            title: 'UW Students',
+            members: [
+                {
+                    name: 'Student 1',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+                {
+                    name: 'Student 2',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+                {
+                    name: 'Student 3',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+                {
+                    name: 'Student 4',
+                    role: 'iSchool Adviser',
+                    picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                },
+            ],
+            title_2: 'Student Pain Points:',
+            aspects: [
+                'Multiple sources of information such as the Canvas Informatics Resource Site and UW Degree Audit often has conflicting information that is outdated.',
+                'Some students are not aware of current resources such as the Canvas Informatics Resource Site.',
+                'Current methods of contacting advisers for simple questions are not efficient and often require scheduling an appointment a month ahead.',
+            ]
+        }
+    },
 }

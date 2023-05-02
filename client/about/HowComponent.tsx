@@ -2,8 +2,8 @@ import { ABOUT_JSON } from "./content";
 import { Box, Grid, Typography } from "@mui/material";
 import {AnimationOnScroll} from 'react-animation-on-scroll';
 
-export default function Who() {
-    const CONTENT = ABOUT_JSON;
+export default function How() {
+    const CONTENT = ABOUT_JSON.how;
 
     return (
         <>
@@ -15,7 +15,7 @@ export default function Who() {
                 }}
             >
                 {
-                    CONTENT.who.title
+                    CONTENT.title
                 }
             </Typography>
             <Typography
@@ -27,7 +27,7 @@ export default function Who() {
                 variant="h6"
             >
                 {
-                    CONTENT.who.subtitle
+                    CONTENT.subtitle
                 }
             </Typography>
             <Grid
@@ -45,7 +45,7 @@ export default function Who() {
                     }}
                 >
                     {
-                        CONTENT.who.team.map((member) => {
+                        CONTENT.team.map((member) => {
                             return (
                                 <AnimationOnScroll animateIn="animate__fadeInLeftBig">
                                     <Grid
@@ -101,6 +101,19 @@ export default function Who() {
                     }
                 </Grid>
             </Grid>
+            <Typography
+                variant="h5"
+                style={{
+                    marginLeft: 300,
+                    marginRight: 300,
+                    opacity: '0.7',
+                    paddingBottom: '50px'
+                }}
+            >
+                {
+                    CONTENT.introduction
+                }
+            </Typography>
         </>
     )
 }

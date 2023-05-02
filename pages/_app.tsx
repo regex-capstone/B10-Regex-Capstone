@@ -34,7 +34,7 @@ const theme = createTheme({
         },
         h6: {
             fontFamily: "Encode Sans, sans-serif",
-        },
+        }
     }
 })
 
