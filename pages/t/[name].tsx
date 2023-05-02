@@ -32,8 +32,9 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
     const pages: Page[] = (await api.Page.get(
         GetPageTypes.PAGES_BY_CATEGORY_ID,
         SortType.ALPHABETICAL,
-        { c_id: category ? category.id as string : undefined }
+        { c_id: category ? category.id as string : null }
     )) as Page[];
+    console.log(pages);
     return {
         props: {
             category: JSON.stringify(category),

@@ -6,7 +6,7 @@ import { ServerPageRequest } from "../models/Page";
 
 export interface PageOptions extends BaseOptions {
     title?: string;
-    page_category_id?: string;
+    category?: string;
     slug?: string;
     populate?: boolean;
 }
