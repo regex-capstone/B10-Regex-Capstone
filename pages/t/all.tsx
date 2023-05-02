@@ -11,7 +11,7 @@ export default function AllTopics() {
     useEffect(() => {
         fetch('/api/category?sort_type=alphabetical')
             .then(res => res.json())
-            .then(data => setCategories(data.payload));
+            .then(data => setCategories([...data.payload, { name: "Uncategorized", id: null, description: "Uncategorized" }]))
     }, []);
 
     return (
