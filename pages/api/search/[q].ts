@@ -18,6 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const results = await api.Search.search(q as string);
 
+                // add search query metric
+                await api.MetricSearchQuery.add({
+                    search_query: q as string,
+                });
+
                 res.status(200).json({
                     success: true,
                     payload: results
