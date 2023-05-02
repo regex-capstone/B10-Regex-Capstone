@@ -8,6 +8,7 @@ import { Page } from "@/isaac/models";
 import Link from "next/link";
 import { Analytics, LibraryAdd } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
+import moment from 'moment';
 
 export default function Index() {
     const { data: session } = useSession();
@@ -178,11 +179,16 @@ function Card(props: any) {
 
 function TrendingCard() {
     const [pages, setPages] = useState<Page[]>();
+    const [views, setViews] = useState<any>();
 
     useEffect(() => {
         fetch("/api/page/trending")
             .then(res => res.json())
-            .then(results => setPages(results.payload))
+            .then(results => {
+                setPages(results.payload.pages);
+                setViews(results.payload.views)
+                console.log(results);
+            })
             .catch(err => console.log(err));
     }, [])
 
@@ -195,7 +201,7 @@ function TrendingCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages ? pages.map(p => <Link href={`/p/${p.slug}/`} key={p.id}>{p.title}</Link>) : undefined}
+                {pages && views ? pages.map((p, i) => <CardRow key={p.id} page={p} view={views[i].views} />) : undefined}
             </Stack>
         </Card>
     )
@@ -220,8 +226,54 @@ function RecentCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages ? pages.map(p => <Link href={`/p/${p.slug}/`} key={p.id}>{p.title}</Link>) : undefined}
+                {pages ? pages.map((p, i) => <CardRow key={p.id} page={p} />) : undefined}
             </Stack>
         </Card>
+    )
+}
+
+function CardRow(props: any) {
+    const { page, view } = props;
+
+    if (!view) {
+        let time = page.created_at;
+        console.log(time)
+        console.log(typeof(time))
+        return (
+            <>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                }}>
+                    <Link style={{
+                        flex: '1'
+                    }} href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                    <p style={{
+                        marginTop: '0',
+                        fontSize: '.75em'
+                    }}>{moment(page.created_at).fromNow()}</p>
+                </Box>
+            </>
+        )
+    }
+
+    return (
+        <>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+            }}>
+                <Link style={{
+                    flex: '1'
+                }} href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                <p style={{
+                    marginTop: '0',
+                    fontSize: '.75em'
+                }}>{Intl.NumberFormat('en-US', {
+                    notation: "compact",
+                    maximumFractionDigits: 1
+                  }).format(view)} views</p>
+            </Box>
+        </>
     )
 }

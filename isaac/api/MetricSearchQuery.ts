@@ -1,10 +1,18 @@
 import { BaseOptions, cleanOptions } from "../ISAACOptions";
 import { isErrorResponse } from "../database/DatabaseInterface";
 import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
+<<<<<<< HEAD
 import MetricSearchQuery, { ServerMetricSearchQueryRequest } from "../models/MetricSearchQuery";
 
 
 export interface MetricSearchQueryOptions extends BaseOptions {
+=======
+import { MetricSearchQuery } from "../models";
+import { ServerMetricSearchQueryRequest } from "../models/MetricSearchQuery";
+
+export interface MetricSearchQueryOptions extends BaseOptions {
+    page_id?: string;
+>>>>>>> new-api
 }
 
 export interface MetricSearchQuerySortOptions {
@@ -48,8 +56,13 @@ export const MetricSearchQueryAPI = {
         return payload;
     },
 
+<<<<<<< HEAD
     delete: async (msq_id: string) => {
         const response = (await database.MetricSearchQuery.delete(msq_id));
+=======
+    delete: async (mpc_id: string) => {
+        const response = (await database.MetricSearchQuery.delete(mpc_id));
+>>>>>>> new-api
 
         if (isErrorResponse(response)) throw response.error;
 

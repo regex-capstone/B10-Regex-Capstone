@@ -1,4 +1,3 @@
-import useCategory from "@/hooks/useCategory"
 import { Category } from "@/isaac/models"
 import { useEffect, useState } from "react";
 
@@ -13,13 +12,12 @@ export default function DevTools() {
 
 function CategoryTool() {
   const [categories, setCategories] = useState<Category[]>([])
-  const { data: categoryData } = useCategory();
 
   useEffect(() => {
-    if (categoryData) {
-      setCategories(categoryData.payload)
-    }
-  }, [categoryData])
+    fetch('/api/category?sort_type=alphabetical')
+        .then(res => res.json())
+        .then(data => setCategories(data.payload));
+    }, []);
 
   // TODO: Comment out Session code from api/category
   const onCreateCategory = async (e: any) => {

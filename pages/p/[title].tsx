@@ -1,9 +1,7 @@
-import { Button, ButtonGroup, Container, Stack, Box, FormControl, FormLabel, FormControlLabel, TextField, Typography, IconButton } from "@mui/material";
+import { Box, Button, ButtonGroup, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Grid2 from '@mui/material/Unstable_Grid2';
-import SearchBar from "@/client/SearchBar";
 import Head from "next/head";
-import Logo from "@/client/Logo";
 import Header from "@/client/Header";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
 import { useRouter } from "next/router";
@@ -14,6 +12,10 @@ import { GetRevisionTypes } from "@/isaac/public/api/Revision";
 import React, { useEffect, useState } from 'react';
 import 'quill/dist/quill.snow.css';
 import QuillEditorDialog from "@/client/QuillEditorDialog";
+import { Edit, Analytics } from "@mui/icons-material";
+import Theme from "@/client/Theme";
+import { useSession } from "next-auth/react";
+import DOMPurify from 'isomorphic-dompurify';
 
 const api = PublicAPIEndpoint;
 
@@ -33,7 +35,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
     const { title: slug } = context.params ?? {};
-    // const id = slug?.toString().split('-').pop() ?? ""
     const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as PageData);
     // TODO: why is this Revision and not RevisionData - is the *Data suffix a needed convention?
     const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.REVISIONS_BY_PAGE_SLUG, SortType.RECENTLY_CREATED, { p_slug: slug as string }) as Revision[])[0];
@@ -55,10 +56,15 @@ interface PageProps {
 
 /* (root)/page/[id] */
 export default function Page(props: PageProps) {
+    const session = useSession();
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
+    const router = useRouter();
+    
+    const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
+        console.log(session);
         const options = {
             method: 'POST',
             headers: {
@@ -76,19 +82,32 @@ export default function Page(props: PageProps) {
             <Head>
                 <title>{`${pageData.title} | ISAAC`}</title>
             </Head>
-            <Header />
+            {
+                !session.data
+                    ? <Header />
+                    : <Header actions={
+                        <Stack direction="row">
+                            <IconButton onClick={() => setOpenDialog(true)}>
+                                <Edit htmlColor={Theme.COLOR.PRIMARY} />
+                            </IconButton>
+                            <IconButton onClick={() => router.push('#')}>
+                                <Analytics htmlColor={Theme.COLOR.PRIMARY} />
+                            </IconButton>
+                        </Stack>
+                    }/>
+            }
             <Container>
                 <Grid2 container spacing={2}>
                     <Grid2 xs={3}>
-                        <Stack direction={'column'} spacing={2}>
-                            <Logo />
-                        </Stack>
                     </Grid2>
                     <Grid2 xs={6}>
                         <Stack className="ql-snow" direction={'column'} spacing={2}>
-                            <SearchBar />
+                            <Grid2 xs={3}>
+                            </Grid2>
                             <Content page={pageData} revision={revisionData} />
-                            <QuillEditorDialog 
+                            <QuillEditorDialog
+                                openDialog={openDialog}
+                                setOpenDialogCallback={setOpenDialog}
                                 revisionData={revisionData}
                                 pageData={pageData}
                             />
@@ -163,39 +182,36 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
     };
 
     return (
-        <div
-            style={{
-                backgroundColor: '#D3D3D3',
+        <Box sx={{
                 color: '#fff',
                 padding: '1rem',
                 position: 'fixed',
-                bottom: 1,
                 width: '30%',
                 height: '155px',
                 boxSizing: 'border-box',
                 zIndex: 9999,
-                marginBottom: '2rem',
-            }}
-        >
+                bottom: 1,
+                boxShadow: 5
+            }}>
             <>
                 <Stack direction={'column'} spacing={2}>
                     <Typography color="textPrimary">Did you find this helpful?</Typography>
                     <Stack direction={'row'} spacing={2}>
                         {isHelpful === null ? ( // TODO clean this logic up
-                            <ButtonGroup>
-                                <Button variant="contained" style={{ width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
+                            <Stack spacing={1} direction="row">
+                                <Button color="primary" variant="contained" style={{ width: '60px', height: 'fit-content', borderRadius: 5, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
                                     Yes
                                 </Button>
-                                <Button variant="contained" style={{ width: '60px', height: 'fit-content', backgroundColor: 'black', borderRadius: 0 }} onClick={handleNoButtonClick}>
+                                <Button color="primary" variant="contained" style={{ width: '60px', height: 'fit-content', borderRadius: 5 }} onClick={handleNoButtonClick}>
                                     No
                                 </Button>
-                            </ButtonGroup>
+                            </Stack>
                         ) : isHelpful ? (
                             <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
                         ) : isSubmitted ? (
                             <Typography variant="h6" color="textPrimary" style={{ fontWeight: 'bold' }}>Thank you for your feedback!</Typography>
                         ) : (
-                            <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <form onSubmit={handleSubmitFeedback} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', width: '100%' }}>
                                 <TextField
                                     type="text"
                                     label="Please provide additional feedback"
@@ -204,39 +220,42 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
                                     rows={2}
                                     value={feedbackText}
                                     onChange={(event) => setFeedbackText(event.target.value)}
-                                    inputProps={{
-                                        style: { fontSize: '1rem' },
+                                    inputProps={{ 
+                                        style: { fontSize: '1rem' }, 
                                         maxLength: CHARACTER_LIMIT
                                     }}
-                                    style={{ marginRight: '1rem', width: '400px' }}
+                                    style={{ marginRight: '1rem', flex: 1 }}
                                     helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
-
                                 />
-                                <Button type="submit" variant="contained" color="primary"
-                                    style={{
-                                        width: '80px',
-                                        height: 'fit-content',
-                                        backgroundColor: 'black',
-                                        borderRadius: 0,
-                                        margin: '1.5rem'
-                                    }}
-                                    onClick={handleSubmitFeedback}>
-
-                                    Submit
-                                </Button>
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', width: 'fit-content' }}>
+                                    <Button type="submit" variant="contained" color="primary" 
+                                        style={{
+                                            width: '80px',
+                                            height: 'fit-content',
+                                            borderRadius: 5,
+                                            marginLeft: '1rem',
+                                            marginBottom: '2rem'
+                                        }} 
+                                        onClick={handleYesButtonClick}>
+                                        
+                                        Submit
+                                    </Button>
+                                </div>
                             </form>
                         )}
                     </Stack>
                 </Stack>
             </>
-        </div>
+        </Box>
     )
 
 }
   
 function Content(props: { page: PageData, revision: Revision }) {
     const { revision } = props;
+    const html = DOMPurify.sanitize(revision.content);
+    
     return (
-        <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: revision.content }} />
+        <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: html }} />
     )
 }

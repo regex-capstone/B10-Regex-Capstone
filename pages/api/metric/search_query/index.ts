@@ -1,11 +1,8 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ClientMetricPageClickRequest } from '@/isaac/models/MetricPageClick';
-import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
-import { GetMetricPageClickTypes } from '@/isaac/public/api/MetricPageClick';
-import { NextApiRequest, NextApiResponse } from 'next'
-import { SortType } from '@/isaac/public/SortType';
-import MetricSearchQuery, { ClientMetricSearchQueryRequest } from '../../../../isaac/models/MetricSearchQuery';
-import { GetMetricSearchQueryTypes } from '@/isaac/public/api/MetricSearchQuery';
+import { ClientMetricSearchQueryRequest } from "@/isaac/models/MetricSearchQuery";
+import PublicAPIEndpoint from "@/isaac/public/PublicAPI";
+import { SortType } from "@/isaac/public/SortType";
+import { GetMetricSearchQueryTypes } from "@/isaac/public/api/MetricSearchQuery";
+import { NextApiRequest, NextApiResponse } from "next";
 
 const api = PublicAPIEndpoint;
 
@@ -18,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'GET':
-                const metricSearchQueries = await api.MetricSearchQuery.get(GetMetricSearchQueryTypes.ALL_METRIC_SEARCH_QUERY, SortType.RECENTLY_CREATED);
+                const metricSearchQueries = await api.MetricSearchQuery.get(GetMetricSearchQueryTypes.ALL_METRIC_SEARCH_QUERIES, SortType.RECENTLY_CREATED);
 
                 res.status(200).json({
                     success: true,
@@ -26,18 +23,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'POST':
-                if (!body.search_query) { throw new Error('Invalid search query.'); }
+                if (!body) throw new Error('No body provided.');
+                if (!body.search_query) throw new Error('No search query provided.');
 
                 const clientRequest: ClientMetricSearchQueryRequest = {
                     search_query: body.search_query
                 }
 
-                const post = await api.MetricSearchQuery.add(clientRequest);
+                const metricSearchQuery = await api.MetricSearchQuery.add(clientRequest);
 
                 res.status(200).json({
                     success: true,
-                    payload: post
+                    payload: metricSearchQuery
                 });
+                break;
             default:
                 res.setHeader('Allow', ['GET', 'POST'])
                 res.status(405).end(`Method ${method} Not Allowed`)
