@@ -76,7 +76,6 @@ function ProfileIcon() {
     
     return (
         <Box sx={{
-            flex: 1,
             display: "flex",
             justifyContent: "right",
         }}>
