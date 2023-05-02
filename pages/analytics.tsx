@@ -1,10 +1,12 @@
 import { Card, Title, Grid, Col, BarList, LineChart, Text } from "@tremor/react";
-import { Select, MenuItem } from "@mui/material";
+import { Select, MenuItem, Container } from "@mui/material";
+import Head from "next/head";
 import 'tailwindcss/tailwind.css';
 import { useEffect, useState } from 'react';
 import { MetricSearchQuery, MetricPageClick } from "@/isaac/models";
 import { processMetric } from "../pages/p/analytics";
 import LoadingSpinner from "@/client/LoadingSpinner";
+import Header from "@/client/Header";
 
 // we need a different interface from the MetricInterface in page analytics
 // to account for the name of search metrics not being the date, but
@@ -96,13 +98,17 @@ export default function OverallAnalytics() {
                     processMetric(tempSearchData, queryName);
                 }
             }
+            // sort by highest to lowest value
+            tempSearchData.sort((a, b) => (a.value < b.value) ? 1 : -1);
+
             // only run if array is not empty
             if(tempSearchData.length !== 0) {
                 setTotalSearches(sumData(tempSearchData));
             }
             setSearchTimeData(tempSearchData);
         }
-        setSearchTimeData(tempSearchData);
+        // limit results to top 10
+        setSearchTimeData(tempSearchData.slice(0, 10));
     }, [dateRange, rawSearchData]);
 
     // change click data based on date range
@@ -131,60 +137,66 @@ export default function OverallAnalytics() {
     }
 
     return (
-        <main>
-            <h1>Overall analytics for ISAAC</h1>
+        <>
+            <Head>
+                <title>{"Overall Analytics | ISAAC"}</title>
+            </Head>
+            <Header />
+            <Container>
+                <h1>Overall analytics for ISAAC</h1>
 
-            <Grid numColsLg={6} className="gap-6 mt-6">
-                {/* Main section */}
-                <Col numColSpanLg={4}>
-                    <Card className="h-full">
-                        <Title>Top 10 search queries last {dateRange} days</Title>
-                        <BarList data={searchTimeData} className="mt-2" />
-                    </Card>
+                <Grid numColsLg={6} className="gap-6 mt-6">
+                    {/* Main section */}
+                    <Col numColSpanLg={4}>
+                        <Card>
+                            <Title>Top 10 search queries last {dateRange} days</Title>
+                            <BarList data={searchTimeData} className="mt-2" />
+                        </Card>
 
-                    <Card className="h-full">
-                        <Title>Page views last {dateRange} days</Title>
-                        <LineChart
-                            data={clickTimeData}
-                            index="name"
-                            categories={["value"]}
-                            colors={["green"]}
-                            yAxisWidth={50}
-                        />
-                    </Card>
-                </Col>
+                        <Card>
+                            <Title>Page views last {dateRange} days</Title>
+                            <LineChart
+                                data={clickTimeData}
+                                index="name"
+                                categories={["value"]}
+                                colors={["green"]}
+                                yAxisWidth={50}
+                            />
+                        </Card>
+                    </Col>
 
-                {/* KPI sidebar */}
-                <Col numColSpanLg={2}>
-                    <div className="space-y-10">
-                        <Card>
-                            <h2>Select data date range</h2>
-                            <Select
-                                value={dateRange}
-                                label="Date Range"
-                                onChange={(e) => setDateRange(e.target.value as any)}
-                                className="self-end px-5"
-                                style={{ flex: 1 }}
-                            >
-                                <MenuItem value={7}>7 days</MenuItem>
-                                <MenuItem value={14}>14 days</MenuItem>
-                                <MenuItem value={30}>30 days</MenuItem>
-                                <MenuItem value={60}>60 days</MenuItem>
-                                <MenuItem value={90}>90 days</MenuItem>
-                            </Select>
-                        </Card>
-                        <Card>
-                            <h2>Total page views last {dateRange} days</h2>
-                            <Text>{totalClicks}</Text>
-                        </Card>
-                        <Card>
-                            <h2>Total searches last {dateRange} days</h2>
-                            <Text>{totalSearches}</Text>
-                        </Card>
-                    </div>
-                </Col>
-            </Grid>
-        </main>
+                    {/* KPI sidebar */}
+                    <Col numColSpanLg={2}>
+                        <div className="space-y-10">
+                            <Card>
+                                <h2>Select data date range</h2>
+                                <Select
+                                    value={dateRange}
+                                    label="Date Range"
+                                    onChange={(e) => setDateRange(e.target.value as any)}
+                                    className="self-end px-5"
+                                    style={{ flex: 1 }}
+                                >
+                                    <MenuItem value={7}>7 days</MenuItem>
+                                    <MenuItem value={14}>14 days</MenuItem>
+                                    <MenuItem value={30}>30 days</MenuItem>
+                                    <MenuItem value={60}>60 days</MenuItem>
+                                    <MenuItem value={90}>90 days</MenuItem>
+                                </Select>
+                            </Card>
+                            <Card>
+                                <h2>Total page views last {dateRange} days</h2>
+                                <Text>{totalClicks}</Text>
+                            </Card>
+                            <Card>
+                                <h2>Total searches last {dateRange} days</h2>
+                                <Text>{totalSearches}</Text>
+                            </Card>
+                        </div>
+                    </Col>
+                </Grid>
+            </Container>
+        </>
     );
 }
 
@@ -200,10 +212,4 @@ const fillClickArray = (timeArr: MetricInterfaceBar[], dateRange: number, today:
 // summarizes values for totals
 const sumData = (rawData: MetricInterfaceBar[]) => {
     return rawData.map(i => i.value).reduce((prev, next) => prev + next);
-};
-
-// processMetric from page analytics wont work for search since it needs created_by,
-// so we make a new processing fucntion
-const processSearchMetric = (tempArr: MetricInterfaceBar[], metricName: any, creationDate: number) => {
-        
 };
