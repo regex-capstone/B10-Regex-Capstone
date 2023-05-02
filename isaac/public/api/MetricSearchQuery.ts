@@ -8,8 +8,7 @@ export default interface MetricSearchQueryPublicAPIInterface {
     get(get_type: GetMetricSearchQueryTypes, 
         sort_type: SortType, 
         get_options?: GetMetricSearchQueryOptions): Promise<MetricSearchQuery | MetricSearchQuery[]>,
-    add(clientRequest: ClientMetricSearchQueryRequest): Promise<MetricSearchQuery>,
-    aggregate(agg_type: MetricSearchQueryAggType): Promise<any>
+    add(clientRequest: ClientMetricSearchQueryRequest): Promise<MetricSearchQuery>
 }
 
 export enum GetMetricSearchQueryTypes {
