@@ -34,10 +34,9 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
         SortType.ALPHABETICAL,
         { c_id: category ? category.id as string : null }
     )) as Page[];
-    console.log(pages);
     return {
         props: {
-            category: JSON.stringify(category),
+            category: JSON.stringify(category ?? { name: "Uncategorized", id: undefined, slug: "uncategorized", created_at: -1 }),
             pages: JSON.stringify(pages),
         },
         revalidate: 10,
@@ -52,7 +51,6 @@ interface CategoryProps {
 export default function Directory(props: CategoryProps) {
     const category = JSON.parse(props.category) as Category
     const pages = JSON.parse(props.pages) as Page[]
-    const query = ""
 
     return (
         <>
