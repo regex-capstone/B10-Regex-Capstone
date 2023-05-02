@@ -75,7 +75,7 @@ function Background() {
         <Box sx={{
             position: "relative",
             zIndex: -1,
-            height: "20vh",
+            height: "30vh",
             backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
