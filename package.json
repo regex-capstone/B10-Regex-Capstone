@@ -55,7 +55,7 @@
     "@types/draft-js": "^0.11.10",
     "@types/mongoose": "^5.11.97",
     "@types/quill": "^2.0.10",
-    "@types/react-draft-wysiwyg": "^1.13.4"
+    "@types/react-draft-wysiwyg": "^1.13.4",
     "@types/react-vertical-timeline-component": "^3.3.3"
   }
 }
