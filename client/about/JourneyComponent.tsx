@@ -5,12 +5,16 @@ import 'react-vertical-timeline-component/style.min.css';
 import { DateRange } from "@mui/icons-material";
 import Theme from "../Theme";
 
+const GOLD_COLOR = '#d2bc86';
+
 const journey = {
+    text_1_1: 'Appointments had to be scheduled a month in advance, and emails for general questions were not able to be answered in a timely manner.',
     text_1: 'Alan reached out to the advising team with a basic inquiry about VLPA credit equivalency for the three foreign language classes he took at the Bothell campus.',
     text_2: 'No response yet.',
     text_3: 'Alan reached out again to follow up with his inquiry four months later.',
     text_4: 'Response received! \n "I apologize for the delayed response. Our office was short staffed, and many emails got buried in our inbox - I saw that your message was still unresolved..."— an iSchool Adviser',
-    text_6: 'Hence, we threw together a presentation proposal pitch, defined the information problem, and met with the iSchool Advising Team to solve this problem:',
+    text_6: 'We defined the information problem and threw together a presentation proposal pitch...',
+    text_7: 'On December 12th, 2022, we met with the iSchool Advising Team to discuss this problem:'
 }
 
 export default function Journey() {
@@ -28,16 +32,28 @@ export default function Journey() {
 function Introduction() {
     return (
         <Grid>
+            <Typography
+                variant="h4"
+                style={{
+                    padding: '15px',
+                    textAlign: 'center',
+                    width: '80%',
+                    margin: 'auto',
+                    paddingBottom: '3em'
+                }}
+            >
+                {journey.text_1_1}
+            </Typography>
             <VerticalTimeline
                 animate={true}
-                lineColor={'#d2bc86'}
+                lineColor={GOLD_COLOR}
             >
                 <VerticalTimelineElement
                     iconStyle={{
-                        backgroundColor: '#d2bc86',
+                        backgroundColor: GOLD_COLOR,
                     }}
                     contentStyle={{
-                        backgroundColor: Theme.COLOR.PRIMARY
+                        backgroundColor: Theme.COLOR.PRIMARY,
                     }}
                     contentArrowStyle={{
                         borderRight: '7px solid',
@@ -50,8 +66,8 @@ function Introduction() {
                         variant="h6"
                         style={{
                             color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontSize: '95%'
                         }}
                     >
                         {journey.text_1}
@@ -59,7 +75,7 @@ function Introduction() {
                 </VerticalTimelineElement>
                 <VerticalTimelineElement
                     iconStyle={{
-                        backgroundColor: '#d2bc86',
+                        backgroundColor: GOLD_COLOR,
                     }}
                     contentStyle={{
                         backgroundColor: Theme.COLOR.PRIMARY
@@ -75,8 +91,8 @@ function Introduction() {
                         variant="h6"
                         style={{
                             color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontSize: '95%'
                         }}
                     >
                         {journey.text_3}
@@ -84,7 +100,7 @@ function Introduction() {
                 </VerticalTimelineElement>
                 <VerticalTimelineElement
                     iconStyle={{
-                        backgroundColor: '#d2bc86',
+                        backgroundColor: GOLD_COLOR,
                     }}
                     contentStyle={{
                         backgroundColor: Theme.COLOR.PRIMARY
@@ -100,8 +116,8 @@ function Introduction() {
                         variant="h6"
                         style={{
                             color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
+                            textAlign: 'center',
+                            fontSize: '95%'
                         }}
                     >
                         {journey.text_4.split('\n')[0]}
@@ -111,42 +127,22 @@ function Introduction() {
                 </VerticalTimelineElement>
             </VerticalTimeline>
             <Typography
-                variant="h5"
+                variant="h4"
                 style={{
                     padding: 50,
                     textAlign: 'center',
                     margin: 'auto',
-                    width: '60%'
+                    width: '80%'
                 }}
             >
                 {journey.text_6}
             </Typography>
-            <Box
-                style={{
-                    backgroundColor: '#f5f5f5',
-                    width: '80%',
-                    borderRadius: '20px',
-                    margin: 'auto',
-                    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)'
-                }}
-            >
-                <Typography
-                    variant="h3"
-                    style={{
-                        padding: '50px',
-                        textAlign: 'center'
-                    }}
-                >
-                    {questions.problem}
-                </Typography>
-            </Box>
         </Grid>
     )
 }
 
 const team = {
-    title: 'The Birth of ISAAC',
-    subtitle: 'It all started with our personal experiences as undergraduate students of the iSchool...',
+    subtitle: 'It all started with our personal experiences as undergraduate INFO students of the iSchool...',
     team: [
         {
             name: 'Elbert Cheng',
@@ -156,7 +152,7 @@ const team = {
         {
             name: 'Alan Wen',
             roles: ['Project Engineer'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            picture: '/img/team/alan.png'
         },
         {
             name: 'Keith Ellingwood',
@@ -180,21 +176,12 @@ function Team() {
     return (
         <>
             <Typography
-                variant="h3"
+                variant="h4"
                 style={{
-                    padding: '50px',
-                    textAlign: 'center'
-                }}
-            >
-                {
-                    team.title
-                }
-            </Typography>
-            <Typography
-                variant="h6"
-                style={{
-                    padding: '50px',
-                    textAlign: 'center'
+                    paddingTop: '25px',
+                    textAlign: 'center',
+                    width: '80%',
+                    margin: 'auto'
                 }}
             >
                 {
@@ -282,23 +269,23 @@ const advisers = {
     members: [
         {
             name: 'Dowell Eugenio',
-            roles: ['iSchool Adviser', 'Main Stakeholder'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            roles: ['iSchool Adviser*'],
+            picture: '/img/advisers/dowell.jpg'
         },
         {
             name: 'Elisa Tran',
             roles: ['iSchool Adviser'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            picture: '/img/advisers/elisa.jpg'
         },
         {
             name: 'Matt Trease',
             roles: ['iSchool Adviser'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            picture: '/img/advisers/matt.jpg'
         },
         {
             name: 'Kathy Mitchell',
             roles: ['iSchool Adviser'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            picture: '/img/advisers/kathy.jpg'
         },
     ],
     title_2: 'Adviser Pain Points:',
@@ -337,7 +324,8 @@ function Advisers() {
                                     component="img"
                                     sx={{
                                         height: 200,
-                                        borderRadius: '50%'
+                                        borderRadius: '50%',
+                                        boxShadow: `0px 0px 15px 0px ${GOLD_COLOR}`
                                     }}
                                     src={member.picture}
                                     alt='team profile picture'
@@ -353,38 +341,59 @@ function Advisers() {
                                         member.name
                                     }
                                 </Typography>
-                                {
-                                    member.roles.map((role) => {
-                                        return (
-                                            <Typography
-                                                variant="h6"
-                                                style={{
-                                                    textAlign: 'center',
-                                                    opacity: '0.6'
-                                                }}
-                                            >
-                                                {
-                                                    role
-                                                }
-                                            </Typography>
-                                        )
-                                    })
-                                }
+                                <Grid
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}
+                                >
+                                    {
+                                        member.roles.map((role) => {
+                                            return (
+                                                <Typography
+                                                    variant="h6"
+                                                    style={{
+                                                        textAlign: 'center',
+                                                        opacity: '0.6',
+                                                        flex: 1,
+                                                        margin: 'auto'
+                                                    }}
+                                                >
+                                                    {
+                                                        role
+                                                    }
+                                                </Typography>
+                                            )
+                                        })
+                                    }
+                                </Grid>
                             </Grid>
                         )
                     })
                 }
             </Grid>
+            <Typography
+                variant="h6"
+                style={{
+                    paddingTop: '10px',
+                    textAlign: 'center',
+                    marginRight: '60%',
+                    opacity: '0.5'
+                }}
+            >
+                * = Project Owner
+            </Typography>
         </>
     )
 }
 
 const questions = {
+    introduction: 'In the meeting, we discovered that student questions can be categorized into two types of questions:',
     title_1: 'Simple, Objective Questions',
     desc_1: 'Questions that have objective answers derived from sources of truth like university/departmental policies',
     title_2: 'Complex, Subjective Questions',
     desc_2: 'Questions that is dependent on a student\'s context that may require action and/or personal guidance from an adviser.',
-    mission: 'We aim to allow...',
+    mission: 'Our mission was to allow...',
     mission_1: 'Advisers to focus on students with complex, subjective questions.',
     mission_2: 'Students to receive answers to simple, objective questions within minutes rather than days.',
     problem: 'How might we streamline the processing of simple advising questions for both students and student services?'
@@ -392,7 +401,61 @@ const questions = {
 
 function Questions() {
     return (
-        <>
+        <Grid
+            style={{
+                backgroundColor: '#F5F5F5',
+            }}
+        >
+            <Typography
+                variant="h4"
+                style={{
+                    padding: 75,
+                    textAlign: 'center',
+                    margin: 'auto',
+                    width: '80%'
+                }}
+            >
+                {journey.text_7}
+            </Typography>
+            <Advisers />
+            <Grid
+                style={{
+                    padding: '100px'
+                }}
+            >
+                <Box
+                    style={{
+                        backgroundColor: Theme.COLOR.PRIMARY,
+                        width: '80%',
+                        borderRadius: '20px',
+                        margin: 'auto',
+                        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)'
+                    }}
+                >
+                    <Typography
+                        variant="h4"
+                        style={{
+                            color: Theme.COLOR.TEXT_LIGHT,
+                            padding: '40px',
+                            textAlign: 'center'
+                        }}
+                    >
+                        {questions.problem}
+                    </Typography>
+                </Box>
+            </Grid>
+            {/* <Typography
+                variant="h4"
+                style={{
+                    paddingTop: 50,
+                    paddingBottom: 80,
+                    textAlign: 'center',
+                    margin: 'auto',
+                    width: '80%'
+                }}
+            >
+                {questions.introduction}
+            </Typography> */}
             <Grid
                 style={{
                     flexDirection: 'row',
@@ -404,7 +467,7 @@ function Questions() {
             >
                 <Grid
                     style={{
-                        width: '33%'
+                        width: '40%'
                     }}
                     item
                 >
@@ -436,7 +499,7 @@ function Questions() {
                 </Grid>
                 <Grid
                     style={{
-                        width: '33%'
+                        width: '40%'
                     }}
                     item
                 >
@@ -510,7 +573,7 @@ function Questions() {
                     </Typography>
                 </Grid>
             </Grid>
-        </>
+        </Grid>
     )
 }
 
@@ -608,19 +671,92 @@ function Validation() {
 }
 
 const pipeline = {
-    text_1: 'A centralized, accessible information repository to store information by advisers for students.',
-    title_1: 'Information Repository',
-    text_2: 'A website that allows students to search and browse for answers to their simple, objective questions.',
-    title_2: 'ISAAC Website',
-    text_3: 'Data analytics experience to help advisers make data-driven decisions.',
-    title_3: 'Metrics and Data Analytics',
-    text_4: 'A decoupled, external API for other applications to consume ISAAC information.',
-    title_4: 'ISAAC API',
-    text_5: 'External applications that consume the ISAAC API for students and advisers such as an AI Chatbot.',
-    title_5: 'External Application Integrations',
+    e: [
+        {
+            text: 'A centralized, accessible information repository to store information by advisers for students.',
+            title: 'Information Repository',
+            pic: ''
+        },
+        {
+            text: 'A website that allows students to search and browse for answers to their simple, objective questions.',
+            title: 'ISAAC Website',
+            pic: ''
+        },
+        {
+            text: 'Data analytics experience to help advisers make data-driven decisions.',
+            title: 'Metrics and Data Analytics',
+            pic: ''
+        },
+        {
+            text: 'A decoupled, external API for other applications to consume ISAAC information.',
+            title: 'ISAAC API',
+            pic: '/img/api.png'
+        },
+        {
+            text: 'External applications that consume the ISAAC API for students and advisers such as an AI Chatbot.',
+            title: 'External Application Integrations',
+            pic: '/img/pipeline_diagram.png'
+        },
+    ]
 }
 
 function Pipeline() {
+    const components = pipeline.e.map((e, i) => {
+        return (
+            <VerticalTimelineElement
+                key={i}
+                iconStyle={{
+                    backgroundColor: GOLD_COLOR,
+                }}
+                contentStyle={{
+                    backgroundColor: Theme.COLOR.PRIMARY
+                }}
+                contentArrowStyle={{
+                    borderRight: '7px solid',
+                    borderRightColor: Theme.COLOR.PRIMARY
+                }}
+                icon={<DateRange />}
+            >
+                <Grid
+                    style={{
+                        alignContent: 'center',
+                        justifyContent: 'center'
+                    }}
+                    container
+                >
+                    <Typography
+                        variant="h4"
+                        style={{
+                            color: Theme.COLOR.TEXT_LIGHT,
+                            padding: '15px'
+                        }}
+                    >
+                        {e.title}
+                    </Typography>
+                    <Box
+                        component="img"
+                        src={e.pic}
+                        style={{
+                            marginTop: '15px',
+                            marginBottom: '15px',
+                            width: '95%',
+                            backgroundColor: Theme.COLOR.TEXT_LIGHT,
+                            boxShadow: '0px 0px 10px 0px rgba(255, 255, 255,0.75)'
+                        }}
+                    ></Box>
+                    <Typography
+                        variant="h6"
+                        style={{
+                            color: Theme.COLOR.TEXT_LIGHT,
+                            padding: '15px'
+                        }}
+                    >
+                        {e.text}
+                    </Typography>
+                </Grid>
+            </VerticalTimelineElement>
+        )
+    })
     return (
         <>
             <Grid
@@ -630,190 +766,12 @@ function Pipeline() {
                 }}
                 container
             >
-                <Box
-                    style={{
-                        padding: '50px',
-
-                    }}
-                    component='img'
-                    src='/img/pipeline_diagram.png'
-                ></Box>
-
             </Grid>
             <VerticalTimeline
                 animate={true}
-                lineColor={'#d2bc86'}
+                lineColor={GOLD_COLOR}
             >
-                <VerticalTimelineElement
-                    iconStyle={{
-                        backgroundColor: '#d2bc86',
-                    }}
-                    contentStyle={{
-                        backgroundColor: Theme.COLOR.PRIMARY
-                    }}
-                    contentArrowStyle={{
-                        borderRight: '7px solid',
-                        borderRightColor: Theme.COLOR.PRIMARY
-                    }}
-                    icon={<DateRange />}
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.title_1}
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.text_1}
-                    </Typography>
-                </VerticalTimelineElement>
-                <VerticalTimelineElement
-                    iconStyle={{
-                        backgroundColor: '#d2bc86',
-                    }}
-                    contentStyle={{
-                        backgroundColor: Theme.COLOR.PRIMARY
-                    }}
-                    contentArrowStyle={{
-                        borderRight: '7px solid',
-                        borderRightColor: Theme.COLOR.PRIMARY
-                    }}
-                    icon={<DateRange />}
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.title_2}
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.text_2}
-                    </Typography>
-                </VerticalTimelineElement>
-                <VerticalTimelineElement
-                    iconStyle={{
-                        backgroundColor: '#d2bc86',
-                    }}
-                    contentStyle={{
-                        backgroundColor: Theme.COLOR.PRIMARY
-                    }}
-                    contentArrowStyle={{
-                        borderRight: '7px solid',
-                        borderRightColor: Theme.COLOR.PRIMARY
-                    }}
-                    icon={<DateRange />}
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.title_3}
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.text_3}
-                    </Typography>
-                </VerticalTimelineElement>
-                <VerticalTimelineElement
-                    iconStyle={{
-                        backgroundColor: '#d2bc86',
-                    }}
-                    contentStyle={{
-                        backgroundColor: Theme.COLOR.PRIMARY
-                    }}
-                    contentArrowStyle={{
-                        borderRight: '7px solid',
-                        borderRightColor: Theme.COLOR.PRIMARY
-                    }}
-                    icon={<DateRange />}
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.title_4}
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.text_4}
-                    </Typography>
-                </VerticalTimelineElement>
-                <VerticalTimelineElement
-                    iconStyle={{
-                        backgroundColor: '#d2bc86',
-                    }}
-                    contentStyle={{
-                        backgroundColor: Theme.COLOR.PRIMARY
-                    }}
-                    contentArrowStyle={{
-                        borderRight: '7px solid',
-                        borderRightColor: Theme.COLOR.PRIMARY
-                    }}
-                    icon={<DateRange />}
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.title_5}
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {pipeline.text_5}
-                    </Typography>
-                </VerticalTimelineElement>
+                {components}
             </VerticalTimeline>
         </>
     )
