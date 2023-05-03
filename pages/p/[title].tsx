@@ -72,7 +72,7 @@ export default function Page(props: PageProps) {
         }
         fetch(`/api/metric/page_click/${pageData.id}`, options)
             .then(response => response.json())
-    }, []);
+    });
 
     return (
         <>

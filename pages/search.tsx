@@ -41,7 +41,6 @@ interface SearchProps {
 export default function Search(props: SearchProps) {
     const [results, setResults] = useState<Page[]>(JSON.parse(props.results) as Page[]);
     const [categories, setCategories] = useState<Category[]>(JSON.parse(props.categories) as Category[]);
-    const [searchData, setSearchData] = useState<any>();
     const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
     const [filteredResults, setFilteredResults] = useState<Page[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -69,7 +68,7 @@ export default function Search(props: SearchProps) {
             });
 
         setReload(false);
-    }, [reload]);
+    }, [reload, q]);
 
     useEffect(() => {
         if (q !== cachedQuery) {  // handle re-search
@@ -80,8 +79,6 @@ export default function Search(props: SearchProps) {
 
     useEffect(() => {
         if (selectedCategories.length === 0) setFilteredResults(results)
-        // TODO: Perform filtering
-        // setFilteredResults(results.filter(page => selectedCategories.includes(/* page.category.name */)))
         setFilteredResults(results)
     }, [results, selectedCategories])
 

@@ -1,8 +1,7 @@
 import { AppProps } from 'next/app'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
-import { SessionProvider, useSession } from 'next-auth/react';
+import { SessionProvider } from 'next-auth/react';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
-import NotAuthorizedPage from '@/client/NotAuthorizedPage';
 import Theme from '@/client/Theme';
 import './_app.css'
 
@@ -55,19 +54,7 @@ export default function App({
     )
 }
 
-function AuthLayout(
-    props: { auth: ComponentAuthOptions } & { children: React.ReactNode }
-) {
-    const { data: session } = useSession();
-
-    // TODO: Elbert - rehandle auth
-    // const authProps = props.auth;
-
-    // // admin access only
-    // if (authProps && authProps.role === UserRole.ADMIN && !session?.isAdmin) {
-    //     return <NotAuthorizedPage requireAdmin={true} />
-    // }
-
+function AuthLayout(props: { auth: ComponentAuthOptions } & { children: React.ReactNode }) {
     return (
         <>{props.children}</>
     )
