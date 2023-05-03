@@ -9,9 +9,13 @@ const PageSchema = new mongoose.Schema({
         required: [true, 'Title is missing...'] 
     },
     category: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        required: [true, 'Category reference is missing...'],
-        ref: 'Category' 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        validate: {
+            validator: (val: any) => {
+                return true;
+            }
+        }
     },
     created_at: { 
         type: Date, 
@@ -93,7 +97,7 @@ const MetricPageFeedbackSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Feedback is missing...']
     },
-    page_id: {
+    page: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'Page reference ID is missing...']
     }

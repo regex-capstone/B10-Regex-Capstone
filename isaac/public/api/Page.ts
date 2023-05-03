@@ -20,7 +20,7 @@ export enum GetPageTypes {
 }
 
 export interface GetPageOptions {
-    c_id?: string;
+    c_id?: string | null;
     p_id?: string;
     p_title?: string;
     p_slug?: string;
@@ -58,8 +58,7 @@ export const PagePublicAPI: PagePublicAPIInterface = {
                 return (await isaac.Page.get({ ...options, title: get_options?.p_title }, sort_options)) as Page[];
 
             case GetPageTypes.PAGES_BY_CATEGORY_ID:
-                if (!get_options?.c_id) throw new Error('No category id provided.');
-                return (await isaac.Page.get({ ...options, page_category_id: get_options?.c_id }, sort_options)) as Page[];
+                return (await isaac.Page.get({ ...options, category: get_options?.c_id }, sort_options)) as Page[];
 
             case GetPageTypes.PAGE_BY_ID:
                 if (!get_options?.p_id) throw new Error('No page id provided.');

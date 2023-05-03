@@ -12,6 +12,7 @@ import Header from "@/client/Header";
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
     const api = PublicAPIEndpoint;
     const categories: Category[] = (await api.Category.get(GetCategoryTypes.ALL_CATEGORIES, SortType.ALPHABETICAL) as Category[]);
+    categories.push({ name: "Uncategorized", id: undefined, slug: "uncategorized", created_at: -1 })
     return {
         paths: categories.map((category: Category) => ({
             params: { name: category.name },
@@ -31,11 +32,11 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<Ge
     const pages: Page[] = (await api.Page.get(
         GetPageTypes.PAGES_BY_CATEGORY_ID,
         SortType.ALPHABETICAL,
-        { c_id: category.id as string }
+        { c_id: category ? category.id as string : null }
     )) as Page[];
     return {
         props: {
-            category: JSON.stringify(category),
+            category: JSON.stringify(category ?? { name: "Uncategorized", id: undefined, slug: "uncategorized", created_at: -1 }),
             pages: JSON.stringify(pages),
         },
         revalidate: 10,
@@ -50,7 +51,6 @@ interface CategoryProps {
 export default function Directory(props: CategoryProps) {
     const category = JSON.parse(props.category) as Category
     const pages = JSON.parse(props.pages) as Page[]
-    const query = ""
 
     return (
         <>

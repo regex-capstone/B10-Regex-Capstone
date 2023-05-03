@@ -7,6 +7,7 @@ import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import { GetCategoryTypes } from '@/isaac/public/api/Category';
 import { SortType } from '@/isaac/public/SortType';
+import { ClientCategoryRequest } from '@/isaac/models/Category';
 
 const api = PublicAPIEndpoint;
 
@@ -14,30 +15,55 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const session = await getServerSession(req, res, AuthOptions);
     const { 
         query: { category_id }, 
-        method 
+        method,
+        body
     } = req;
 
     try {
-        const category: Category = (
-            await api.Category.get(GetCategoryTypes.CATEGORY_BY_SLUG, SortType.NONE, { c_id: category_id as string }) as Category
-        );
-
-        if (!category) { throw new Error('Category not found.'); }
-
         switch (method) {
             case 'GET':
+                const get_category: Category = (
+                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_ID, SortType.NONE, { c_id: category_id as string }) as Category
+                );
+        
+                if (!get_category) { throw new Error('Category not found.'); }
+
                 res.status(200).json({
                     success: true,
-                    payload: category
+                    payload: get_category
                 });
 
                 break;
+            case 'PUT':
+                // if (!session) throw new Error('You must be logged in.');
+
+                if (!body) throw new Error('PUT request has no body.');
+                if (!body.name) throw new Error('PUT request has no name.');
+
+                const clientRequest: ClientCategoryRequest = {
+                    name: body.name ?? null
+                }
+
+                const updated = await api.Category.update(category_id as string, clientRequest);
+
+                res.status(200).json({
+                    success: true,
+                    payload: updated
+                });
+                break;
+
             case 'DELETE':
                 if (!session) throw new Error('You must be logged in.');
+                
+                const delete_category: Category = (
+                    await api.Category.get(GetCategoryTypes.CATEGORY_BY_ID, SortType.NONE, { c_id: category_id as string }) as Category
+                );
+        
+                if (!delete_category) { throw new Error('Category not found.'); }
 
                 // delete all pages under the selected category
                 const pages = (
-                    await api.Page.get(GetPageTypes.PAGES_BY_CATEGORY_ID, SortType.NONE, { c_id: category.id as string }) as Page[]
+                    await api.Page.get(GetPageTypes.PAGES_BY_CATEGORY_ID, SortType.NONE, { c_id: delete_category.id as string }) as Page[]
                 );
 
                 for (const page of pages) {
@@ -51,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             default:
-                res.setHeader('Allow', ['GET', 'DELETE']);
+                res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
                 res.status(405).send(`Method ${method} Not Allowed`);
         }
     } catch (e) {

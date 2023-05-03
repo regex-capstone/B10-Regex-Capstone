@@ -1,12 +1,11 @@
 import { Avatar, Box, Container, IconButton, Stack, TextField } from '@mui/material';
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
 import { ReactNode, useState } from 'react';
 
 export default function Header(props: { actions?: ReactNode, disableSearchBar?: boolean, initialQuery?: string }) {
     const router = useRouter()
-    const { data: session } = useSession()
     return (
         <Box sx={{
             top: 0,
@@ -20,37 +19,21 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                     alignItems: "left",
                     justifyContent: "right",
                 }}>
-                    <Stack spacing={0} direction="row" sx={{
-                        flex: 1,
-                    }}>
+                    <Stack spacing={0} direction="row">
                         <IconButton onClick={(e) => router.push("/")}>
                             <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
                         </IconButton>
                         {props.actions}
                     </Stack>
                     <Box sx={{
-                        flex: 2,
+                        flex: 1,
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
                     }}>
                         {props.disableSearchBar ? null : <SearchBar initialQuery={props.initialQuery} />}
                     </Box>
-                    <Box sx={{
-                        flex: 1,
-                        display: "flex",
-                        justifyContent: "right",
-                    }}>
-                        <IconButton onClick={(e) => {
-                            if (session) {
-                                // router.push("/profile") TODO deprecate profile
-                            } else {
-                                signIn()
-                            }
-                        }}>
-                            <Avatar src={session?.picture} />
-                        </IconButton>
-                    </Box>
+                    <ProfileIcon />
                 </Stack>
             </Container>
         </Box>
@@ -82,5 +65,29 @@ function SearchBar(props: { initialQuery?: string }) {
                 width: "100%",
             }}
         />
+    )
+}
+
+function ProfileIcon() {
+    const { data: session } = useSession()
+    if (!session) {
+        return null
+    }
+    
+    return (
+        <Box sx={{
+            display: "flex",
+            justifyContent: "right",
+        }}>
+            <IconButton onClick={(e) => {
+                if (session) {
+                    signOut()
+                } else {
+                    signIn()
+                }
+            }}>
+                <Avatar src={session?.picture} />
+            </IconButton>
+        </Box>
     )
 }

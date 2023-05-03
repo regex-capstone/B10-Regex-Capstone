@@ -47,5 +47,13 @@ export const CategoryAPI = {
         if (isErrorResponse(response)) throw response.error;
 
         return response.success;
+    },
+
+    update: async (c_id: string, c: ServerCategoryRequest) => {
+        const response = (await database.Category.update(c_id, c));
+
+        if (isErrorResponse(response)) throw response.error;
+
+        return response.success;
     }
 }

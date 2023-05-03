@@ -1,23 +1,72 @@
-import { Autocomplete, Box, Button, Container, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Header from "@/client/Header";
 import { Page } from "@/isaac/models";
-
+import Link from "next/link";
+import { Analytics, LibraryAdd } from "@mui/icons-material";
+import { useSession } from "next-auth/react";
+import moment from 'moment';
+import Theme from "@/client/Theme";
 
 export default function Index() {
+    const { data: session } = useSession();
+    const router = useRouter();
+
     return (
         <>
             <Head>
                 <title>ISAAC</title>
             </Head>
-            <Header disableSearchBar />
+            {
+                session ?
+                    <Header disableSearchBar actions={
+                        <Stack direction="row">
+                            <IconButton onClick={() => router.push('/p/new')}>
+                                <LibraryAdd htmlColor={Theme.COLOR.PRIMARY} />
+                            </IconButton>
+                            <IconButton onClick={() => alert('Analytics Button')}>
+                                <Analytics htmlColor={Theme.COLOR.PRIMARY} />
+                            </IconButton>
+                        </Stack>
+                    } />
+                    :
+                    <GuestHeader />
+            }
             <Background />
-            <SearchModule />
-            <PageBody />
+            <Box sx={{
+                marginTop: -2.75,
+            }}>
+                <SearchModule />
+                <PageBody />
+            </Box>
         </>
+    )
+}
+
+function GuestHeader() {
+    return (
+        <Box sx={{
+            height: "64px",
+            backgroundColor: Theme.COLOR.BACKGROUND_LIGHT,
+            display: "flex",
+            boxShadow: 5,
+            alignItems: "center",
+            justifyContent: "center",
+        }}>
+            <Typography
+                fontFamily="Encode Sans"
+                fontSize="24px"
+                color={Theme.COLOR.PRIMARY}
+                letterSpacing="1em"
+                textAlign="center"
+                marginLeft="0.5em"
+            >
+                ISAAC
+            </Typography>
+        </Box>
     )
 }
 
@@ -26,7 +75,7 @@ function Background() {
         <Box sx={{
             position: "relative",
             zIndex: -1,
-            height: "50vh",
+            height: "30vh",
             backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
@@ -34,7 +83,6 @@ function Background() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            filter: "blur(2px)",
         }} />
     )
 }
@@ -48,26 +96,9 @@ function SearchModule() {
     return (
         <Box sx={{
             width: "100%",
-            zIndex: 0,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            marginTop: "15vh",
         }}>
             <Container maxWidth="md">
                 <Stack spacing={2} direction="column" alignItems="center">
-                    <Typography
-                        fontFamily="sans-serif"
-                        fontWeight="700"
-                        fontSize="32px"
-                        color="#FFF"
-                        letterSpacing="0.75em"
-                        sx={{
-                            textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)"
-                        }}
-                    >
-                        ISAAC
-                    </Typography>
                     <Box sx={{
                         minWidth: "60%",
                     }}>
@@ -98,6 +129,7 @@ function SearchModule() {
                                     backgroundColor: "#FFF",
                                     borderRadius: 30,
                                     border: "none",
+                                    boxShadow: 5,
                                 }} />}
                         />
                     </Box >
@@ -122,7 +154,6 @@ function PageBody() {
             backgroundColor: "#FFF",
             padding: 2,
             margin: 0,
-            position: "relative",
             zIndex: 1,
         }}>
             <Container maxWidth="md">
@@ -130,7 +161,6 @@ function PageBody() {
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
-                    marginTop: -5,
                 }}>
                     <TrendingCard />
                     <RecentCard />
@@ -159,16 +189,17 @@ function Card(props: any) {
 
 function TrendingCard() {
     const [pages, setPages] = useState<Page[]>();
+    const [views, setViews] = useState<any>();
 
     useEffect(() => {
         fetch("/api/page/trending")
             .then(res => res.json())
-            .then(results => setPages(results.payload))
-            .catch(err => console.log(err));
+            .then(results => {
+                setPages(results.payload.pages);
+                setViews(results.payload.views)
+            })
     }, [])
 
-    // TODO: Alan - set loading spinner until data is fetched?
-    // TODO: Alan - handle results
     return (
         <Card>
             <Box sx={{
@@ -177,13 +208,9 @@ function TrendingCard() {
             }}>
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
-            {pages ? JSON.stringify(pages) : "hi"} 
-            {/* <Stack direction="column">
-                <a href="#">A Really Long Title of Some Really Long Article</a>
-                <a href="#">Another Great Article, With A Shorter Title</a>
-                <a href="#">Some Good Stuff</a>
-                <a href="#">Somewhere Over The Rainbow</a>
-            </Stack> */}
+            <Stack direction="column">
+                {pages && views ? pages.map((p, i) => <CardRow key={p.id} page={p} view={views[i].views} />) : undefined}
+            </Stack>
         </Card>
     )
 }
@@ -192,14 +219,11 @@ function RecentCard() {
     const [pages, setPages] = useState<Page[]>();
 
     useEffect(() => {
-        fetch("/api/page?sort_type=recently_created")
+        fetch("/api/page?sort_type=recently_created&limit=5")
             .then(res => res.json())
             .then(results => setPages(results.payload))
-            .catch(err => console.log(err));
     }, [])
 
-    // TODO: Alan - handle results
-    
     return (
         <Card>
             <Box sx={{
@@ -208,13 +232,52 @@ function RecentCard() {
             }}>
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
-            {pages ? JSON.stringify(pages) : "hi"} 
-            {/* <Stack direction="column">
-                <a href="#">Long Article</a>
-                <a href="#">Some Good Stuff</a>
-                <a href="#">Somewhere Over The Rainbow</a>
-                <a href="#">Another Great Article, With A Shorter Title</a>
-            </Stack> */}
+            <Stack direction="column">
+                {pages ? pages.map((p, i) => <CardRow key={p.id} page={p} />) : undefined}
+            </Stack>
         </Card>
+    )
+}
+
+function CardRow(props: any) {
+    const { page, view } = props;
+
+    if (!view) {
+        return (
+            <>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                }}>
+                    <Link style={{
+                        flex: '1'
+                    }} href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                    <p style={{
+                        marginTop: '0',
+                        fontSize: '.75em'
+                    }}>{moment(page.created_at).fromNow()}</p>
+                </Box>
+            </>
+        )
+    }
+
+    return (
+        <>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'row',
+            }}>
+                <Link style={{
+                    flex: '1'
+                }} href={`/p/${page.slug}/`} key={page.id}>{page.title}</Link>
+                <p style={{
+                    marginTop: '0',
+                    fontSize: '.75em'
+                }}>{Intl.NumberFormat('en-US', {
+                        notation: "compact",
+                        maximumFractionDigits: 1
+                    }).format(view)} views</p>
+            </Box>
+        </>
     )
 }

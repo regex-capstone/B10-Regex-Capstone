@@ -14,7 +14,7 @@ const api = PublicAPIEndpoint;
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
     const { 
-        query: { sort_type: raw_sort_type, populate: populate_string }, 
+        query: { sort_type: raw_sort_type, populate: populate_string, limit }, 
         body,
         method 
     } = req;
@@ -33,22 +33,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     ) as Page[]
                 );
 
+                const payload = pages.splice(0, limit ? parseInt(limit as string) : pages.length);
+
                 res.status(200).json({
                     success: true,
-                    payload: pages
+                    payload: payload
                 });
                 break;
             case 'POST':
-                if (!session) throw new Error('You must be logged in.');
+                // if (!session) throw new Error('You must be logged in.');
 
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.title) throw new Error('POST request has no title.');
-                if (!body.page_category_id) throw new Error('POST request has no page_category_id.');
 
                 const clientRequest: ClientPageRequest = {
-                    title: body.title,
-                    category: body.page_category_id
+                    title: body.title
                 }
+                
+                if (body.category) clientRequest.category = body.category;
 
                 const page = await api.Page.add(clientRequest);
 

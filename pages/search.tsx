@@ -3,8 +3,6 @@ import { Box, Container, Stack, FormControl, InputLabel, Select, OutlinedInput, 
 import { Page, Category } from '@/isaac/models';
 import { useState, useEffect } from "react";
 import { roundOff } from "@/client/utils/TimeUtils";
-import useSearch from "@/hooks/useSearch";
-import useCategory from "@/hooks/useCategory";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import Head from 'next/head';
 import Header from '@/client/Header';
@@ -43,33 +41,42 @@ interface SearchProps {
 export default function Search(props: SearchProps) {
     const [results, setResults] = useState<Page[]>(JSON.parse(props.results) as Page[]);
     const [categories, setCategories] = useState<Category[]>(JSON.parse(props.categories) as Category[]);
+    const [searchData, setSearchData] = useState<any>();
     const [timeElapsed, setTimeElapsed] = useState(props.time_elapsed);
     const [filteredResults, setFilteredResults] = useState<Page[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const router = useRouter();
     const { q } = router.query as { q: string };
-    const { data: searchData } = useSearch(q);
-    const { data: categoryData } = useCategory();
     const [cachedQuery, setCachedQuery] = useState(q);
 
-    useEffect(() => {
-        if (searchData && q !== cachedQuery) {  // handle re-search
-            const data = searchData.payload;
-            const freshPages = data.results;
-            const timeElapsed = roundOff(data.time_elapsed / 1000);
+    const [reload, setReload] = useState(false);
 
+    useEffect(() => {
+        fetch('/api/category?sort_type=alphabetical')
+            .then(res => res.json())
+            .then(data => setCategories(data.payload));
+
+        fetch('/api/search/' + q)
+            .then(res => res.json())
+            .then(data => {
+                const freshPages = data.payload.results;
+                const timeElapsed = roundOff(data.payload.time_elapsed / 1000);
+
+                setCachedQuery(q);
+                setResults(freshPages);
+                setTimeElapsed(timeElapsed);
+            });
+
+        setReload(false);
+    }, [reload]);
+
+    useEffect(() => {
+        if (q !== cachedQuery) {  // handle re-search
             setCachedQuery(q);
-            setResults(freshPages);
-            setTimeElapsed(timeElapsed);
+            setReload(true);
         }
-    }, [searchData, cachedQuery, q])
-
-    useEffect(() => {
-        if (categoryData) {
-            setCategories(categoryData.payload);
-        }
-    }, [categoryData])
+    }, [cachedQuery, q])
 
     useEffect(() => {
         if (selectedCategories.length === 0) setFilteredResults(results)
@@ -88,7 +95,6 @@ export default function Search(props: SearchProps) {
                 <SearchFilters categories={categories} selected={selectedCategories} setSelected={setSelectedCategories} />
                 <i>{filteredResults.length} results ({timeElapsed} seconds)</i>
                 <SearchResults results={filteredResults} />
-                <FeedbackForm />
             </Container>
         </>
     )
@@ -152,22 +158,6 @@ function Result(props: { result: Page }) {
                 <Typography fontSize="1.2rem" fontFamily="Encode Sans"><b>{props.result.title}</b></Typography>
             </Link>
             <Typography fontSize="0.8rem" color={Theme.COLOR.TEXT_DARK}>{props.result.description}</Typography>
-        </Box>
-    )
-}
-
-function FeedbackForm() {
-    return (
-        <Box sx={{
-            marginTop: 2,
-            marginBottom: 2,
-            height: 200,
-            backgroundColor: "gray",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-        }}>
-            <>Feedback</>
         </Box>
     )
 }

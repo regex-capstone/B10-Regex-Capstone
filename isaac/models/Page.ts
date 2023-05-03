@@ -3,7 +3,7 @@ import Category from "./Category";
 export default interface Page {
     id?: string;
     title: string;
-    category: string | Category;
+    category?: string | Category | null;
     created_at: number;
     description: string;
     slug?: string;
@@ -11,7 +11,7 @@ export default interface Page {
 
 export interface ClientPageRequest {
     title: string;
-    category: string;
+    category?: string;
 }
 
 export interface ServerPageRequest extends ClientPageRequest {

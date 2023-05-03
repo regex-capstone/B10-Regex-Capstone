@@ -1,5 +1,4 @@
 import Header from "@/client/Header"
-import useCategory from "@/hooks/useCategory"
 import { Category } from "@/isaac/models"
 import { Box, Container } from "@mui/material"
 import Head from "next/head"
@@ -8,13 +7,12 @@ import { useEffect, useState } from "react"
 
 export default function AllTopics() {
     const [categories, setCategories] = useState<Category[]>([])
-    const { data: categoryData } = useCategory();
 
     useEffect(() => {
-        if (categoryData) {
-            setCategories(categoryData.payload)
-        }
-    }, [categoryData])
+        fetch('/api/category?sort_type=alphabetical')
+            .then(res => res.json())
+            .then(data => setCategories([...data.payload, { name: "Uncategorized", id: null, description: "Uncategorized" }]))
+    }, []);
 
     return (
         <>

@@ -4,8 +4,8 @@ import { CategoryAPI } from './Category';
 import { UserAPI } from './User';
 import { SearchAPI } from './Search';
 import { MetricPageClickAPI } from './MetricPageClick';
-import { MetricSearchQueryAPI } from '../database/mongoose/api/MetricSearchQuery';
-import { MetricPageFeedbackAPI } from '../database/mongoose/api/MetricPageFeedback';
+// import { MetricSearchQueryAPI } from './MetricSearchQuery';
+import { MetricPageFeedbackAPI } from './MetricPageFeedback';
 
 export {
     PageAPI,
@@ -14,6 +14,5 @@ export {
     UserAPI,
     SearchAPI,
     MetricPageClickAPI,
-    MetricSearchQueryAPI,
     MetricPageFeedbackAPI
 }

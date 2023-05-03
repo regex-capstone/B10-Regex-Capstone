@@ -47,7 +47,7 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
         try {
             const page = new MongooseModels.Page({
                 ...serverRequest,
-                category: new mongoose.Types.ObjectId(serverRequest.category)
+                category: (serverRequest.category) ? new mongoose.Types.ObjectId(serverRequest.category) : null
             });
 
             page.slug = convert(`${page.title} ${page._id}`, {
