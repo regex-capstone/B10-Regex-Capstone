@@ -30,13 +30,13 @@ export const ABOUT_JSON = {
             }
         ]
     },
-    how: {
-        title: 'How did WE get here?',
-        subtitle: 'Meet the development team, Team REGEX, as it all started with our personal experiences as undergraduate students of the iSchool...',
+    team: {
+        title: 'The Journey of ISAAC',
+        subtitle: 'It all started with our personal experiences as undergraduate students of the iSchool...',
         team: [
             {
                 name: 'Elbert Cheng',
-                roles: ['Project Director'],
+                roles: ['Project Lead'],
                 picture: '/img/team/elbert.png'
             },
             {
@@ -57,13 +57,13 @@ export const ABOUT_JSON = {
             {
                 name: 'Brian Park',
                 roles: ['Front-end Engineer'],
-                picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+                picture: '/img/team/brian.jpg'
             }
         ],
-        introduction: 'We extensively interviewed iSchool advisers and students with varying statuses (prospective and current) to understand the current landscape of the iSchool academic advising experience. Our findings helped us identify these following pain points on two fronts.'
     },
     stakeholders: {
         title: 'Who is ISAAC trying to help?',
+        introduction: 'We extensively interviewed iSchool advisers and students with varying statuses (prospective and current) to understand the current landscape of the iSchool academic advising experience. Our findings helped us identify these following pain points on two fronts.',
         advisers: {
             title: 'iSchool Advising Team',
             members: [
@@ -127,4 +127,12 @@ export const ABOUT_JSON = {
             ]
         }
     },
+    journey: {
+        inquiry_1: 'May 11th, 2022 - Alan reached out to the advising team with a basic inquiry about credit equivalency.',
+        no_answer: 'He did not receive a response...',
+        inquiry_2: 'September 12th, 2022 - Alan reached out again to follow up with his inquiry four months later.',
+        answer: 'He received a response from an adviser the next day.',
+        quote: '\"Our office was short staffed, and many emails got buried in our inbox - I saw that your message was still unresolved...\"',
+        call_to_action: 'And so we pitched the multi-stage idea of ISAAC to the advising team, and they loved it!'
+    }
 }

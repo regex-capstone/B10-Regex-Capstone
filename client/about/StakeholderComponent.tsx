@@ -1,6 +1,5 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, Grid, Typography } from "@mui/material";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import { ABOUT_JSON } from "./content";
-import { ExpandMore } from "@mui/icons-material";
 
 export default function Stakeholders() {
     const CONTENT = ABOUT_JSON;
@@ -8,18 +7,18 @@ export default function Stakeholders() {
     return (
         <Box
             style={{
-                backgroundColor: '#f5f5f5'
             }}
         >
-            {/* <Typography
-                variant="h3"
+            <Typography
+                variant="h6"
                 style={{
-                    padding: '25px',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    marginLeft: 300,
+                    marginRight: 300
                 }}
             >
-                {CONTENT.stakeholders.title}
-            </Typography> */}
+                {CONTENT.stakeholders.introduction}
+            </Typography>
             <Grid>
                 <Box
                 >
@@ -38,10 +37,39 @@ export default function Stakeholders() {
     )
 }
 
+const advisers = {
+    title: 'iSchool Advising Team',
+    members: [
+        {
+            name: 'Dowell Eugenio',
+            role: 'iSchool Adviser',
+            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+        },
+        {
+            name: 'Elisa Tran',
+            role: 'iSchool Adviser',
+            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+        },
+        {
+            name: 'Matt Trease',
+            role: 'iSchool Adviser',
+            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+        },
+        {
+            name: 'Kathy Mitchell',
+            role: 'iSchool Adviser',
+            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+        },
+    ],
+    title_2: 'Adviser Pain Points:',
+    aspects: [
+        'Post-COVID, email inquiries for simple, objective questions that don\'t require human interaction have increased exponentially.',
+        'In 2022, the iSchool enrolled 839 students and plans to admit up to 1,400 annually in the future, which will result in a heavier workload for the advising team.',
+        'The existing Canvas Informatics Resource Site... TODO',
+    ]
+}
 // TODO maybe make accordion?
 function Advisers() {
-    const CONTENT = ABOUT_JSON;
-
     return (
         <>
             <Typography
@@ -51,7 +79,7 @@ function Advisers() {
                     padding: '50px'
                 }}
             >
-                {CONTENT.stakeholders.advisers.title}
+                {advisers.title}
             </Typography>
             <Grid
                 container
@@ -63,7 +91,7 @@ function Advisers() {
                 }}
             >
                 {
-                    CONTENT.stakeholders.advisers.members.map((member) => {
+                    advisers.members.map((member) => {
                         return (
                             <Grid
                                 style={{
@@ -109,33 +137,6 @@ function Advisers() {
                         )
                     })
                 }
-            </Grid>
-            <Grid>
-                <Typography
-                    variant="h4"
-                    style={{
-                        marginLeft: 300,
-                        paddingTop: '25px',
-                        paddingBottom: '25px'
-                    }}
-                >
-                    {CONTENT.stakeholders.advisers.title_2}
-                </Typography>
-                <Typography
-                    variant="h6"
-                    style={{
-                        marginLeft: 350,
-                        marginRight: 300
-                    }}
-                >
-                    {
-                        CONTENT.stakeholders.advisers.aspects.map((aspect) => {
-                            return (
-                                <li>{aspect}</li>
-                            )
-                        })
-                    }
-                </Typography>
             </Grid>
         </>
     )
