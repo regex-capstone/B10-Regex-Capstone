@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+// ^ for ComponentOptions enum
 import { Button, Container, Select, MenuItem, Box } from "@mui/material";
 import { Card, Grid } from "@tremor/react";
 import { PlusCircleIcon } from '@heroicons/react/solid'
@@ -8,7 +10,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import sha256 from "crypto-js";
 import { Page } from "@/isaac/models";
-import { GetStaticPropsContext, GetStaticPropsResult } from "next";
 import Header from "@/client/Header";
 
 // TODO move these analytics components to like `/client/analytics` or something

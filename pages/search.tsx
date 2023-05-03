@@ -159,8 +159,11 @@ function Result(props: { result: Page }) {
     )
 }
 
+// unused
+/*
 function filterResults(results: Page[], catFilter: string[]) {
     return (results && catFilter.length != 0)
         ? results.filter(result => catFilter.includes(result.category as string))
         : results;
 }
+*/
