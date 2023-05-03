@@ -1,8 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
-import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
-import { getServerSession } from 'next-auth';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import Page, { ClientPageRequest } from '@/isaac/models/Page';
@@ -12,7 +10,6 @@ import { parseSortType } from '@/isaac/public/SortType';
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const session = await getServerSession(req, res, AuthOptions);
     const { 
         query: { sort_type: raw_sort_type, populate: populate_string, limit }, 
         body,

@@ -8,11 +8,6 @@ import { useEffect, useState } from "react";
 import Category from '../../isaac/models/Category';
 import { useRouter } from "next/router";
 
-/*
-    Path: /p/new
-
-    This page uses CSG. It is not statically generated at build time.
-*/
 const loadingTextArr = [
     'SAVING.',
     'SAVING..',
@@ -42,7 +37,7 @@ export default function CreatePage() {
                 clearInterval(textInterval);
             }
         }
-    }, []);
+    });
 
     const handleSave = async () => {
         // handle loading text
@@ -73,7 +68,7 @@ export default function CreatePage() {
         const pageData = await pageResponse.json();
 
         if (!pageData.success) {
-            console.error("ERROR CREATING PAGE.");  // TODO handle with toast?
+            window.alert("ERROR CREATING PAGE.");
         }
 
         const createdPage = pageData.payload;
@@ -96,14 +91,14 @@ export default function CreatePage() {
         const revisionData = await revisionResponse.json();
 
         if (!revisionData.success) {
-            console.error("ERROR CREATING REVISION.");  // TODO handle with toast?
+            window.alert("ERROR CREATING REVISION.");
         }
 
         await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${createdPage.slug}`);
 
         await router.push({
             pathname: '/redirect',
-            query: { path: `p/${createdPage.slug}`}
+            query: { path: `p/${createdPage.slug}` }
         });
 
         setSaving(false);
@@ -151,7 +146,7 @@ export default function CreatePage() {
                                 label="What is the page title?"
                                 onChange={(e: SelectChangeEvent) => setCategoryId(e.target.value)}
                             >
-                                {   
+                                {
                                     categories.map((category: Category) => (
                                         <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
                                     ))

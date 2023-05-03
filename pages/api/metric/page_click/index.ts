@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { ClientMetricPageClickRequest } from '@/isaac/models/MetricPageClick';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetMetricPageClickTypes } from '@/isaac/public/api/MetricPageClick';
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -9,7 +7,6 @@ const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { 
-        body,
         method 
     } = req;
 

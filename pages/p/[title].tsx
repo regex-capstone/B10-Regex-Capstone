@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
+import { Box, Button, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
 import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
@@ -36,7 +36,6 @@ export async function getStaticPaths(): Promise<GetStaticPathsResult> {
 export async function getStaticProps(context: GetStaticPropsContext): Promise<GetStaticPropsResult<PageProps>> {
     const { title: slug } = context.params ?? {};
     const pageData: PageData = (await api.Page.get(GetPageTypes.PAGE_BY_SLUG, SortType.NONE, { p_slug: slug as string }) as PageData);
-    // TODO: why is this Revision and not RevisionData - is the *Data suffix a needed convention?
     const revisionData: Revision = (await api.Revision.get(GetRevisionTypes.REVISIONS_BY_PAGE_SLUG, SortType.RECENTLY_CREATED, { p_slug: slug as string }) as Revision[])[0];
 
     return {
@@ -60,11 +59,10 @@ export default function Page(props: PageProps) {
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
     const router = useRouter();
-    
+
     const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
-        console.log(session);
         const options = {
             method: 'POST',
             headers: {
@@ -74,8 +72,7 @@ export default function Page(props: PageProps) {
         }
         fetch(`/api/metric/page_click/${pageData.id}`, options)
             .then(response => response.json())
-            .then(data => console.log(data));
-    }, []);
+    });
 
     return (
         <>
@@ -94,7 +91,7 @@ export default function Page(props: PageProps) {
                                 <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
-                    }/>
+                    } />
             }
             <Container>
                 <Grid2 container spacing={2}>
@@ -134,7 +131,6 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
     const [isSubmitted, setIsSubmitted] = useState(false);
     const CHARACTER_LIMIT = 250;
 
-    // TODO maybe cookie to save the user's response on an article?
     const handleYesButtonClick = () => {
         const clientRequest = {
             is_helpful: true
@@ -150,7 +146,6 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 
         fetch(`/api/metric/page_feedback/${props.pageId}`, fetchOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
 
         setIsHelpful(true); // Technically not needed
         setIsSubmitted(true);
@@ -176,28 +171,27 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 
         fetch(`/api/metric/page_feedback/${props.pageId}`, fetchOptions)
             .then(response => response.json())
-            .then(data => console.log(data));
 
         setIsSubmitted(true);
     };
 
     return (
         <Box sx={{
-                color: '#fff',
-                padding: '1rem',
-                position: 'fixed',
-                width: '30%',
-                height: '155px',
-                boxSizing: 'border-box',
-                zIndex: 9999,
-                bottom: 1,
-                boxShadow: 5
-            }}>
+            color: '#fff',
+            padding: '1rem',
+            position: 'fixed',
+            width: '30%',
+            height: '155px',
+            boxSizing: 'border-box',
+            zIndex: 9999,
+            bottom: 1,
+            boxShadow: 5
+        }}>
             <>
                 <Stack direction={'column'} spacing={2}>
                     <Typography color="textPrimary">Did you find this helpful?</Typography>
                     <Stack direction={'row'} spacing={2}>
-                        {isHelpful === null ? ( // TODO clean this logic up
+                        {isHelpful === null ? (
                             <Stack spacing={1} direction="row">
                                 <Button color="primary" variant="contained" style={{ width: '60px', height: 'fit-content', borderRadius: 5, marginRight: '0.1rem' }} onClick={handleYesButtonClick}>
                                     Yes
@@ -220,24 +214,24 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
                                     rows={2}
                                     value={feedbackText}
                                     onChange={(event) => setFeedbackText(event.target.value)}
-                                    inputProps={{ 
-                                        style: { fontSize: '1rem' }, 
+                                    inputProps={{
+                                        style: { fontSize: '1rem' },
                                         maxLength: CHARACTER_LIMIT
                                     }}
                                     style={{ marginRight: '1rem', flex: 1 }}
                                     helperText={`${feedbackText.length}/${CHARACTER_LIMIT}`}
                                 />
                                 <div style={{ display: 'flex', justifyContent: 'flex-end', width: 'fit-content' }}>
-                                    <Button type="submit" variant="contained" color="primary" 
+                                    <Button type="submit" variant="contained" color="primary"
                                         style={{
                                             width: '80px',
                                             height: 'fit-content',
                                             borderRadius: 5,
                                             marginLeft: '1rem',
                                             marginBottom: '2rem'
-                                        }} 
+                                        }}
                                         onClick={handleYesButtonClick}>
-                                        
+
                                         Submit
                                     </Button>
                                 </div>
@@ -250,11 +244,11 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
     )
 
 }
-  
+
 function Content(props: { page: PageData, revision: Revision }) {
     const { revision } = props;
     const html = DOMPurify.sanitize(revision.content);
-    
+
     return (
         <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: html }} />
     )

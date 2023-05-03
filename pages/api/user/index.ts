@@ -2,17 +2,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import '@/isaac/database/mongoose/MongooseProvider';
 import { User } from '@/isaac/models';
-import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
-import { getServerSession } from 'next-auth';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetUserTypes } from '@/isaac/public/api/User';
 import { ClientUserRequest } from '@/isaac/models/User';
 
 const api = PublicAPIEndpoint;
 
-// TODO: double check this works
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const session = await getServerSession(req, res, AuthOptions);
     const { 
         body,
         method 
@@ -37,8 +33,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 const acknowledgement = await api.User.add(clientRequest);
-
-                console.log(acknowledgement);
 
                 res.status(200).json({
                     success: true,

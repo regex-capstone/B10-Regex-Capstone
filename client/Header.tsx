@@ -19,16 +19,14 @@ export default function Header(props: { actions?: ReactNode, disableSearchBar?: 
                     alignItems: "left",
                     justifyContent: "right",
                 }}>
-                    <Stack spacing={0} direction="row" sx={{
-                        flex: 1,
-                    }}>
+                    <Stack spacing={0} direction="row">
                         <IconButton onClick={(e) => router.push("/")}>
                             <img height="32" width="32" src="https://ischool.uw.edu/sites/default/files/inline-images/logo-black-symbol2.jpg" />
                         </IconButton>
                         {props.actions}
                     </Stack>
                     <Box sx={{
-                        flex: 2,
+                        flex: 1,
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "center",
@@ -78,7 +76,6 @@ function ProfileIcon() {
     
     return (
         <Box sx={{
-            flex: 1,
             display: "flex",
             justifyContent: "right",
         }}>
