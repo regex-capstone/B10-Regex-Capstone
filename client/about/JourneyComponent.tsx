@@ -24,7 +24,6 @@ export default function Journey() {
             <Introduction />
             <Questions />
             <Validation />
-            <Pipeline />
         </Box>
     )
 }
@@ -175,6 +174,15 @@ const team = {
 function Team() {
     return (
         <>
+            <Grid
+                style={{
+                    width: '50%',
+                    margin: 'auto',
+                    padding: '50px'
+                }}
+            >
+                <Divider />
+            </Grid>
             <Typography
                 variant="h4"
                 style={{
@@ -220,7 +228,8 @@ function Team() {
                                             sx={{
                                                 height: 200,
                                                 width: 200,
-                                                borderRadius: '50%'
+                                                borderRadius: '50%',
+                                                boxShadow: `0px 0px 15px 0px ${Theme.COLOR.PRIMARY}`
                                             }}
                                             src={member.picture}
                                             alt='team profile picture'
@@ -375,7 +384,7 @@ function Advisers() {
             <Typography
                 variant="h6"
                 style={{
-                    paddingTop: '10px',
+                    paddingBottom: '50px',
                     textAlign: 'center',
                     marginRight: '60%',
                     opacity: '0.5'
@@ -394,8 +403,11 @@ const questions = {
     title_2: 'Complex, Subjective Questions',
     desc_2: 'Questions that is dependent on a student\'s context that may require action and/or personal guidance from an adviser.',
     mission: 'Our mission was to allow...',
-    mission_1: 'Advisers to focus on students with complex, subjective questions.',
-    mission_2: 'Students to receive answers to simple, objective questions within minutes rather than days.',
+    missions: [
+        'Advisers to focus on students with complex, subjective questions.',
+        'Advisers to make data-driven decisions on how to answer student questions faster.',
+        'Students to receive answers to simple, objective questions within minutes rather than days.'
+    ],
     problem: 'How might we streamline the processing of simple advising questions for both students and student services?'
 }
 
@@ -420,7 +432,8 @@ function Questions() {
             <Advisers />
             <Grid
                 style={{
-                    padding: '100px'
+                    padding: '100px',
+                    backgroundColor: Theme.COLOR.PRIMARY
                 }}
             >
                 <Box
@@ -429,7 +442,6 @@ function Questions() {
                         width: '80%',
                         borderRadius: '20px',
                         margin: 'auto',
-                        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.2)'
                     }}
                 >
                     <Typography
@@ -443,140 +455,128 @@ function Questions() {
                         {questions.problem}
                     </Typography>
                 </Box>
-            </Grid>
-            {/* <Typography
-                variant="h4"
-                style={{
-                    paddingTop: 50,
-                    paddingBottom: 80,
-                    textAlign: 'center',
-                    margin: 'auto',
-                    width: '80%'
-                }}
-            >
-                {questions.introduction}
-            </Typography> */}
-            <Grid
-                style={{
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#F5F5F5'
-                }}
-                container
-            >
                 <Grid
                     style={{
-                        width: '40%'
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        justifyContent: 'center',
+                        color: Theme.COLOR.TEXT_LIGHT
                     }}
-                    item
+                    container
                 >
-                    <Typography
-                        variant="h4"
+                    <Grid
                         style={{
-                            padding: '50px',
-                            textAlign: 'center'
+                            width: '40%'
                         }}
+                        item
                     >
-                        {questions.title_1}
-                    </Typography>
-                    <Typography
-                        variant="h6"
+                        <Typography
+                            variant="h4"
+                            style={{
+                                padding: '50px',
+                                textAlign: 'center'
+                            }}
+                        >
+                            {questions.title_1}
+                        </Typography>
+                        <Typography
+                            variant="h6"
+                            style={{
+                                padding: '50px',
+                                textAlign: 'center'
+                            }}
+                        >
+                            {questions.desc_1}
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        item
+                    >
+                        <Divider
+                            orientation="vertical"
+                            style={{
+                                backgroundColor: Theme.COLOR.TEXT_LIGHT,
+                            }}
+                        />
+                    </Grid>
+                    <Grid
                         style={{
-                            padding: '50px',
-                            textAlign: 'center'
+                            width: '40%'
                         }}
+                        item
                     >
-                        {questions.desc_1}
-                    </Typography>
+                        <Typography
+                            variant="h4"
+                            style={{
+                                padding: '50px',
+                                textAlign: 'center',
+                                color: Theme.COLOR.TEXT_LIGHT
+                            }}
+                        >
+                            {questions.title_2}
+                        </Typography>
+                        <Typography
+                            variant="h6"
+                            style={{
+                                padding: '50px',
+                                textAlign: 'center',
+                                color: Theme.COLOR.TEXT_LIGHT
+                            }}
+                        >
+                            {questions.desc_2}
+                        </Typography>
+                    </Grid>
                 </Grid>
-                <Grid
-                    item
+                <Typography
+                    variant="h4"
+                    style={{
+                        padding: '50px',
+                        textAlign: 'center',
+                        color: Theme.COLOR.TEXT_LIGHT
+                    }}
                 >
-                    <Divider
-                        orientation="vertical"
-                    />
-                </Grid>
+                    {questions.mission}
+                </Typography>
                 <Grid
                     style={{
-                        width: '40%'
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        justifyContent: 'center',
+                        color: Theme.COLOR.TEXT_LIGHT
                     }}
-                    item
+                    container
                 >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            padding: '50px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {questions.title_2}
-                    </Typography>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            padding: '50px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {questions.desc_2}
-                    </Typography>
-                </Grid>
-            </Grid>
-            <Typography
-                variant="h4"
-                style={{
-                    padding: '50px',
-                    textAlign: 'center'
-                }}
-            >
-                {questions.mission}
-            </Typography>
-            <Grid
-                style={{
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                }}
-                container
-            >
-                <Grid
-                    style={{
-                        width: '25%'
-                    }}
-                    item
-                >
-                    <Typography
-                        variant="h5"
-                        style={{
-                            padding: '50px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {questions.mission_1}
-                    </Typography>
-                </Grid>
-                <Grid
-                    style={{
-                        width: '25%'
-                    }}
-                    item
-                >
-                    <Typography
-                        variant="h5"
-                        style={{
-                            padding: '50px',
-                            textAlign: 'center'
-                        }}
-                    >
-                        {questions.mission_2}
-                    </Typography>
+                    {
+                        questions.missions.map((mission) => {
+                            const length = questions.missions.length;
+
+                            return (
+                                <Grid
+                                    style={{
+                                        width: `${100 / length}%`
+                                    }}
+                                    item
+                                >
+                                    <Typography
+                                        variant="h5"
+                                        style={{
+                                            padding: '50px',
+                                            textAlign: 'center'
+                                        }}
+                                    >
+                                        {mission}
+                                    </Typography>
+                                </Grid>
+                            )
+                        })
+                        }
                 </Grid>
             </Grid>
         </Grid>
     )
 }
 
+// TODO style and maybe content cut
 const validation = {
     title: 'Validating the Problem',
     text_1: 'To validate our problem, we extensively interviewed the iSchool Advising Team and iSchool students to define pain points for the current method of getting simple advising questions answered.',
@@ -666,113 +666,6 @@ function Validation() {
                     }
                 </Grid>
             </Grid>
-        </>
-    )
-}
-
-const pipeline = {
-    e: [
-        {
-            text: 'A centralized, accessible information repository to store information by advisers for students.',
-            title: 'Information Repository',
-            pic: ''
-        },
-        {
-            text: 'A website that allows students to search and browse for answers to their simple, objective questions.',
-            title: 'ISAAC Website',
-            pic: ''
-        },
-        {
-            text: 'Data analytics experience to help advisers make data-driven decisions.',
-            title: 'Metrics and Data Analytics',
-            pic: ''
-        },
-        {
-            text: 'A decoupled, external API for other applications to consume ISAAC information.',
-            title: 'ISAAC API',
-            pic: '/img/api.png'
-        },
-        {
-            text: 'External applications that consume the ISAAC API for students and advisers such as an AI Chatbot.',
-            title: 'External Application Integrations',
-            pic: '/img/pipeline_diagram.png'
-        },
-    ]
-}
-
-function Pipeline() {
-    const components = pipeline.e.map((e, i) => {
-        return (
-            <VerticalTimelineElement
-                key={i}
-                iconStyle={{
-                    backgroundColor: GOLD_COLOR,
-                }}
-                contentStyle={{
-                    backgroundColor: Theme.COLOR.PRIMARY
-                }}
-                contentArrowStyle={{
-                    borderRight: '7px solid',
-                    borderRightColor: Theme.COLOR.PRIMARY
-                }}
-                icon={<DateRange />}
-            >
-                <Grid
-                    style={{
-                        alignContent: 'center',
-                        justifyContent: 'center'
-                    }}
-                    container
-                >
-                    <Typography
-                        variant="h4"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px'
-                        }}
-                    >
-                        {e.title}
-                    </Typography>
-                    <Box
-                        component="img"
-                        src={e.pic}
-                        style={{
-                            marginTop: '15px',
-                            marginBottom: '15px',
-                            width: '95%',
-                            backgroundColor: Theme.COLOR.TEXT_LIGHT,
-                            boxShadow: '0px 0px 10px 0px rgba(255, 255, 255,0.75)'
-                        }}
-                    ></Box>
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                            padding: '15px'
-                        }}
-                    >
-                        {e.text}
-                    </Typography>
-                </Grid>
-            </VerticalTimelineElement>
-        )
-    })
-    return (
-        <>
-            <Grid
-                sx={{
-                    alignContent: 'center',
-                    justifyContent: 'center'
-                }}
-                container
-            >
-            </Grid>
-            <VerticalTimeline
-                animate={true}
-                lineColor={GOLD_COLOR}
-            >
-                {components}
-            </VerticalTimeline>
         </>
     )
 }
