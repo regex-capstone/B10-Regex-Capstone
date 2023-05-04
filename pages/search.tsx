@@ -78,9 +78,26 @@ export default function Search(props: SearchProps) {
     }, [cachedQuery, q])
 
     useEffect(() => {
-        if (selectedCategories.length === 0) setFilteredResults(results)
-        setFilteredResults(results)
-    }, [results, selectedCategories])
+        if (selectedCategories.length === 0) {
+            setFilteredResults(results);
+        }  
+        else {
+            /*
+             *  So, selectedCategories contains an array of strings which are the
+             *  names of the currently selected categories. Page contains the id
+             *  of its category, under .category. This code converts the names of
+             *  the selected categories to their ids, and filters for the pages
+             *  whose category ids are in that array.
+             */
+            const selectedCategoryIds = selectedCategories.map((name) => {
+                const cat = categories.find((cat) => cat.name === name);
+                return cat?.id;
+            })
+            setFilteredResults(results.filter((page) => {
+                return selectedCategoryIds.includes(page.category as string)
+            }));
+        }
+    })
 
     return (
         <>
@@ -151,6 +168,7 @@ function SearchResults(props: { results: Page[] }) {
 function Result(props: { result: Page }) {
     return (
         <Box>
+            {/* { props.result.category } */}
             <Link href={`/p/${props.result.slug}`}>
                 <Typography fontSize="1.2rem" fontFamily="Encode Sans"><b>{props.result.title}</b></Typography>
             </Link>
@@ -158,12 +176,3 @@ function Result(props: { result: Page }) {
         </Box>
     )
 }
-
-// unused
-/*
-function filterResults(results: Page[], catFilter: string[]) {
-    return (results && catFilter.length != 0)
-        ? results.filter(result => catFilter.includes(result.category as string))
-        : results;
-}
-*/
