@@ -87,7 +87,7 @@ export default function Page(props: PageProps) {
                             <IconButton onClick={() => setOpenDialog(true)}>
                                 <Edit htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
-                            <IconButton onClick={() => router.push('#')}>
+                            <IconButton onClick={() => router.push('/p/analytics?slug=' + pageData.slug)}>
                                 <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
