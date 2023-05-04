@@ -177,13 +177,12 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 
     return (
         <Box sx={{
-            color: '#fff',
+            backgroundColor: '#fff',
             padding: '1rem',
-            position: 'fixed',
-            width: '30%',
+            width: '100%',
             height: '155px',
             boxSizing: 'border-box',
-            zIndex: 9999,
+            zIndex: 1,
             bottom: 1,
             boxShadow: 5
         }}>
