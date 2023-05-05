@@ -228,12 +228,27 @@ function JourneyWrapper() {
         }}>
             <Container maxWidth="lg" sx={{
                 marginTop: "10vh",
-                paddingTop: "10vh",
+                padding: "10vh",
                 boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
                 backgroundColor: Theme.COLOR.BACKGROUND_LIGHT,
             }}>
                 <Journey />
             </Container>
+        </Box>
+    )
+}
+
+function Footer() {
+    return (
+        <Box sx={{
+            backgroundColor: Theme.COLOR.PRIMARY,
+            color: Theme.COLOR.TEXT_LIGHT
+        }}>
+            <Typography
+                textAlign="center"
+            >
+                &#169; REGEX 2023
+            </Typography>
         </Box>
     )
 }
