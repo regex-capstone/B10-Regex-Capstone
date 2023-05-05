@@ -6,6 +6,9 @@ import { AnimationOnScroll } from 'react-animation-on-scroll';
 import content from '@/public/about.json'
 import Theme from "@/client/Theme";
 import { GitHub, LinkedIn } from "@mui/icons-material";
+import { Pipeline } from "@/client/about/WhyComponent";
+import Journey, { Questions, Advisers, Validation } from "@/client/about/JourneyComponent"
+import 'react-vertical-timeline-component/style.min.css';
 
 export default function About() {
     return (
@@ -24,6 +27,8 @@ function Body() {
             <Banner hero={content.hero} />
             <Why why={content.why} />
             <Team team={content.team} />
+            <Scale />
+            <JourneyWrapper />
         </Stack>
     )
 }
@@ -121,13 +126,8 @@ function Team(props: any) {
     const { team } = props
     return (
         <Box sx={{
-            // height: "100vh",
             background: Theme.COLOR.BACKGROUND_DARK,
             zIndex: 1,
-            // backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
-            // backgroundSize: "cover",
-            // backgroundRepeat: "no-repeat",
-            // backgroundPosition: "center",
         }}>
             <Container maxWidth="md" sx={{
                 paddingTop: "10vh",
@@ -136,9 +136,6 @@ function Team(props: any) {
                 zIndex: 2,
             }}>
                 <Box sx={{
-                    // padding: "10px",
-                    // backgroundColor: "#FFF",
-                    // borderRadius: "10px"
                     color: "#FFF",
                 }}>
                     <Typography
@@ -198,10 +195,45 @@ function TeamMemberCard(props: any) {
                     {member.roles}
                 </Typography>
                 <Stack direction="row" spacing={1}>
-                    <a target="_blank" href={member.social.linkedin}><LinkedIn /></a>
-                    <a target="_blank" href={member.social.github}><GitHub /></a>
+                    <a target="_blank" rel="noreferrer" href={member.social.linkedin}><LinkedIn /></a>
+                    <a target="_blank" rel="noreferrer" href={member.social.github}><GitHub /></a>
                 </Stack>
             </Box>
         </Box>
+    )
+}
+
+function Scale() {
+    return (
+        <Box sx={{
+            boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+        }}>
+            <Container maxWidth="lg" sx={{
+                paddingTop: "10vh",
+                paddingBottom: "10vh"
+            }}>
+                <Pipeline />
+            </Container>
+        </Box>
+
+    )
+}
+
+function JourneyWrapper() {
+    return (
+        <Box sx={{
+            boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+        }}>
+            <Container maxWidth="lg" sx={{
+                zIndex: -1,
+            }}>
+                <Box sx={{
+                    color: Theme.COLOR.BACKGROUND_DARK,
+                }}>
+                    <Journey />
+                </Box>
+            </Container>
+        </Box>
+
     )
 }

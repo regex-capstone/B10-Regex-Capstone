@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { ABOUT_JSON } from "./content";
+// import { ABOUT_JSON } from "./content";
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
 import Theme from "../Theme";
@@ -178,7 +178,7 @@ const pipeline = {
     ]
 }
 
-function Pipeline() {
+export function Pipeline() {
     const components = pipeline.e.map((e, i) => {
         return (
             <VerticalTimelineElement
@@ -251,6 +251,7 @@ function Pipeline() {
                     pipeline.title
                 }
             </Typography>
+            <hr />
             <Typography
                 style={{
                     textAlign: 'center',
