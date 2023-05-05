@@ -8,13 +8,7 @@ import Theme from "../Theme";
 const GOLD_COLOR = '#d2bc86';
 
 const journey = {
-    text_1_1: 'Appointments had to be scheduled a month in advance, and emails for general questions were not able to be answered in a timely manner.',
-    text_1: 'Alan reached out to the advising team with a basic inquiry about VLPA credit equivalency for the three foreign language classes he took at the Bothell campus.',
-    text_2: 'No response yet.',
-    text_3: 'Alan reached out again to follow up with his inquiry four months later.',
-    text_4: 'Response received! \n "I apologize for the delayed response. Our office was short staffed, and many emails got buried in our inbox - I saw that your message was still unresolved..."— an iSchool Adviser',
-    text_6: 'We defined the information problem and threw together a presentation proposal pitch...',
-    text_7: 'On December 12th, 2022, we met with the iSchool Advising Team to discuss this problem:'
+    
 }
 
 export default function Journey() {
@@ -141,34 +135,7 @@ function Introduction() {
 }
 
 const team = {
-    subtitle: 'It all started with our personal experiences as undergraduate INFO students of the iSchool...',
-    team: [
-        {
-            name: 'Elbert Cheng',
-            roles: ['Project Lead'],
-            picture: '/img/team/elbert.png'
-        },
-        {
-            name: 'Alan Wen',
-            roles: ['Project Engineer'],
-            picture: '/img/team/alan.png'
-        },
-        {
-            name: 'Keith Ellingwood',
-            roles: ['Data Engineer'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-        },
-        {
-            name: 'Ryan Langford',
-            roles: ['Front-end Engineer'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-        },
-        {
-            name: 'Brian Park',
-            roles: ['Front-end Engineer'],
-            picture: '/img/team/brian.jpg'
-        }
-    ],
+
 }
 
 function Team() {

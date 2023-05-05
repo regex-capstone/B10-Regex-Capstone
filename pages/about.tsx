@@ -21,6 +21,7 @@ function Body() {
         <Stack direction="column" spacing={0}>
             <Banner hero={content.hero} />
             <Why why={content.why} />
+            <Team team={content.team} />
         </Stack>
     )
 }
@@ -56,10 +57,11 @@ function Why(props: any) {
     const { why } = props
     return (
         <Box sx={{
-            boxShadow: 5,
+            boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
         }}>
             <Container maxWidth="lg" sx={{
                 paddingTop: "10vh",
+                paddingBottom: "10vh"
             }}>
                 <Stack direction="column" spacing={2}>
                     <Typography
@@ -111,4 +113,67 @@ function Why(props: any) {
             </Container>
         </Box>
     )
-} 
+}
+
+function Team(props: any) {
+    const { team } = props
+    return (
+        <Box sx={{
+            height: "100vh",
+            background: "#000",
+            zIndex: 1,
+            backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+        }}>
+            <Container maxWidth="md" sx={{
+                paddingTop: "10vh",
+                paddingBottom: "10vh",
+                opacity: "100%",
+                zIndex: 2,
+            }}>
+                <Box sx={{
+                    padding: "10px",
+                    backgroundColor: "#FFF",
+                    borderRadius: "10px"
+                }}>
+                    <Typography
+                        fontFamily="Encode Sans"
+                        fontWeight="bold"
+                        fontSize="1rem"
+                        textAlign="center"
+                    >
+                        {team.subtitle}
+                    </Typography>
+                </Box>
+                <Box sx={{
+                    display: "flex",
+                    flexWrap: "wrap"
+                }}>
+                    {team.team.map((member: any) => <TeamMemberCard key={member.name} member={member} />)}
+                </Box>
+            </Container>
+        </Box>
+    )
+}
+
+function TeamMemberCard(props: any) {
+    const { member } = props
+    return (
+        <Box sx={{
+            flex: 1,
+            padding: "10px",
+            backgroundColor: "#FFF",
+            borderRadius: "10px"
+        }}>
+            <Box sx={{
+                borderRadius: 50,
+                backgroundColor: "red",
+            }}>
+                <Image src={member.picture} alt={member.name} width={100} height={100} />
+            </Box>
+            {member.name}
+        </Box>
+    )
+}
