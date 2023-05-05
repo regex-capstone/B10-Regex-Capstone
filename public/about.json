@@ -38,35 +38,55 @@
                 "roles": [
                     "Project Lead"
                 ],
-                "picture": "/img/team/elbert.png"
+                "picture": "/img/team/elbert.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/elbert-cheng/",
+                    "github": "https://github.com/treblenaX"
+                }
             },
             {
                 "name": "Alan Wen",
                 "roles": [
                     "Project Engineer"
                 ],
-                "picture": "/img/team/alan.png"
+                "picture": "/img/team/alan.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/wenjalan/",
+                    "github": "https://github.com/wenjalan"
+                }
             },
             {
                 "name": "Keith Ellingwood",
                 "roles": [
                     "Data Engineer"
                 ],
-                "picture": ""
+                "picture": "/img/team/elbert.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/keith-ellingwood-iii/",
+                    "github": "https://github.com/kje123"
+                }
             },
             {
                 "name": "Ryan Langford",
                 "roles": [
-                    "Front-end Engineer"
+                    "Frontend Engineer"
                 ],
-                "picture": ""
+                "picture": "/img/team/elbert.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/ryan-langford-497651195/",
+                    "github": "https://github.com/RyanLangford"
+                }
             },
             {
                 "name": "Brian Park",
                 "roles": [
-                    "Front-end Engineer"
+                    "Frontend Engineer"
                 ],
-                "picture": "/img/team/brian.jpg"
+                "picture": "/img/team/brian.jpg",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/brian-park-3a7447251/",
+                    "github": "#"
+                }
             }
         ]
     },

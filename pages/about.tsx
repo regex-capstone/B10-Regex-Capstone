@@ -4,6 +4,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import content from '@/public/about.json'
+import Theme from "@/client/Theme";
+import { GitHub, LinkedIn } from "@mui/icons-material";
 
 export default function About() {
     return (
@@ -119,13 +121,13 @@ function Team(props: any) {
     const { team } = props
     return (
         <Box sx={{
-            height: "100vh",
-            background: "#000",
+            // height: "100vh",
+            background: Theme.COLOR.BACKGROUND_DARK,
             zIndex: 1,
-            backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
+            // backgroundImage: "url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Mary_Gates_Hall%2C_April_2008.jpg/1280px-Mary_Gates_Hall%2C_April_2008.jpg')",
+            // backgroundSize: "cover",
+            // backgroundRepeat: "no-repeat",
+            // backgroundPosition: "center",
         }}>
             <Container maxWidth="md" sx={{
                 paddingTop: "10vh",
@@ -134,22 +136,25 @@ function Team(props: any) {
                 zIndex: 2,
             }}>
                 <Box sx={{
-                    padding: "10px",
-                    backgroundColor: "#FFF",
-                    borderRadius: "10px"
+                    // padding: "10px",
+                    // backgroundColor: "#FFF",
+                    // borderRadius: "10px"
+                    color: "#FFF",
                 }}>
                     <Typography
                         fontFamily="Encode Sans"
-                        fontWeight="bold"
+                        // fontWeight="bold"
                         fontSize="1rem"
                         textAlign="center"
                     >
                         {team.subtitle}
                     </Typography>
                 </Box>
+                <hr />
                 <Box sx={{
                     display: "flex",
-                    flexWrap: "wrap"
+                    flexWrap: "wrap",
+                    justifyContent: "space-evenly"
                 }}>
                     {team.team.map((member: any) => <TeamMemberCard key={member.name} member={member} />)}
                 </Box>
@@ -162,18 +167,41 @@ function TeamMemberCard(props: any) {
     const { member } = props
     return (
         <Box sx={{
-            flex: 1,
+            boxShadow: 5,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            margin: "10px",
             padding: "10px",
             backgroundColor: "#FFF",
-            borderRadius: "10px"
+            borderRadius: "10px",
+            width: "150px",
         }}>
+            <Image src={member.picture} alt={member.name} width={150} height={150} />
             <Box sx={{
-                borderRadius: 50,
-                backgroundColor: "red",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                paddingTop: "10px",
+                paddingBottom: "10px"
             }}>
-                <Image src={member.picture} alt={member.name} width={100} height={100} />
+                <Typography
+                    textAlign="center"
+                    fontWeight="bold"
+                >
+                    {member.name}
+                </Typography>
+                <Typography
+                    textAlign="center"
+                    fontSize="0.8rem"
+                >
+                    {member.roles}
+                </Typography>
+                <Stack direction="row" spacing={1}>
+                    <a target="_blank" href={member.social.linkedin}><LinkedIn /></a>
+                    <a target="_blank" href={member.social.github}><GitHub /></a>
+                </Stack>
             </Box>
-            {member.name}
         </Box>
     )
 }
