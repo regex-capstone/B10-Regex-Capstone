@@ -20,7 +20,6 @@ const journey = {
 export default function Journey() {
     return (
         <Box>
-            <Team />
             <Introduction />
             <Questions />
             <Validation />
@@ -140,139 +139,6 @@ function Introduction() {
     )
 }
 
-const team = {
-    subtitle: 'It all started with our personal experiences as undergraduate INFO students of the iSchool...',
-    team: [
-        {
-            name: 'Elbert Cheng',
-            roles: ['Project Lead'],
-            picture: '/img/team/elbert.png'
-        },
-        {
-            name: 'Alan Wen',
-            roles: ['Project Engineer'],
-            picture: '/img/team/alan.png'
-        },
-        {
-            name: 'Keith Ellingwood',
-            roles: ['Data Engineer'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-        },
-        {
-            name: 'Ryan Langford',
-            roles: ['Front-end Engineer'],
-            picture: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-        },
-        {
-            name: 'Brian Park',
-            roles: ['Front-end Engineer'],
-            picture: '/img/team/brian.jpg'
-        }
-    ],
-}
-
-function Team() {
-    return (
-        <>
-            <Grid
-                style={{
-                    width: '50%',
-                    margin: 'auto',
-                    padding: '50px'
-                }}
-            >
-                <Divider />
-            </Grid>
-            <Typography
-                variant="h4"
-                style={{
-                    paddingTop: '25px',
-                    textAlign: 'center',
-                    width: '80%',
-                    margin: 'auto'
-                }}
-            >
-                {
-                    team.subtitle
-                }
-            </Typography>
-            <Grid
-                style={{
-                    padding: '50px'
-                }}
-            >
-                <Grid
-                    container
-                    style={{
-                        alignContent: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'row',
-                        display: 'flex'
-                    }}
-                >
-                    {
-                        team.team.map((member, i) => {
-                            return (
-                                <AnimationOnScroll key={i} animateIn="animate__fadeInLeftBig">
-                                    <Grid
-                                        style={{
-                                            alignContent: 'center',
-                                            justifyContent: 'center',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            padding: '20px'
-                                        }}
-                                    >
-                                        <Box
-                                            component="img"
-                                            sx={{
-                                                height: 200,
-                                                width: 200,
-                                                borderRadius: '50%',
-                                                boxShadow: `0px 0px 15px 0px ${Theme.COLOR.PRIMARY}`
-                                            }}
-                                            src={member.picture}
-                                            alt='team profile picture'
-                                        />
-                                        <Typography
-                                            variant="h6"
-                                            style={{
-                                                paddingTop: '10px',
-                                                textAlign: 'center'
-                                            }}
-                                        >
-                                            {
-                                                member.name
-                                            }
-                                        </Typography>
-                                        {
-                                            member.roles.map((role) => {
-                                                return (
-                                                    <Typography
-                                                        variant="h6"
-                                                        style={{
-                                                            textAlign: 'center',
-                                                            opacity: '0.6'
-                                                        }}
-                                                    >
-                                                        {
-                                                            role
-                                                        }
-                                                    </Typography>
-                                                )
-                                            })
-                                        }
-                                    </Grid>
-                                </AnimationOnScroll>
-                            )
-                        })
-                    }
-                </Grid>
-            </Grid>
-        </>
-    )
-}
-
 const advisers = {
     title: 'iSchool Advising Team',
     members: [
@@ -361,6 +227,7 @@ export function Advisers() {
                                         member.roles.map((role) => {
                                             return (
                                                 <Typography
+                                                    key={role}
                                                     variant="h6"
                                                     style={{
                                                         textAlign: 'center',
@@ -553,6 +420,7 @@ export function Questions() {
 
                             return (
                                 <Grid
+                                    key={mission}
                                     style={{
                                         width: `${100 / length}%`
                                     }}
@@ -636,10 +504,10 @@ export function Validation() {
                         textAlign: 'center'
                     }}
                 >
-                    {   // TODO bullet styling?
+                    {   
                         validation.bullets_1.map((bullet) => {
                             return (
-                                <ul>{bullet}</ul>
+                                <ul key={bullet}>{bullet}</ul>
                             )
                         })
                     }
@@ -658,10 +526,10 @@ export function Validation() {
                         textAlign: 'center'
                     }}
                 >
-                    {   // TODO bullet styling?
+                    {   
                         validation.bullets_2.map((bullet) => {
                             return (
-                                <ul>{bullet}</ul>
+                                <ul key={bullet}>{bullet}</ul>
                             )
                         })
                     }

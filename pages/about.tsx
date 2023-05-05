@@ -29,6 +29,7 @@ function Body() {
             <Team team={content.team} />
             <Scale />
             <JourneyWrapper />
+            <Footer />
         </Stack>
     )
 }
@@ -222,18 +223,17 @@ function Scale() {
 function JourneyWrapper() {
     return (
         <Box sx={{
-            boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+            backgroundColor: Theme.COLOR.BACKGROUND_DARK,
+            width: "100%",
         }}>
             <Container maxWidth="lg" sx={{
-                zIndex: -1,
+                marginTop: "10vh",
+                paddingTop: "10vh",
+                boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
+                backgroundColor: Theme.COLOR.BACKGROUND_LIGHT,
             }}>
-                <Box sx={{
-                    color: Theme.COLOR.BACKGROUND_DARK,
-                }}>
-                    <Journey />
-                </Box>
+                <Journey />
             </Container>
         </Box>
-
     )
 }
