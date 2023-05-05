@@ -45,10 +45,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (!session) throw new Error('You must be logged in.');
 
                 if (!body) throw new Error('PUT request has no body.');
-                if (!body.title) throw new Error('PUT request has no title.');
                 
                 const clientRequest: ClientPageUpdateRequest = {
-                    title: body.title ?? null
+                    title: body.title ?? null,
+                    category: body.category ?? null,
                 }
 
                 const updated = await api.Page.update(
