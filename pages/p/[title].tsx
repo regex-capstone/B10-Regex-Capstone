@@ -161,6 +161,8 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
             is_helpful: isHelpful
         }
 
+        console.log(clientRequest);
+
         const fetchOptions = {
             method: 'POST',
             headers: {
@@ -229,7 +231,7 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
                                             marginLeft: '1rem',
                                             marginBottom: '2rem'
                                         }}
-                                        onClick={handleYesButtonClick}>
+                                        onClick={handleSubmitFeedback}>
 
                                         Submit
                                     </Button>
