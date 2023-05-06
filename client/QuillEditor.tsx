@@ -1,12 +1,15 @@
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
-import { Box, Button, Container, Dialog, Grid, TextField } from "@mui/material";
+import { Box, Button, Container, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import { useRouter } from "next/router";
+import { Category } from "@/isaac/models"
 import React, { useEffect, useState } from 'react';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
+import { valid } from 'node-html-parser';
 
 interface QuillTextEditorProps {
     setContentCallback: (content: string) => void;
+    setCategoryCallback: (content: string) => void;
     pageData?: PageData;
     revisionData?: RevisionData;
     title?: string;
@@ -14,8 +17,7 @@ interface QuillTextEditorProps {
 }
 
 export default function QuillTextEditor(props: QuillTextEditorProps) {
-    const setContentCallback = props.setContentCallback;
-    const { pageData, revisionData } = props;
+    const { setContentCallback, setCategoryCallback, pageData, revisionData } = props;
 
     const CreateQuillEditor = (content: string) => {
         const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -69,6 +71,10 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             }
         }, [htmlOverride])
 
+        useEffect(() => {
+            
+        })
+
         return (
             <>
                 <Dialog 
@@ -90,6 +96,10 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                 >
                     Open HTML Editor
                 </Button>
+                <CategorySelector
+                    pageData={pageData}
+                    callback={setCategoryCallback}
+                />
             </>
         );
     }
@@ -163,5 +173,38 @@ function HTMLToEditorDialog(props: any) {
                 </Grid>
             </Grid>
         </>
+    )
+}
+
+function CategorySelector(props: { callback: Function, pageData: PageData | undefined }) {
+    const { callback, pageData } = props
+
+    const [categories, setCategories] = useState<Category[]>([])
+
+    useEffect(() => {
+        fetch('/api/category?sort_type=alphabetical')
+            .then(res => res.json())
+            .then(data => setCategories([...data.payload, { name: "Uncategorized", id: null, description: "Uncategorized" }]))
+    }, []);
+
+    const handleChange = (event: any) => {
+        callback(event.target.value);
+    }
+
+    return (
+        <FormControl fullWidth>
+            <InputLabel id="category_label">Change Category</InputLabel>
+            <Select
+                labelId="dcategory_label"
+                id="category_select"
+                label="Select a Category"
+                defaultValue={pageData ? pageData.category : 'Uncategorized'}
+                onChange={handleChange}
+            >
+                {categories.map((category: Category) => (
+                    <MenuItem value={category.id}>{category.name}</MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     )
 }

@@ -19,6 +19,8 @@ export default function CreatePage() {
     const [categories, setCategories] = useState<Category[]>([]);
 
     const [content, setContent] = useState('');
+    const [category, setCategory] = useState<string>('');
+
     const [title, setTitle] = useState('');
 
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
@@ -158,6 +160,7 @@ export default function CreatePage() {
                                 ?
                                 <QuillTextEditor
                                     setContentCallback={setContent}
+                                    setCategoryCallback={setCategory}
                                     title={title}
                                     categoryId={categoryId}
                                 />
