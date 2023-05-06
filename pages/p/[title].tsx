@@ -87,7 +87,7 @@ export default function Page(props: PageProps) {
                             <IconButton onClick={() => setOpenDialog(true)}>
                                 <Edit htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
-                            <IconButton onClick={() => router.push('#')}>
+                            <IconButton onClick={() => router.push('/p/analytics?slug=' + pageData.slug)}>
                                 <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
@@ -161,6 +161,8 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
             is_helpful: isHelpful
         }
 
+        console.log(clientRequest);
+
         const fetchOptions = {
             method: 'POST',
             headers: {
@@ -177,13 +179,12 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 
     return (
         <Box sx={{
-            color: '#fff',
+            backgroundColor: '#fff',
             padding: '1rem',
-            position: 'fixed',
-            width: '30%',
+            width: '100%',
             height: '155px',
             boxSizing: 'border-box',
-            zIndex: 9999,
+            zIndex: 1,
             bottom: 1,
             boxShadow: 5
         }}>
@@ -230,7 +231,7 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
                                             marginLeft: '1rem',
                                             marginBottom: '2rem'
                                         }}
-                                        onClick={handleYesButtonClick}>
+                                        onClick={handleSubmitFeedback}>
 
                                         Submit
                                     </Button>

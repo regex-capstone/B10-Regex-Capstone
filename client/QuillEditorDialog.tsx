@@ -56,14 +56,14 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
         }
 
         const options = {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(clientRequestCategory)
         }
 
-        const categoryResponse = await fetch('/api/page', options);
+        const categoryResponse = await fetch(`/api/page/slug/${pageData.slug}`, options);
         const categoryData = await categoryResponse.json();
 
         if (!categoryData.success) {

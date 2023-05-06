@@ -27,8 +27,8 @@ export default function Index() {
                             <IconButton onClick={() => router.push('/p/new')}>
                                 <LibraryAdd htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
-                            <IconButton onClick={() => alert('Analytics Button')}>
-                                <Analytics htmlColor={Theme.COLOR.PRIMARY} />
+                            <IconButton onClick={() => router.push('/analytics')}>
+                                <Analytics />
                             </IconButton>
                         </Stack>
                     } />

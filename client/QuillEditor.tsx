@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 import { valid } from 'node-html-parser';
+import DOMPurify from 'isomorphic-dompurify';
 
 interface QuillTextEditorProps {
     setContentCallback: (content: string) => void;

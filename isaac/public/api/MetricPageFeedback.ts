@@ -7,16 +7,12 @@ export default interface MetricPageFeedbackPublicAPIInterface {
     get(get_type: GetMetricPageFeedbackTypes, 
         sort_type: SortType, 
         get_options?: GetMetricPageFeedbackOptions): Promise<MetricPageFeedback | MetricPageFeedback[]>,
-    add(clientRequest: ClientMetricPageFeedbackRequest): Promise<MetricPageFeedback>,
-    aggregate(agg_type: MetricPageFeedbackAggType): Promise<any>
+    add(clientRequest: ClientMetricPageFeedbackRequest): Promise<MetricPageFeedback>
 }
 
 export enum GetMetricPageFeedbackTypes {
     ALL_METRIC_PAGE_FEEDBACK,
     METRIC_PAGE_FEEDBACK_BY_PAGE
-}
-
-export enum MetricPageFeedbackAggType {
 }
 
 export interface GetMetricPageFeedbackOptions {
@@ -63,16 +59,4 @@ export const MetricPageFeedbackPublicAPI: MetricPageFeedbackPublicAPIInterface =
 
         return MetricPageFeedback;
     },
-
-    aggregate: async (type: MetricPageFeedbackAggType) => {
-        let response;
-
-        switch (type) {
-            default:
-                throw new Error('Invalid aggregation type.');
-        }
-
-        return response
-    },
-
 }

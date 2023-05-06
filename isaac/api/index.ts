@@ -4,7 +4,7 @@ import { CategoryAPI } from './Category';
 import { UserAPI } from './User';
 import { SearchAPI } from './Search';
 import { MetricPageClickAPI } from './MetricPageClick';
-// import { MetricSearchQueryAPI } from './MetricSearchQuery';
+import { MetricSearchQueryAPI } from './MetricSearchQuery';
 import { MetricPageFeedbackAPI } from './MetricPageFeedback';
 
 export {
@@ -14,5 +14,6 @@ export {
     UserAPI,
     SearchAPI,
     MetricPageClickAPI,
-    MetricPageFeedbackAPI
+    MetricPageFeedbackAPI,
+    MetricSearchQueryAPI
 }

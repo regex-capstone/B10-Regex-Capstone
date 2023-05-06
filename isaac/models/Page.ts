@@ -21,5 +21,6 @@ export interface ServerPageRequest extends ClientPageRequest {
 
 export interface ClientPageUpdateRequest extends Partial<Page> {
     title?: string;
+    category?: string;
     description?: string;
 }

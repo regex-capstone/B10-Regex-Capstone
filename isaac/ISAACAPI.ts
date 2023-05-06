@@ -5,9 +5,9 @@ import {
     UserAPI, 
     SearchAPI, 
     MetricPageClickAPI,
-    MetricPageFeedbackAPI
+    MetricPageFeedbackAPI,
+    MetricSearchQueryAPI
 } from "./api";
-import { MetricSearchQueryAPI } from "./api/MetricSearchQuery";
 
 /**
  * This is the logic interface for the ISAAC API.
