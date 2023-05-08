@@ -14,12 +14,12 @@ export default function Feedback(props: any) {
     useEffect(() => {
         setLoading(true);
 
-        fetch("/api/metric/page_feedback/" + props.id)
+        fetch("/api/metric/page_feedback/" + props.page_id)
             .then(res => res.json())
             .then(results => setFeedbackData(results.payload));
 
         setLoading(false);
-    }, [props.id])
+    }, [props.page_id])
 
     useEffect(() => {
         if(feedbackData) {

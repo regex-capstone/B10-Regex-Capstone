@@ -17,7 +17,7 @@ export default function ViewsOverTime(props: any) {
     useEffect(() => {
         setLoading(true);
 
-        fetch("/api/metric/page_click/" + props.id)
+        fetch("/api/metric/page_click/" + props.page_id)
             .then(res => {
                 const data = res.json();
                 return data;
@@ -25,7 +25,7 @@ export default function ViewsOverTime(props: any) {
             .then(results => setAnalyticData(results.payload));
 
         setLoading(false);
-    }, [props.id])
+    }, [props.page_id])
 
     useEffect(() => {
         if (analyticData) {
