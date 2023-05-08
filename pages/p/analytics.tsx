@@ -69,9 +69,7 @@ function AnalyticsContainer(props: any) {
 
     useEffect(() => {
         if (deleteComponentOption !== '') {
-            console.log("option: " + deleteComponentOption);
             const compToDelete = document.getElementById(deleteComponentOption);
-            console.log("component" + compToDelete);
             if (compToDelete) { // ensure compToDelete is not null
                 compToDelete.remove();
             }
@@ -100,15 +98,12 @@ function AnalyticsContainer(props: any) {
                                 switch (i) {
                                     case "ViewsOverTime":
                                         const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
-                                        console.log("views key: " + viewsKey);
                                         return (<ViewsOverTime key={viewsKey} id={viewsKey} page_id={pageData.id} delete={setDeleteComponentOption} />);
                                     case "Feedback":
                                         const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
-                                        console.log("feedback key: " + feedbackKey);
                                         return (<Feedback key={feedbackKey} id={feedbackKey} page_id={pageData.id} delete={setDeleteComponentOption} />);
                                     case "NegativeFeedbackMessages":
                                         const feedbackMessageKey = i + "-" + sha256.SHA256(i + index.toString());
-                                        console.log("messages key: " + feedbackMessageKey);
                                         return (<NegativeFeedbackMessages key={feedbackMessageKey} id={feedbackMessageKey} page_id={pageData.id} delete={setDeleteComponentOption} />);
                                 }
                             })
