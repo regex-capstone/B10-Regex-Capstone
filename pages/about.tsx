@@ -25,10 +25,10 @@ function Body() {
   return (
     <Stack direction="column" spacing={0}>
       <Banner hero={content.hero} />
-      <Why why={content.why} />
-      <Scale />
       <Team team={content.team} />
       <JourneyWrapper />
+      <Why why={content.why} />
+      <Scale />
       <Footer />
     </Stack>
   )
@@ -55,6 +55,7 @@ function Banner(props: any) {
             {props.hero.subtitle}
           </Typography>
           {/* <Button variant="contained">Button</Button> */}
+          <img src="/gif/hero.gif" alt="hero" width="50%" />
         </Stack>
       </Container>
     </Box>
@@ -143,7 +144,7 @@ function Team(props: any) {
           <Typography
             fontFamily="Encode Sans"
             // fontWeight="bold"
-            fontSize="1rem"
+            fontSize="2rem"
             textAlign="center"
           >
             {team.subtitle}
@@ -193,6 +194,7 @@ function TeamMemberCard(props: any) {
         <Typography
           textAlign="center"
           fontSize="0.8rem"
+          padding="5px"
         >
           {member.roles}
         </Typography>
