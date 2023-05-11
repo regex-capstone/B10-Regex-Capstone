@@ -252,7 +252,7 @@ function JourneyWrapper() {
 function Footer() {
     return (
         <Box sx={{
-            backgroundColor: Theme.COLOR.BACKGROUND_DARK,
+            backgroundColor: Theme.COLOR.PRIMARY,
             color: Theme.COLOR.TEXT_LIGHT
         }}>
             <Typography
