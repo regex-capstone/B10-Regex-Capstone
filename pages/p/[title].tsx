@@ -1,6 +1,5 @@
 import { Box, Button, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
-import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
 import Header from "@/client/Header";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
@@ -93,29 +92,18 @@ export default function Page(props: PageProps) {
                         </Stack>
                     } />
             }
-            <Container>
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={3}>
-                    </Grid2>
-                    <Grid2 xs={6}>
-                        <Stack className="ql-snow" direction={'column'} spacing={2}>
-                            <Grid2 xs={3}>
-                            </Grid2>
-                            <Content page={pageData} revision={revisionData} />
-                            <QuillEditorDialog
-                                openDialog={openDialog}
-                                setOpenDialogCallback={setOpenDialog}
-                                revisionData={revisionData}
-                                pageData={pageData}
-                            />
-                            <FeedbackSection pageId={pageData.id as string} />
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={3} sx={{
-                        marginTop: 13,
-                    }}>
-                    </Grid2>
-                </Grid2>
+            <Container maxWidth="md">
+                <Stack className="ql-snow" direction={'column'} spacing={2}>
+                    <Content page={pageData} revision={revisionData} />
+                    <QuillEditorDialog
+                        openDialog={openDialog}
+                        setOpenDialogCallback={setOpenDialog}
+                        revisionData={revisionData}
+                        pageData={pageData}
+                    />
+                    <FeedbackSection pageId={pageData.id as string} />
+                </Stack>
+
             </Container>
         </>
     )
