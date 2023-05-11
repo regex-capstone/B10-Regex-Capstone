@@ -99,28 +99,28 @@ function Introduction() {
                     date="9/12/2022"
                     icon={<DateRange />}
                 >
-                <Stack direction="row">
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                        }}
-                    >
-                        {journey.text_3}
-                    </Typography>
-                    <Divider orientation="vertical" style={{ backgroundColor: '#FFFFFF', alignSelf: 'center', marginRight: '10px', height: '100px' }} />
-                    <Box
-                        component="img"
-                        src="/img/team/alan.png"
-                        style={{
-                            borderRadius: '50%',
-                            width: '7rem',
-                            height: '7rem',
-                            marginRight: '1rem',
-                            alignSelf: 'center'
-                        }}
-                    ></Box>
-                </Stack>
+                    <Stack direction="row">
+                        <Typography
+                            variant="h6"
+                            style={{
+                                color: Theme.COLOR.TEXT_LIGHT,
+                            }}
+                        >
+                            {journey.text_3}
+                        </Typography>
+                        <Divider orientation="vertical" style={{ backgroundColor: '#FFFFFF', alignSelf: 'center', marginRight: '10px', height: '100px' }} />
+                        <Box
+                            component="img"
+                            src="/img/team/alan.png"
+                            style={{
+                                borderRadius: '50%',
+                                width: '7rem',
+                                height: '7rem',
+                                marginRight: '1rem',
+                                alignSelf: 'center'
+                            }}
+                        ></Box>
+                    </Stack>
                 </VerticalTimelineElement>
                 <VerticalTimelineElement
                     iconStyle={{
@@ -136,28 +136,28 @@ function Introduction() {
                     date="9/13/2022"
                     icon={<DateRange />}
                 >
-                <Stack direction="row">
-                    <Box
-                        component="img"
-                        src="/img/ischool.png"
-                        style={{
-                            borderRadius: '50%',
-                            width: '7rem',
-                            height: '7rem',
-                            marginRight: '1rem',
-                            alignSelf: 'center'
-                        }}
-                    ></Box>
-                    <Divider orientation="vertical" style={{ backgroundColor: '#FFFFFF', alignSelf: 'center', marginRight: '20px', height: '100px' }} />
-                    <Typography
-                        variant="h6"
-                        style={{
-                            color: Theme.COLOR.TEXT_LIGHT,
-                        }}
-                    >
-                        {journey.text_4}
-                    </Typography>
-                </Stack>
+                    <Stack direction="row">
+                        <Box
+                            component="img"
+                            src="/img/ischool.png"
+                            style={{
+                                borderRadius: '50%',
+                                width: '7rem',
+                                height: '7rem',
+                                marginRight: '1rem',
+                                alignSelf: 'center'
+                            }}
+                        ></Box>
+                        <Divider orientation="vertical" style={{ backgroundColor: '#FFFFFF', alignSelf: 'center', marginRight: '20px', height: '100px' }} />
+                        <Typography
+                            variant="h6"
+                            style={{
+                                color: Theme.COLOR.TEXT_LIGHT,
+                            }}
+                        >
+                            {journey.text_4}
+                        </Typography>
+                    </Stack>
                 </VerticalTimelineElement>
             </VerticalTimeline>
             <Typography
@@ -211,77 +211,78 @@ const advisers = {
 export function Advisers() {
     // TODO: I have no clue how to center this spaghetti code
     return (
-        <Grid style={{
-            alignItems: 'center',
-            justifyContent: 'center'
+        <Box sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center"
         }}>
-            <Stack direction="row" spacing={1} >
-                {
-                    advisers.members.map((member, i) => {
-                        return (
-                            <Grid
-                                key={i}
+            {
+                advisers.members.map((member, i) => {
+                    return (
+                        <Grid
+                            key={i}
+                            style={{
+                                alignContent: 'center',
+                                justifyContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                padding: '20px'
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                sx={{
+                                    height: 200,
+                                    borderRadius: '50%',
+                                    boxShadow: `0px 0px 15px 0px ${GOLD_COLOR}`
+                                }}
+                                src={member.picture}
+                                alt='team profile picture'
+                            />
+                            <Typography
+                                variant="h6"
                                 style={{
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    padding: '20px'
+                                    paddingTop: '10px',
+                                    textAlign: 'center'
                                 }}
                             >
-                                <Box
-                                    component="img"
-                                    sx={{
-                                        height: 200,
-                                        borderRadius: '50%',
-                                        boxShadow: `0px 0px 15px 0px ${GOLD_COLOR}`
-                                    }}
-                                    src={member.picture}
-                                    alt='team profile picture'
-                                />
-                                <Typography
-                                    variant="h6"
-                                    style={{
-                                        paddingTop: '10px',
-                                        textAlign: 'center'
-                                    }}
-                                >
-                                    {
-                                        member.name
-                                    }
-                                </Typography>
-                                <Grid
-                                    style={{
-                                        display: 'flex',
-                                        flexDirection: 'column'
-                                    }}
-                                >
-                                    {
-                                        member.roles.map((role) => {
-                                            return (
-                                                <Typography
-                                                    key={role}
-                                                    variant="h6"
-                                                    style={{
-                                                        textAlign: 'center',
-                                                        opacity: '0.6',
-                                                        flex: 1,
-                                                        margin: 'auto'
-                                                    }}
-                                                >
-                                                    {
-                                                        role
-                                                    }
-                                                </Typography>
-                                            )
-                                        })
-                                    }
-                                </Grid>
+                                {
+                                    member.name
+                                }
+                            </Typography>
+                            <Grid
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}
+                            >
+                                {
+                                    member.roles.map((role) => {
+                                        return (
+                                            <Typography
+                                                key={role}
+                                                variant="h6"
+                                                style={{
+                                                    textAlign: 'center',
+                                                    opacity: '0.6',
+                                                    flex: 1,
+                                                    margin: 'auto'
+                                                }}
+                                            >
+                                                {
+                                                    role
+                                                }
+                                            </Typography>
+                                        )
+                                    })
+                                }
                             </Grid>
-                        )
-                    })
-                }
-            </Stack>
+                        </Grid>
+                    )
+                })
+            }
             <Typography
                 variant="h6"
                 style={{
@@ -292,7 +293,7 @@ export function Advisers() {
             >
                 * = Project Owner
             </Typography>
-        </Grid>
+        </Box>
     )
 }
 
