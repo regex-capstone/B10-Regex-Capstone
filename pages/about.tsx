@@ -1,5 +1,5 @@
 import "animate.css/animate.min.css";
-import { Box, Typography, Container, Stack, Button } from "@mui/material";
+import { Box, Typography, Container, Stack, Button, Grid } from "@mui/material";
 import Head from "next/head";
 import Image from "next/image";
 import { AnimationOnScroll } from 'react-animation-on-scroll';
@@ -10,13 +10,15 @@ import { Pipeline } from "@/client/about/WhyComponent";
 import Journey from "@/client/about/JourneyComponent"
 import 'react-vertical-timeline-component/style.min.css';
 import { useRouter } from "next/router";
+import Header from "@/client/Header";
 
 export default function About() {
     return (
         <>
             <Head>
-                <title>About ISAAC</title>
+                <title>ISAAC | About</title>
             </Head>
+            <Header disableSearchBar />
             <Body />
         </>
     )
@@ -43,25 +45,32 @@ function Banner(props: any) {
             background: "linear-gradient(90deg, rgba(232,227,211,1) 0%, rgba(210,188,134,1) 100%)"
         }}>
             <Container maxWidth="md" sx={{
-                paddingTop: "20vh",
             }}>
                 <Stack direction="column" spacing={1}>
-                    <Typography
-                        fontFamily="Encode Sans"
-                        fontSize="3rem"
-                        fontWeight="bold"
-                    >
-                        {props.hero.title}
-                    </Typography>
-                    <Typography>
-                        {props.hero.subtitle}
-                    </Typography>
-                    <Box sx={{
-                        maxWidth: "300px"
-                    }}>
-                        <Button variant="contained" onClick={() => router.push("/")}>Launch</Button>
-                    </Box>
-                    <img src="/gif/hero.gif" alt="hero" width="50%" />
+                        <Box
+                            component="img"
+                            src="/gif/hero.gif"
+                            style={{
+                                width: "75%",
+                                maxWidth: "500px",
+                                margin: "auto"
+                            }}
+                        />
+                        <Typography
+                            fontFamily="Encode Sans"
+                            fontSize="3rem"
+                            fontWeight="bold"
+                        >
+                            {props.hero.title}
+                        </Typography>
+                        <Typography>
+                            {props.hero.subtitle}
+                        </Typography>
+                        <Box sx={{
+                            maxWidth: "300px"
+                        }}>
+                            <Button variant="contained" onClick={() => router.push("/")}>Launch</Button>
+                        </Box>
                 </Stack>
             </Container>
         </Box>
@@ -239,9 +248,8 @@ function JourneyWrapper() {
         }}>
             <Container maxWidth="lg" sx={{
                 marginTop: "10vh",
-                padding: "10vh",
-                boxShadow: "0 3px 10px rgb(0 0 0 / 0.2)",
-                backgroundColor: Theme.COLOR.BACKGROUND_LIGHT,
+                backgroundColor: Theme.COLOR.BACKGROUND_DARK,
+                color: Theme.COLOR.TEXT_LIGHT
             }}>
                 <Journey />
             </Container>

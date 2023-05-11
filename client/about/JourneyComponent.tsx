@@ -266,7 +266,7 @@ export function Advisers() {
                                                 variant="h6"
                                                 style={{
                                                     textAlign: 'center',
-                                                    opacity: '0.6',
+                                                    opacity: '0.8',
                                                     flex: 1,
                                                     margin: 'auto'
                                                 }}
@@ -288,7 +288,7 @@ export function Advisers() {
                 style={{
                     textAlign: 'center',
                     marginRight: '60%',
-                    opacity: '0.5'
+                    opacity: '0.8'
                 }}
             >
                 * = Project Owner
@@ -405,8 +405,9 @@ function QuestionBox(props: any) {
     return (
         <Box
             sx={{
-                boxShadow: 10,
-                borderRadius: '5px'
+                borderRadius: '5px',
+                boxShadow: '5px 5px 5px rgba(255, 255, 255, 0.3)',
+                backgroundColor: Theme.COLOR.BACKGROUND_LIGHT
             }}
         >
             <Typography
@@ -446,7 +447,6 @@ function ProblemStatementBox(props: any) {
     return (
         <Box
             sx={{
-                boxShadow: 10,
                 borderRadius: '10px',
                 backgroundColor: Theme.COLOR.PRIMARY
             }}
@@ -471,8 +471,9 @@ function PainPointsBox(props: any) {
     return (
         <Box
             sx={{
-                boxShadow: 10,
-                borderRadius: '5px'
+                borderRadius: '5px',
+                boxShadow: '5px 5px 5px rgba(255, 255, 255, 0.3)',
+                backgroundColor: Theme.COLOR.BACKGROUND_LIGHT
             }}
         >
             <Typography

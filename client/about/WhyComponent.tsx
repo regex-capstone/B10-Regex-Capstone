@@ -152,6 +152,14 @@ const pipeline = {
             color: '#7fc97f'
         },
         {
+            text: 'A decoupled, external API for other applications to consume ISAAC information.',
+            title: 'ISAAC API',
+            status: 'COMPLETED - v2.0',
+            pic: '/img/api.png',
+            icon: <Check />,
+            color: '#7fc97f'
+        },
+        {
             text: 'An upgraded website with UW iSchool branding and QoL UI/UX improvements.',
             title: '(Beta) ISAAC Website',
             status: 'COMPLETED - v2.0',
@@ -164,14 +172,6 @@ const pipeline = {
             title: 'Metrics and Data Analytics',
             status: 'COMPLETED - v2.0',
             pic: '/img/data_analytics.png',
-            icon: <Check />,
-            color: '#7fc97f'
-        },
-        {
-            text: 'A decoupled, external API for other applications to consume ISAAC information.',
-            title: 'ISAAC API',
-            status: 'COMPLETED - v2.0',
-            pic: '/img/api.png',
             icon: <Check />,
             color: '#7fc97f'
         },
