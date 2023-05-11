@@ -1,5 +1,4 @@
 import { Box, Grid, Typography } from "@mui/material";
-// import { ABOUT_JSON } from "./content";
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
 import Theme from "../Theme";

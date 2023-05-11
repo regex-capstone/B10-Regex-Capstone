@@ -14,13 +14,17 @@ import Header from "@/client/Header";
 
 export default function About() {
     return (
-        <>
+        <Grid
+            style={{
+                width: "100%"
+            }}
+        >
             <Head>
                 <title>ISAAC | About</title>
             </Head>
             <Header disableSearchBar />
             <Body />
-        </>
+        </Grid>
     )
 }
 
@@ -47,30 +51,30 @@ function Banner(props: any) {
             <Container maxWidth="md" sx={{
             }}>
                 <Stack direction="column" spacing={1}>
-                        <Box
-                            component="img"
-                            src="/gif/hero.gif"
-                            style={{
-                                width: "75%",
-                                maxWidth: "500px",
-                                margin: "auto"
-                            }}
-                        />
-                        <Typography
-                            fontFamily="Encode Sans"
-                            fontSize="3rem"
-                            fontWeight="bold"
-                        >
-                            {props.hero.title}
-                        </Typography>
-                        <Typography>
-                            {props.hero.subtitle}
-                        </Typography>
-                        <Box sx={{
-                            maxWidth: "300px"
-                        }}>
-                            <Button variant="contained" onClick={() => router.push("/")}>Launch</Button>
-                        </Box>
+                    <Box
+                        component="img"
+                        src="/gif/hero.gif"
+                        style={{
+                            width: "75%",
+                            maxWidth: "500px",
+                            margin: "auto"
+                        }}
+                    />
+                    <Typography
+                        fontFamily="Encode Sans"
+                        fontSize="3rem"
+                        fontWeight="bold"
+                    >
+                        {props.hero.title}
+                    </Typography>
+                    <Typography>
+                        {props.hero.subtitle}
+                    </Typography>
+                    <Box sx={{
+                        maxWidth: "300px"
+                    }}>
+                        <Button variant="contained" onClick={() => router.push("/")}>Launch</Button>
+                    </Box>
                 </Stack>
             </Container>
         </Box>
