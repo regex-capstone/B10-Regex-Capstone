@@ -235,10 +235,18 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 }
 
 function Content(props: { page: PageData, revision: Revision }) {
-    const { revision } = props;
+    const { page, revision } = props;
     const html = DOMPurify.sanitize(revision.content);
 
     return (
-        <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: html }} />
+        <>
+            <Typography fontSize={'2rem'} fontWeight={'bold'} sx={{
+                marginTop: '1rem',
+            }}>
+                {page.title}
+            </Typography>
+            <hr />
+            <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: html }} />
+        </>
     )
 }
