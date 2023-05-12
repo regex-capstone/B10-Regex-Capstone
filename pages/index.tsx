@@ -28,7 +28,7 @@ export default function Index() {
                                 <LibraryAdd htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                             <IconButton onClick={() => router.push('/analytics')}>
-                                <Analytics />
+                                <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
                     } />
