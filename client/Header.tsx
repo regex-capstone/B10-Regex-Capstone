@@ -1,4 +1,4 @@
-import { Avatar, Box, Container, IconButton, Stack, TextField } from '@mui/material';
+import { Avatar, Box, Container, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Search from '@mui/icons-material/Search';
@@ -77,8 +77,10 @@ function ProfileIcon() {
     return (
         <Box sx={{
             display: "flex",
+            alignItems: "center",
             justifyContent: "right",
         }}>
+            <Typography fontWeight='bold'>{session?.name}</Typography>
             <IconButton onClick={(e) => {
                 if (session) {
                     signOut()
