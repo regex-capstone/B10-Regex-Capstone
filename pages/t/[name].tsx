@@ -2,12 +2,16 @@ import { Category, Page } from "@/isaac/models"
 import { SortType } from "@/isaac/public/SortType"
 import { GetStaticPathsContext, GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from "next"
 import Head from "next/head"
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Container, IconButton, Stack } from "@mui/material";
 import Link from "next/link"
 import PublicAPIEndpoint from "@/isaac/public/PublicAPI"
 import { GetCategoryTypes } from "@/isaac/public/api/Category"
 import { GetPageTypes } from "@/isaac/public/api/Page"
 import Header from "@/client/Header";
+import { useSession } from "next-auth/react";
+import { Delete } from "@mui/icons-material";
+import Theme from "@/client/Theme";
+import { useRouter } from "next/router";
 
 export async function getStaticPaths(context: GetStaticPathsContext): Promise<GetStaticPathsResult> {
     const api = PublicAPIEndpoint;
@@ -52,12 +56,34 @@ export default function Directory(props: CategoryProps) {
     const category = JSON.parse(props.category) as Category
     const pages = JSON.parse(props.pages) as Page[]
 
+    const { data: session } = useSession()
+    const router = useRouter()
+
+    const handleDelete = async () => {
+        await fetch(`/api/category/c_id/${category.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        router.push('/t/all')
+    }
+
     return (
         <>
             <Head>
                 <title>{`${category.name} | ISAAC`}</title>
             </Head>
-            <Header />
+            <Header actions={
+                session ?
+                    <Stack direction='row'>
+                        <IconButton>
+                            <Delete htmlColor={Theme.COLOR.PRIMARY} onClick={() => handleDelete()} />
+                        </IconButton>
+                    </Stack>
+                : undefined
+            }
+            />
             <Container maxWidth="md">
                 <Content name={category.name} pages={pages} />
             </Container>
