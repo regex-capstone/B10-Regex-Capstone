@@ -6,14 +6,17 @@ import { GetPageTypes } from '@/isaac/public/api/Page';
 import Page, { ClientPageRequest } from '@/isaac/models/Page';
 import { ClientRevisionRequest } from '@/isaac/models/Revision';
 import { parseSortType } from '@/isaac/public/SortType';
+import { getServerSession } from 'next-auth';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const { 
         query: { sort_type: raw_sort_type, populate: populate_string, limit }, 
         body,
-        method 
+        method
     } = req;
     const sort_type = parseSortType(raw_sort_type as string);
     const populate: boolean = (populate_string) ? (populate_string as string).toLowerCase() === 'true' : false;
@@ -38,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'POST':
-                // if (!session) throw new Error('You must be logged in.');
+                if (!session) throw new Error('You must be logged in.');
 
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.title) throw new Error('POST request has no title.');
