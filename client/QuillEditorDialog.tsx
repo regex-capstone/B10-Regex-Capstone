@@ -68,12 +68,17 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             console.error("ERROR CREATING REVISION.");  // TODO handle with toast?
         }
 
+        console.log('sending validation...');
+        await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${pageData.slug}`);
+        console.log('received validation!');
+
         await router.push({
-            pathname: '/redirect',
-            query: { path: `p/${pageData.slug}`}
+            pathname: `/p/${pageData.slug}`
         });
 
+        console.log('routing!');
         setSaving(false);
+        setOpenDialogCallback(false);
     }
 
     return (

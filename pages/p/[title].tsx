@@ -15,6 +15,7 @@ import { Edit, Analytics } from "@mui/icons-material";
 import Theme from "@/client/Theme";
 import { useSession } from "next-auth/react";
 import DOMPurify from 'isomorphic-dompurify';
+import useSWR from "swr";
 
 const api = PublicAPIEndpoint;
 
@@ -57,7 +58,10 @@ export default function Page(props: PageProps) {
     const session = useSession();
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
+    // const [revisionData, setRevisionData] = useState<Revision>(JSON.parse(props.revisionData));
     const router = useRouter();
+
+    // const { data: rawRevisionData } = useSWR(`/api/revision/page/${pageData.slug}/recent`, (url: string) => fetch(url).then(res => res.json()));
 
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -72,6 +76,13 @@ export default function Page(props: PageProps) {
         fetch(`/api/metric/page_click/${pageData.id}`, options)
             .then(response => response.json())
     });
+
+    // useEffect(() => {
+    //     if (rawRevisionData) {
+    //         console.log(rawRevisionData);
+    //         setRevisionData(rawRevisionData.payload);
+    //     }
+    // }, [rawRevisionData])
 
     return (
         <>
@@ -173,8 +184,7 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
             height: '155px',
             boxSizing: 'border-box',
             zIndex: 1,
-            bottom: 1,
-            boxShadow: 5
+            border: '1px solid #E0E0E0',
         }}>
             <>
                 <Stack direction={'column'} spacing={2}>
@@ -237,6 +247,10 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 function Content(props: { page: PageData, revision: Revision }) {
     const { page, revision } = props;
     const html = DOMPurify.sanitize(revision.content);
+
+    useEffect(() => {
+        console.log(revision);
+    }, [])
 
     return (
         <>
