@@ -16,13 +16,17 @@ import Theme from "@/client/Theme";
 import { useSession } from "next-auth/react";
 import DOMPurify from 'isomorphic-dompurify';
 import useSWR from "swr";
+import { MetricPageClickAggType } from "@/isaac/public/api/MetricPageClick";
 
 const api = PublicAPIEndpoint;
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-    const pages: PageData[] = (await api.Page.get(GetPageTypes.ALL_PAGES, SortType.NONE) as PageData[]);
+    // const pages: PageData[] = (await api.Page.get(GetPageTypes.ALL_PAGES, SortType.NONE) as PageData[]);
+    const aggregation = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES));
+    let pages = aggregation.map((e: any) => e.page[0]);
+    pages = pages.filter((e: any) => e !== undefined);
     return {
-        paths: pages.map(page => {
+        paths: pages.map((page: PageData) => {
             return {
                 params: {
                     title: `${page.slug}`
