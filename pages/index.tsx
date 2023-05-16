@@ -1,5 +1,6 @@
 import { Autocomplete, Box, Button, Container, IconButton, Stack, TextField, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -29,6 +30,9 @@ export default function Index() {
                             </IconButton>
                             <IconButton onClick={() => router.push('/analytics')}>
                                 <Analytics htmlColor={Theme.COLOR.PRIMARY} />
+                            </IconButton>
+                            <IconButton onClick={() => router.push('/admin')}>
+                                <SupervisorAccountIcon htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
                     } />
@@ -195,8 +199,8 @@ function TrendingCard() {
         fetch("/api/page/trending")
             .then(res => res.json())
             .then(results => {
-                setPages(results.payload.pages);
-                setViews(results.payload.views)
+                setPages(results.payload ? results.payload.pages : []);
+                setViews(results.payload ? results.payload.views : [])
             })
     }, [])
 
