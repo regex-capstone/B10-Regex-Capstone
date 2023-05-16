@@ -5,10 +5,13 @@ import { User } from '@/isaac/models';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetUserTypes } from '@/isaac/public/api/User';
 import { ClientUserRequest } from '@/isaac/models/User';
+import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
+import { getServerSession } from 'next-auth';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, AuthOptions);
     const { 
         body,
         method 
@@ -17,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         switch (method) {
             case 'POST':
-                // if (!session) { throw new Error('Not authorized. >:('); }
+                if (!session) { throw new Error('Not authorized. >:('); }
 
                 if (!body) { throw new Error('No body provided'); }
                 if (!body.email) { throw new Error('No email provided'); }

@@ -1,0 +1,164 @@
+{
+    "hero": {
+        "title": "Meet ISAAC, the ultimate academic advising sidekick!",
+        "subtitle": "With ISAAC, advisers can effortlessly answer student questions without needing to schedule an appointment and take academic advising to the next level.",
+        "button": "CHECK IT OUT"
+    },
+    "why": {
+        "title": "Why should you choose ISAAC?",
+        "subtitle": "We have upgraded upon the current experience for the advisers to easily maintain and distribute information to students, and for the students to consume information in a quick, searchable manner.",
+        "features": [
+            {
+                "icon": "/img/search.jpg",
+                "text": "A search engine to allow students to quickly find answers to their questions.",
+                "attribution": "<a href='https://www.flaticon.com/free-icons/web-portal' title='web portal icons'>Web portal icons created by Vectors Tank - Flaticon</a>"
+            },
+            {
+                "icon": "/img/article.jpg",
+                "text": "Static-Site Generation for fast loading times, SEO, and easy deployment.",
+                "attribution": "<a href='https://www.flaticon.com/free-icons/gear' title='gear icons'>Gear icons created by DinosoftLabs - Flaticon</a>"
+            },
+            {
+                "icon": "/img/analytics.png",
+                "text": "Data analytic dashboards to enable advisers to make data-driven decisions.",
+                "attribution": "<a href='https://www.flaticon.com/free-icons/dashboard' title='dashboard icons'>Dashboard icons created by Eucalyp - Flaticon</a>"
+            },
+            {
+                "icon": "/img/editor.png",
+                "text": "The ability for advisers to easily add, update, remove, and import HTML  ",
+                "attribution": "<a href='https://www.flaticon.com/free-icons/text-editor' title='text editor icons'>Text editor icons created by Noor Hakim - Flaticon</a>"
+            }
+        ]
+    },
+    "team": {
+        "subtitle": "It all started with our personal experiences as undergraduate INFO students of the iSchool...",
+        "team": [
+            {
+                "name": "Elbert Cheng",
+                "roles": [
+                    "Project Lead"
+                ],
+                "picture": "/img/team/elbert.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/elbert-cheng/",
+                    "github": "https://github.com/treblenaX"
+                }
+            },
+            {
+                "name": "Alan Wen",
+                "roles": [
+                    "Project Engineer"
+                ],
+                "picture": "/img/team/alan.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/wenjalan/",
+                    "github": "https://github.com/wenjalan"
+                }
+            },
+            {
+                "name": "Keith Ellingwood",
+                "roles": [
+                    "Data Engineer"
+                ],
+                "picture": "/img/team/keith.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/keith-ellingwood-iii/",
+                    "github": "https://github.com/kje123"
+                }
+            },
+            {
+                "name": "Ryan Langford",
+                "roles": [
+                    "Frontend Engineer"
+                ],
+                "picture": "/img/team/ryan.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/ryan-langford-497651195/",
+                    "github": "https://github.com/RyanLangford"
+                }
+            },
+            {
+                "name": "Brian Park",
+                "roles": [
+                    "Frontend Engineer"
+                ],
+                "picture": "/img/team/brian.png",
+                "social": {
+                    "linkedin": "https://www.linkedin.com/in/brian-park-3a7447251/",
+                    "github": "#"
+                }
+            }
+        ]
+    },
+    "journey": {
+        "text_1_1": "Appointments had to be scheduled a month in advance, and emails for general questions were not able to be answered in a timely manner.",
+        "text_1": "Alan reached out to the advising team with a basic inquiry about VLPA credit equivalency for the three foreign language classes he took at the Bothell campus.",
+        "text_2": "No response yet.",
+        "text_3": "Alan reached out again to follow up with his inquiry four months later.",
+        "text_4": "Response received! \n 'I apologize for the delayed response. Our office was short staffed, and many emails got buried in our inbox - I saw that your message was still unresolved...' — an iSchool Adviser",
+        "text_6": "We defined the information problem and threw together a presentation proposal pitch...",
+        "text_7": "On December 12th,  2022, we met with the iSchool Advising Team to discuss this problem:"
+    },
+    "advisers": {
+        "title": "iSchool Advising Team",
+        "members": [
+            {
+                "name": "Dowell Eugenio",
+                "roles": ["iSchool Adviser*"],
+                "picture": "/img/advisers/dowell.jpg"
+            },
+            {
+                "name": "Elisa Tran",
+                "roles": ["iSchool Adviser"],
+                "picture": "/img/advisers/elisa.jpg"
+            },
+            {
+                "name": "Matt Trease",
+                "roles": ["iSchool Adviser"],
+                "picture": "/img/advisers/matt.jpg"
+            },
+            {
+                "name": "Kathy Mitchell",
+                "roles": ["iSchool Adviser"],
+                "picture": "/img/advisers/kathy.jpg"
+            }
+        ],
+        "title_2": "Adviser Pain Points:",
+        "aspects": [
+            "Post-COVID, email inquiries for simple, objective questions that don't require human interaction have increased exponentially.",
+            "In 2022, the iSchool enrolled 839 students and plans to admit up to 1,400 annually in the future, which will result in a heavier workload for the advising team.",
+            "The existing Canvas Informatics Resource Site... TODO"
+        ]
+    },
+    "scale": {
+        "title": "How does ISAAC scale?",
+        "subtitle": "We focused on building ISAAC into a modular, scalable system that will allow for future expansion and integration with external applications.",
+        "e": [
+            {
+                "text": "A centralized, accessible information repository to store information by advisers for students.",
+                "title": "Information Repository",
+                "status": "COMPLETED - v1.0"
+            },
+            {
+                "text": "A website that allows students to search and browse for answers to their simple, objective questions.",
+                "title": "ISAAC Website",
+                "status": "COMPLETED - v1.0"
+            },
+            {
+                "text": "Data analytics experience to help advisers make data-driven decisions.",
+                "title": "Metrics and Data Analytics",
+                "status": "COMPLETED - v2.0"
+            },
+            {
+                "text": "A decoupled, external API for other applications to consume ISAAC information.",
+                "title": "ISAAC API",
+                "status": "COMPLETED - v2.0"
+            },
+            {
+                "text": "External applications that consume the ISAAC API for students and advisers such as an AI Chatbot.",
+                "title": "External Application Integrations",
+                "status": "PLANNED - v3.0 (future Capstone project)"
+            }
+        ]
+    }
+}

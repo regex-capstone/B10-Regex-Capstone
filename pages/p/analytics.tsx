@@ -98,13 +98,13 @@ function AnalyticsContainer(props: any) {
                                 switch (i) {
                                     case "ViewsOverTime":
                                         const viewsKey = i + "-" + sha256.SHA256(i + index.toString());
-                                        return (<ViewsOverTime key={viewsKey} id={pageData.id} delete={setDeleteComponentOption} />);
+                                        return (<ViewsOverTime key={viewsKey} id={viewsKey} page_id={pageData.id} delete={setDeleteComponentOption} />);
                                     case "Feedback":
                                         const feedbackKey = i + "-" + sha256.SHA256(i + index.toString());
-                                        return (<Feedback key={feedbackKey} id={pageData.id} delete={setDeleteComponentOption} />);
+                                        return (<Feedback key={feedbackKey} id={feedbackKey} page_id={pageData.id} delete={setDeleteComponentOption} />);
                                     case "NegativeFeedbackMessages":
                                         const feedbackMessageKey = i + "-" + sha256.SHA256(i + index.toString());
-                                        return (<NegativeFeedbackMessages key={feedbackMessageKey} id={pageData.id} delete={setDeleteComponentOption} />);
+                                        return (<NegativeFeedbackMessages key={feedbackMessageKey} id={feedbackMessageKey} page_id={pageData.id} delete={setDeleteComponentOption} />);
                                 }
                             })
                         }

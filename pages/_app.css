@@ -10,3 +10,7 @@ a:hover {
   color: #85754D;
   text-decoration: underline;
 }
+
+html, body {
+    overflow-x: hidden;
+}

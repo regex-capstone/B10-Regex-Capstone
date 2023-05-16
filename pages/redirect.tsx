@@ -10,8 +10,8 @@ export default function RedirectComponent() {
     const { path } = router.query;
 
     useEffect(() => {
-        if (!path) router.push('/');
-        router.push(`/${path}`);
+        if (path === undefined) router.push('/');
+        else router.push(`/${path}`);
     });
 
     return (

@@ -15,7 +15,6 @@ export enum GetPageTypes {
     PAGES_BY_CATEGORY_ID,
     PAGES_BY_TITLE,
     PAGE_BY_SLUG,
-    TRENDING_PAGES,
     ALL_PAGES
 }
 

@@ -1,5 +1,4 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { ABOUT_JSON } from "./content";
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import { VerticalTimeline, VerticalTimelineElement } from "react-vertical-timeline-component";
 import Theme from "../Theme";
@@ -139,23 +138,15 @@ const pipeline = {
             text: 'A centralized, accessible information repository to store information by advisers for students.',
             title: 'Information Repository',
             status: 'COMPLETED - v1.0',
-            pic: '',    // TODO get picture
+            pic: '/img/info_repo.png',
             icon: <Check />,
             color: '#7fc97f'
         },
         {
             text: 'A website that allows students to search and browse for answers to their simple, objective questions.',
-            title: 'ISAAC Website',
+            title: '(Alpha) ISAAC Website',
             status: 'COMPLETED - v1.0',
-            pic: '/img/home_page.png',
-            icon: <Check />,
-            color: '#7fc97f'
-        },
-        {
-            text: 'Data analytics experience to help advisers make data-driven decisions.',
-            title: 'Metrics and Data Analytics',
-            status: 'COMPLETED - v2.0',
-            pic: '',    // TODO get picture
+            pic: '/img/old_home_page.png',
             icon: <Check />,
             color: '#7fc97f'
         },
@@ -164,6 +155,22 @@ const pipeline = {
             title: 'ISAAC API',
             status: 'COMPLETED - v2.0',
             pic: '/img/api.png',
+            icon: <Check />,
+            color: '#7fc97f'
+        },
+        {
+            text: 'An upgraded website with UW iSchool branding and QoL UI/UX improvements.',
+            title: '(Beta) ISAAC Website',
+            status: 'COMPLETED - v2.0',
+            pic: '/img/home_page.png',
+            icon: <Check />,
+            color: '#7fc97f'
+        },
+        {
+            text: 'Data analytics experience to help advisers make data-driven decisions.',
+            title: 'Metrics and Data Analytics',
+            status: 'COMPLETED - v2.0',
+            pic: '/img/data_analytics.png',
             icon: <Check />,
             color: '#7fc97f'
         },
@@ -178,7 +185,7 @@ const pipeline = {
     ]
 }
 
-function Pipeline() {
+export function Pipeline() {
     const components = pipeline.e.map((e, i) => {
         return (
             <VerticalTimelineElement
@@ -251,6 +258,7 @@ function Pipeline() {
                     pipeline.title
                 }
             </Typography>
+            <hr />
             <Typography
                 style={{
                     textAlign: 'center',

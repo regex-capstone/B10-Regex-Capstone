@@ -28,7 +28,7 @@ export default function Index() {
                                 <LibraryAdd htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                             <IconButton onClick={() => router.push('/analytics')}>
-                                <Analytics />
+                                <Analytics htmlColor={Theme.COLOR.PRIMARY} />
                             </IconButton>
                         </Stack>
                     } />
@@ -209,7 +209,8 @@ function TrendingCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages && views ? pages.map((p, i) => <CardRow key={p.id} page={p} view={views[i].views} />) : undefined}
+                {/* TODO: Fix pages containing null entries */}
+                {pages && views ? pages.map((p, i) => p ? <CardRow key={p.id} page={p} view={views[i].views} /> : undefined) : undefined}
             </Stack>
         </Card>
     )
@@ -233,7 +234,8 @@ function RecentCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Recently Updated</b></Typography>
             </Box>
             <Stack direction="column">
-                {pages ? pages.map((p, i) => <CardRow key={p.id} page={p} />) : undefined}
+                {/* TODO: Ensure pages does not contain null values */}
+                {pages ? pages.map((p, i) => p ? <CardRow key={p.id} page={p} /> : undefined) : undefined}
             </Stack>
         </Card>
     )

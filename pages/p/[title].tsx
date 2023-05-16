@@ -1,6 +1,5 @@
 import { Box, Button, Container, Stack, TextField, Typography, IconButton } from "@mui/material";
 import { Revision, Page as PageData } from "@/isaac/models";
-import Grid2 from '@mui/material/Unstable_Grid2';
 import Head from "next/head";
 import Header from "@/client/Header";
 import { GetStaticPathsResult, GetStaticPropsContext, GetStaticPropsResult } from 'next';
@@ -16,13 +15,18 @@ import { Edit, Analytics } from "@mui/icons-material";
 import Theme from "@/client/Theme";
 import { useSession } from "next-auth/react";
 import DOMPurify from 'isomorphic-dompurify';
+import useSWR from "swr";
+import { MetricPageClickAggType } from "@/isaac/public/api/MetricPageClick";
 
 const api = PublicAPIEndpoint;
 
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
-    const pages: PageData[] = (await api.Page.get(GetPageTypes.ALL_PAGES, SortType.NONE) as PageData[]);
+    // const pages: PageData[] = (await api.Page.get(GetPageTypes.ALL_PAGES, SortType.NONE) as PageData[]);
+    const aggregation = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES));
+    let pages = aggregation.map((e: any) => e.page[0]);
+    pages = pages.filter((e: any) => e !== undefined);
     return {
-        paths: pages.map(page => {
+        paths: pages.map((page: PageData) => {
             return {
                 params: {
                     title: `${page.slug}`
@@ -58,7 +62,10 @@ export default function Page(props: PageProps) {
     const session = useSession();
     const pageData: PageData = JSON.parse(props.pageData);
     const revisionData: Revision = JSON.parse(props.revisionData);
+    // const [revisionData, setRevisionData] = useState<Revision>(JSON.parse(props.revisionData));
     const router = useRouter();
+
+    // const { data: rawRevisionData } = useSWR(`/api/revision/page/${pageData.slug}/recent`, (url: string) => fetch(url).then(res => res.json()));
 
     const [openDialog, setOpenDialog] = useState(false);
 
@@ -73,6 +80,13 @@ export default function Page(props: PageProps) {
         fetch(`/api/metric/page_click/${pageData.id}`, options)
             .then(response => response.json())
     });
+
+    // useEffect(() => {
+    //     if (rawRevisionData) {
+    //         console.log(rawRevisionData);
+    //         setRevisionData(rawRevisionData.payload);
+    //     }
+    // }, [rawRevisionData])
 
     return (
         <>
@@ -93,29 +107,18 @@ export default function Page(props: PageProps) {
                         </Stack>
                     } />
             }
-            <Container>
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={3}>
-                    </Grid2>
-                    <Grid2 xs={6}>
-                        <Stack className="ql-snow" direction={'column'} spacing={2}>
-                            <Grid2 xs={3}>
-                            </Grid2>
-                            <Content page={pageData} revision={revisionData} />
-                            <QuillEditorDialog
-                                openDialog={openDialog}
-                                setOpenDialogCallback={setOpenDialog}
-                                revisionData={revisionData}
-                                pageData={pageData}
-                            />
-                            <FeedbackSection pageId={pageData.id as string} />
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={3} sx={{
-                        marginTop: 13,
-                    }}>
-                    </Grid2>
-                </Grid2>
+            <Container maxWidth="md">
+                <Stack className="ql-snow" direction={'column'} spacing={2}>
+                    <Content page={pageData} revision={revisionData} />
+                    <QuillEditorDialog
+                        openDialog={openDialog}
+                        setOpenDialogCallback={setOpenDialog}
+                        revisionData={revisionData}
+                        pageData={pageData}
+                    />
+                    <FeedbackSection pageId={pageData.id as string} />
+                </Stack>
+
             </Container>
         </>
     )
@@ -185,8 +188,7 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
             height: '155px',
             boxSizing: 'border-box',
             zIndex: 1,
-            bottom: 1,
-            boxShadow: 5
+            border: '1px solid #E0E0E0',
         }}>
             <>
                 <Stack direction={'column'} spacing={2}>
@@ -247,10 +249,22 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 }
 
 function Content(props: { page: PageData, revision: Revision }) {
-    const { revision } = props;
+    const { page, revision } = props;
     const html = DOMPurify.sanitize(revision.content);
 
+    useEffect(() => {
+        console.log(revision);
+    }, [])
+
     return (
-        <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: html }} />
+        <>
+            <Typography fontSize={'2rem'} fontWeight={'bold'} sx={{
+                marginTop: '1rem',
+            }}>
+                {page.title}
+            </Typography>
+            <hr />
+            <Container className="ql-editor" dangerouslySetInnerHTML={{ __html: html }} />
+        </>
     )
 }

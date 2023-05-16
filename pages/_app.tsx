@@ -1,5 +1,6 @@
 import { AppProps } from 'next/app'
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { CssBaseline} from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SessionProvider } from 'next-auth/react';
 import { ComponentAuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import Theme from '@/client/Theme';
