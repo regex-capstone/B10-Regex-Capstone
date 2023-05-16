@@ -16,20 +16,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         body,
         method 
     } = req;
+    let email: string;
+    let user: User;
+    let users: User[];
 
     try {
         switch (method) {
+            case 'GET':
+                if (!session) { throw new Error('Not authorized. >:('); }
+
+                users = await api.User.get(GetUserTypes.ALL_USERS, {}) as User[];
+
+                res.status(200).json({
+                    success: true,
+                    payload: users
+                });
+
+                break;
             case 'POST':
                 if (!session) { throw new Error('Not authorized. >:('); }
 
                 if (!body) { throw new Error('No body provided'); }
                 if (!body.email) { throw new Error('No email provided'); }
 
-                const email = body.email as string;
+                email = body.email as string;
 
-                const u: User = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email });
+                user = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email }) as User;
 
-                if (u) { throw new Error('User already exists'); }
+                if (user) { throw new Error('User already exists'); }
 
                 const clientRequest: ClientUserRequest = {
                     email: email
@@ -40,12 +54,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 res.status(200).json({
                     success: true,
                     acknowledged: acknowledgement
-                })
-
+                });
 
                 break;
+            case 'DELETE':
+                if (!session) { throw new Error('Not authorized. >:('); }
+
+                if (!body) { throw new Error('No body provided'); }
+                if (!body.email) { throw new Error('No email provided'); }
+
+                email = body.email;
+
+                res.status(200).json(await api.User.delete({ email: email }));
+                break;
             default:
-                res.setHeader('Allow', ['POST']);
+                res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
                 res.status(405).end(`Method ${method} Not Allowed`);
         }
     } catch (e) {

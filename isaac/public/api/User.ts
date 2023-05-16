@@ -4,13 +4,14 @@ import { ClientUserRequest, ServerUserRequest } from "@/isaac/models/User";
 
 
 export default interface UserPublicAPIInterface {
-    get(get_type: GetUserTypes, get_options?: GetUserOptions): Promise<User>,
+    get(get_type: GetUserTypes, get_options?: GetUserOptions): Promise<User | User[]>,
     add(clientRequest: ClientUserRequest): Promise<boolean>,
     delete(options: any): Promise<any>
 }
 
 export enum GetUserTypes {
-    USER_BY_EMAIL
+    USER_BY_EMAIL,
+    ALL_USERS
 }
 
 export interface GetUserOptions {
@@ -25,6 +26,8 @@ export const UserPublicAPI: UserPublicAPIInterface = {
             case GetUserTypes.USER_BY_EMAIL:
                 if (!get_options?.email) throw new Error('No email provided.');
                 return (await isaac.User.get({ email: get_options?.email, single: true })) as User;
+            case GetUserTypes.ALL_USERS:
+                return (await isaac.User.get({})) as User[];
 
             default:
                 throw new Error("Invalid get type.");

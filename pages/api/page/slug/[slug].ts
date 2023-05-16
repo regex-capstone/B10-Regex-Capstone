@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'DELETE':
-                // if (!session) throw new Error('You must be logged in.');
+                if (!session) throw new Error('You must be logged in.');
                 
                 const deletedPageAcknowledgment = await api.Page.delete({
                     _id: page.id as string
