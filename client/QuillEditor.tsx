@@ -52,7 +52,7 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
             'link'
         ];
 
-        let placeholder = 'Create a new page...';
+        let placeholder = '       Create a new page...';
 
         const { quill, quillRef } = useQuill({ modules, formats, placeholder });
 
