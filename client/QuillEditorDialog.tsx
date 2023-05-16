@@ -22,7 +22,8 @@ const loadingTextArr = [
 export default function QuillEditorDialog(props: QuillTextEditorProps) {
     const { pageData, revisionData, openDialog, setOpenDialogCallback } = props;
     const [content, setContent] = useState<string>('');
-
+    const [category, setCategory] = useState<string>('');
+    
     const [loadingText, setLoadingText] = useState(loadingTextArr[0]);
     const [textInterval, setTextInterval] = useState<NodeJS.Timeout | null>(null);
     const [isSaving, setSaving] = useState(false);
@@ -47,6 +48,27 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             setLoadingText(loadingTextArr[textIndex % 3]);
             textIndex++;
         }, 200));
+
+        // handle category change
+        const clientRequestCategory = {
+            title: pageData.title,
+            category: category
+        }
+
+        const options = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(clientRequestCategory)
+        }
+
+        const categoryResponse = await fetch(`/api/page/slug/${pageData.slug}`, options);
+        const categoryData = await categoryResponse.json();
+
+        if (!categoryData.success) {
+            window.alert("ERROR Setting Category.");
+        }
 
         // process create revision created by user
         const clientRequestRevision = {
@@ -86,6 +108,7 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             <Dialog fullWidth={true} maxWidth={'lg'} open={openDialog} onClose={setOpenDialogCallback}>
                 <QuillTextEditor
                     setContentCallback={setContent}
+                    setCategoryCallback={setCategory}
                     pageData={pageData}
                     revisionData={revisionData}
                 />
