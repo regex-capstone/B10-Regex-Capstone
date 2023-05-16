@@ -14,7 +14,6 @@ export default function Admin() {
   const { data: session } = useSession()
   const [admins, setAdmins] = useState<User[]>([])
 
-  // TODO: Get all admins 
   useEffect(() => {
     fetch(API_ENDPOINT_USER)
       .then(res => res.json())
