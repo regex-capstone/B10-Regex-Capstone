@@ -54,6 +54,18 @@ export const MetricSearchQueryAPI: ModelAPI<MetricSearchQuery, ServerMetricSearc
     },
     
     aggregate: async (...agg_args: any[]) => { throw new Error('Not implemented'); },
-    update: async (id: string, attributes: Partial<MetricSearchQuery>) => { throw new Error('Not implemented'); },
-    delete: async (id: string) => { throw new Error('Not implemented'); }
+    update: async (id: string, attributes: Partial<MetricSearchQuery>) => { throw new Error('Not implemented'); },    
+    delete: async (options: any) => {
+        try {
+            const response = await MongooseModels.MetricSearchQuery.deleteMany(options);
+            return {
+                success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    }
 }

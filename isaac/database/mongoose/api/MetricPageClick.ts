@@ -13,7 +13,7 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick, ServerMetricPageClick
             const payload: MetricPageClick[] = data.map((raw) => {
                 return {
                     created_at: raw.created_at,
-                    page_id: raw.page_id
+                    page: raw.page
                 };
             });
 
@@ -32,7 +32,7 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick, ServerMetricPageClick
         try {
             const payload = new MongooseModels.MetricPageClick({
                 ...serverRequest,
-                page_id: new mongoose.Types.ObjectId(serverRequest.page_id)
+                page: new mongoose.Types.ObjectId(serverRequest.page)
             });
             await payload.validate();
             await payload.save();
@@ -70,11 +70,12 @@ export const MetricPageClickAPI: ModelAPI<MetricPageClick, ServerMetricPageClick
 
     update: async (id: string, attributes: Partial<MetricPageClick>) => { throw new Error('Not implemented'); },
     
-    delete: async (id: string) => {
+    delete: async (options: any) => {
         try {
-            const response = await MongooseModels.MetricPageClick.deleteOne({_id: id});
+            const response = await MongooseModels.MetricPageClick.deleteMany(options);
             return {
                 success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
             }
         } catch (err: any) {
             return {

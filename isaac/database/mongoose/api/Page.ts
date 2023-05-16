@@ -42,7 +42,6 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
             }
         }
     },
-
     add: async (serverRequest: ServerPageRequest) => {
         try {
             const page = new MongooseModels.Page({
@@ -75,12 +74,12 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
             }
         }
     },
-
-    delete: async (id: string) => {
+    delete: async (options: any) => {
         try {
-            const response = await MongooseModels.Page.deleteOne({ _id: id });
+            const response = await MongooseModels.Page.deleteMany(options);
             return {
-                success: response.acknowledged ?? false
+                success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
             }
         } catch (err: any) {
             return {
@@ -88,7 +87,6 @@ export const PageModelAPI: ModelAPI<Page, ServerPageRequest> = {
             }
         }
     },
-
     update: async (slug: string, attributes: Partial<Page>) => {
         try {
             // hack: i'm too lazy rn to figure this out if u wanna figure it out be my guest

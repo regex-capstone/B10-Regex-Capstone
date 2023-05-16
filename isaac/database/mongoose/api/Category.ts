@@ -62,11 +62,12 @@ export const CategoryModelAPI: ModelAPI<Category, ServerCategoryRequest> = {
         }
     },
 
-    delete: async (id: string) => {
+    delete: async (options: any) => {
         try {
-            const response = await MongooseModels.Category.deleteOne({ _id: id });
+            const response = await MongooseModels.Category.deleteMany(options);
             return {
-                success: response.acknowledged ?? false
+                success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
             }
         } catch (err: any) {
             return {

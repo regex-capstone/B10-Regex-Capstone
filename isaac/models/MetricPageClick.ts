@@ -1,10 +1,10 @@
 export default interface MetricPageClick {
     created_at: number;
-    page_id: string;
+    page: string;
 }
 
 export interface ClientMetricPageClickRequest {
-    page_id: string;
+    page: string;
 }
 
 export interface ServerMetricPageClickRequest extends ClientMetricPageClickRequest {

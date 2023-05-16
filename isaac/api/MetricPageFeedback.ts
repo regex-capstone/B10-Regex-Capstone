@@ -53,6 +53,6 @@ export const MetricPageFeedbackAPI = {
 
         if (isErrorResponse(response)) throw response.error;
 
-        return response.success;
+        return response;
     }
 };

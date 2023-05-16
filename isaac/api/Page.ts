@@ -59,6 +59,6 @@ export const PageAPI = {
 
         if (isErrorResponse(response)) throw response.error;
         
-        return response.success;
+        return response;
     }
 }

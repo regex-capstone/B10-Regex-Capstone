@@ -30,7 +30,6 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback, ServerMetricPag
             }
         }
     },
-
     add: async (serverRequest: ServerMetricPageFeedbackRequest) => {
         try {
             const payload = new MongooseModels.MetricPageFeedback({
@@ -70,7 +69,18 @@ export const MetricPageFeedbackAPI: ModelAPI<MetricPageFeedback, ServerMetricPag
             }
         }
     },
-
-    update: async (id: string, attributes: Partial<MetricPageFeedback>) => { throw new Error('Not implemented'); },
-    delete: async (id: string) => { throw new Error('Not implemented'); }
+    update: async (id: string, attributes: Partial<MetricPageFeedback>) => { throw new Error('Not implemented'); },    
+    delete: async (options: any) => {
+        try {
+            const response = await MongooseModels.MetricPageFeedback.deleteMany(options);
+            return {
+                success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    }
 }

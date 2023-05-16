@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             case 'POST':
                 const payload = (
                     await api.MetricPageClick.add({
-                        page_id: page_id as string
+                        page: page_id as string
                     })
                 );
                 res.status(200).json({

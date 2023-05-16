@@ -7,7 +7,7 @@ export default interface PagePublicAPIInterface {
     get(get_type: GetPageTypes, sort_type: SortType, get_options?: GetPageOptions): Promise<Page | Page[]>,
     add(p: ClientPageRequest): Promise<Page>,
     update(slug: string, p: ClientPageUpdateRequest): Promise<Page>,
-    delete(p_id: string): Promise<boolean>
+    delete(options: any): Promise<any>
 }
 
 export enum GetPageTypes {
@@ -97,8 +97,8 @@ export const PagePublicAPI: PagePublicAPIInterface = {
         return page;
     },
 
-    delete: async (p_id: string) => {
-        const isDeleted = (await isaac.Page.delete(p_id)) as boolean;
+    delete: async (options: any) => {
+        const isDeleted = (await isaac.Page.delete(options));
 
         if (isDeleted) isaac.Search.resetCorpus();
 

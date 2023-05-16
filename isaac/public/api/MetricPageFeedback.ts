@@ -7,7 +7,8 @@ export default interface MetricPageFeedbackPublicAPIInterface {
     get(get_type: GetMetricPageFeedbackTypes, 
         sort_type: SortType, 
         get_options?: GetMetricPageFeedbackOptions): Promise<MetricPageFeedback | MetricPageFeedback[]>,
-    add(clientRequest: ClientMetricPageFeedbackRequest): Promise<MetricPageFeedback>
+    add(clientRequest: ClientMetricPageFeedbackRequest): Promise<MetricPageFeedback>,
+    delete(options: any): Promise<any>
 }
 
 export enum GetMetricPageFeedbackTypes {
@@ -59,4 +60,8 @@ export const MetricPageFeedbackPublicAPI: MetricPageFeedbackPublicAPIInterface =
 
         return MetricPageFeedback;
     },
+
+    delete: async (options: any) => {
+        return await isaac.MetricPageFeedback.delete(options);
+    }
 }

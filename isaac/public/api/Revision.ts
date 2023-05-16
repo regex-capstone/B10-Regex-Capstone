@@ -7,7 +7,7 @@ import parse from "node-html-parser";
 export default interface RevisionPublicAPIInterface {
     get(get_type: GetRevisionTypes, sort_type: SortType, get_options?: GetRevisionOptions): Promise<Revision | Revision[]>,
     add(r: ClientRevisionRequest): Promise<Revision>,
-    delete(p_id: string): Promise<boolean>
+    delete(options: any): Promise<any>
 }
 
 export enum GetRevisionTypes {
@@ -101,7 +101,7 @@ export const RevisionPublicAPI: RevisionPublicAPIInterface = {
         return rev;
     },
 
-    delete: async (r_id: string) => {
-        return (await isaac.Revision.delete(r_id)) as boolean;
+    delete: async (options: any) => {
+        return (await isaac.Revision.delete(options));
     }
 }

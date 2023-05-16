@@ -4,7 +4,7 @@ import MongooseDatabaseAPI from "../database/mongoose/MongooseAPI";
 import MetricPageClick, { ServerMetricPageClickRequest } from "../models/MetricPageClick";
 
 export interface MetricPageClickOptions extends BaseOptions {
-    page_id?: string;
+    page?: string;
 }
 
 export interface MetricPageClickSortOptions {
@@ -48,11 +48,11 @@ export const MetricPageClickAPI = {
         return payload;
     },
 
-    delete: async (mpc_id: string) => {
-        const response = (await database.MetricPageClick.delete(mpc_id));
+    delete: async (options: any) => {
+        const response = (await database.MetricPageClick.delete(options));
 
         if (isErrorResponse(response)) throw response.error;
 
-        return response.success;
+        return response;
     }
 };

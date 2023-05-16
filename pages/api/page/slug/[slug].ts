@@ -62,13 +62,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'DELETE':
-                if (!session) throw new Error('You must be logged in.');
+                // if (!session) throw new Error('You must be logged in.');
                 
-                const deleted = await api.Page.delete(page.id as string);
+                const deletedPageAcknowledgment = await api.Page.delete({
+                    _id: page.id as string
+                });
                 
+                // delete connections to this page
+                const deletedRevisionAcknowledgment = await api.Revision.delete({
+                    page: page.id as string
+                });
+                const deletedMetricPageClickAcknowledgment = await api.MetricPageClick.delete({
+                    page: page.id as string
+                });
+                const deletedMetricPageFeedbackAcknowledgment = await api.MetricPageFeedback.delete({
+                    page: page.id as string
+                });
+
                 res.status(200).json({
                     success: true,
-                    payload: deleted
+                    payload: {
+                        page: deletedPageAcknowledgment,
+                        revision: deletedRevisionAcknowledgment,
+                        metricPageClick: deletedMetricPageClickAcknowledgment,
+                        metricPageFeedback: deletedMetricPageFeedbackAcknowledgment
+                    }
                 });
                 break;
             default:

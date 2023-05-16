@@ -5,7 +5,6 @@ import { MetricSearchQuery } from "../models";
 import { ServerMetricSearchQueryRequest } from "../models/MetricSearchQuery";
 
 export interface MetricSearchQueryOptions extends BaseOptions {
-    page_id?: string;
 }
 
 export interface MetricSearchQuerySortOptions {

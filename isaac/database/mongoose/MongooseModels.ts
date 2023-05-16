@@ -78,7 +78,7 @@ const MetricPageClickSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Date missing...']
     },
-    page_id: {
+    page: {
         type: mongoose.Schema.Types.ObjectId,
         required: [true, 'Page reference ID is missing...']
     }

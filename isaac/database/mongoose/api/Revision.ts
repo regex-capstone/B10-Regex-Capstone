@@ -68,11 +68,12 @@ export const RevisionModelAPI: ModelAPI<Revision, ServerRevisionRequest> = {
         }
     },
 
-    delete: async (id: string) => {
+    delete: async (options: any) => {
         try {
-            const response = await MongooseModels.Revision.deleteOne({ _id: id });
+            const response = await MongooseModels.Revision.deleteMany(options);
             return {
-                success: response.acknowledged ?? false
+                success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
             }
         } catch (err: any) {
             return {

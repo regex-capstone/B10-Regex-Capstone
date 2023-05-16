@@ -31,7 +31,7 @@ export default interface DatabaseAPI {
 export interface ModelAPI<K, T> {
     get: (options: any, sort: any) => Promise<SuccessDBResponse | ErrorDBResponse>,
     add: (serverRequest: T) => Promise<SuccessDBResponse | ErrorDBResponse>,
-    delete: (id: string) => Promise<SuccessDBResponse | ErrorDBResponse>,
+    delete: (options: any) => Promise<SuccessDBResponse | ErrorDBResponse>,
     update: (id: string, attributes: Partial<K>) => Promise<SuccessDBResponse | ErrorDBResponse>,
     aggregate: (...agg_args: any[]) => Promise<SuccessDBResponse | ErrorDBResponse>
 }

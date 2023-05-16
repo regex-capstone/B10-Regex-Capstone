@@ -39,11 +39,11 @@ export const RevisionAPI = {
         return resultRev;
     },
 
-    delete: async (r_id: string) => {
-        const response = (await database.Revision.delete(r_id));
+    delete: async (query: any) => {
+        const response = (await database.Revision.delete(query));
 
         if (isErrorResponse(response)) throw response.error;
 
-        return response.success;
+        return response;
     }
 }

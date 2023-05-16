@@ -5,7 +5,8 @@ import { ClientUserRequest, ServerUserRequest } from "@/isaac/models/User";
 
 export default interface UserPublicAPIInterface {
     get(get_type: GetUserTypes, get_options?: GetUserOptions): Promise<User>,
-    add(clientRequest: ClientUserRequest): Promise<boolean>
+    add(clientRequest: ClientUserRequest): Promise<boolean>,
+    delete(options: any): Promise<any>
 }
 
 export enum GetUserTypes {
@@ -41,5 +42,9 @@ export const UserPublicAPI: UserPublicAPIInterface = {
         if (!acknowledgement) throw new Error('Error adding new user.');
 
         return acknowledgement;
+    },
+
+    delete: async (options: any) => {
+        return (await isaac.User.delete(options));
     }
 }

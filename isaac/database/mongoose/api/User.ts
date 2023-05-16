@@ -47,5 +47,17 @@ export const UserModelAPI: ModelAPI<User, ServerUserRequest> = {
 
     update: async (u: any) => { throw new Error('Not implemented'); },
     aggregate: async (groupOptions: any, sortOptions: any, lookupOptions: any) => { throw new Error('Not implemented'); },
-    delete: (id: string) => { throw new Error('Not implemented'); }
+    delete: async (options: any) => {
+        try {
+            const response = await MongooseModels.User.deleteMany(options);
+            return {
+                success: response.acknowledged ?? false,
+                payload: response.deletedCount ?? 0
+            }
+        } catch (err: any) {
+            return {
+                error: err
+            }
+        }
+    },
 }

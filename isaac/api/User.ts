@@ -45,5 +45,13 @@ export const UserAPI = {
         if (!resultUser) throw new Error('Error updating user.');
     
         return resultUser;
+    },
+
+    delete: async (options: any) => {
+        const response = (await database.User.delete(options));
+    
+        if (isErrorResponse(response)) throw response.error;
+    
+        return response;
     }
 }
