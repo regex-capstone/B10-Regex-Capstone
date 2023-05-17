@@ -7,6 +7,7 @@ import QuillTextEditor from "@/client/QuillEditor";
 import { useEffect, useState } from "react";
 import Category from '../../isaac/models/Category';
 import { useRouter } from "next/router";
+import Header from "@/client/Header";
 
 const loadingTextArr = [
     'SAVING.',
@@ -111,19 +112,8 @@ export default function CreatePage() {
             <Head>
                 <title>{`Create New Page | ISAAC`}</title>
             </Head>
+            <Header />
             <Container>
-                <Grid2 container spacing={2}>
-                    <Grid2 xs={3}>
-                        <Stack direction={'column'} spacing={2}>
-                            <Logo />
-                        </Stack>
-                    </Grid2>
-                    <Grid2 xs={6}>
-                        <Stack direction={'column'} spacing={2}>
-                            <SearchBar initialQuery={''} />
-                        </Stack>
-                    </Grid2>
-                </Grid2>
                 <Grid2 xs={6}>
                     <Stack direction={'column'} spacing={2}>
                         <div>

@@ -20,7 +20,7 @@ export default function About() {
             }}
         >
             <Head>
-                <title>ISAAC | About</title>
+                <title>About | ISAAC</title>
             </Head>
             <Header disableSearchBar />
             <Body />

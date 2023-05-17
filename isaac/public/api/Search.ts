@@ -11,8 +11,12 @@ const isaac = ISAACAPI;
 
 export const SearchPublicAPI = {
     search: async (q: string) => {
+        let results = [];
         const s = performance.now();
-        const results = await isaac.Search.search(q);
+        
+        results = (q === '') 
+            ? await isaac.Page.get({}, { created_at: -1 })
+            : await isaac.Search.search(q);
 
         return {
             results: results,

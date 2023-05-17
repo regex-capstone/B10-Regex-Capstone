@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 // add search query metric
                 await api.MetricSearchQuery.add({
-                    search_query: q as string,
+                    search_query: (q as string).trim(),
                 });
 
                 res.status(200).json({
