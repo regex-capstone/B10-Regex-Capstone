@@ -5,10 +5,9 @@ import { RevisionModelAPI } from './api/Revision';
 import { CategoryModelAPI } from './api/Category';
 import { UserModelAPI } from './api/User';
 import { MetricPageClickAPI } from "./api/MetricPageClick";
-import MetricSearchQuery from '../../models/MetricSearchQuery';
-import MetricPageFeedback from '../../models/MetricPageFeedback';
 import { MetricPageFeedbackAPI } from "./api/MetricPageFeedback";
 import { MetricSearchQueryAPI } from "./api/MetricSearchQuery";
+import { SearchSerialAPI } from "./api/SearchSerial";
 
 try {
     await connectToDatabase();
@@ -29,7 +28,8 @@ const MongooseDatabaseAPI: DatabaseAPI = {
     User: UserModelAPI,
     MetricPageClick: MetricPageClickAPI,
     MetricSearchQuery: MetricSearchQueryAPI,
-    MetricPageFeedback: MetricPageFeedbackAPI
+    MetricPageFeedback: MetricPageFeedbackAPI,
+    SearchSerial: SearchSerialAPI
 };
 
 export default MongooseDatabaseAPI;

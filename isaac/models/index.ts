@@ -5,6 +5,7 @@ import User from './User';
 import MetricPageClick from './MetricPageClick';
 import MetricSearchQuery from './MetricSearchQuery';
 import MetricPageFeedback from './MetricPageFeedback';
+import SearchSerial from './SearchSerial';
 
 export type {
     Page,
@@ -13,5 +14,6 @@ export type {
     MetricPageFeedback,
     Revision,
     Category,
-    User
+    User,
+    SearchSerial
 }

@@ -80,8 +80,6 @@ export const PagePublicAPI: PagePublicAPIInterface = {
 
         const page: Page = await isaac.Page.add(serverRequest);
 
-        isaac.Search.resetCorpus();
-
         if (!page) throw new Error('Error adding new page.');
 
         return page;
@@ -89,8 +87,6 @@ export const PagePublicAPI: PagePublicAPIInterface = {
 
     update: async (slug: string, clientRequest: ClientPageUpdateRequest) => {
         const page: Page = await isaac.Page.update(slug, clientRequest);
-
-        isaac.Search.resetCorpus();
         
         if (!page) throw new Error('Error updating page.');
 
@@ -99,8 +95,6 @@ export const PagePublicAPI: PagePublicAPIInterface = {
 
     delete: async (options: any) => {
         const isDeleted = (await isaac.Page.delete(options));
-
-        if (isDeleted) isaac.Search.resetCorpus();
 
         return isDeleted;
     }

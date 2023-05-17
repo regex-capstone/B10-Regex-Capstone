@@ -6,13 +6,15 @@ import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
 import { getServerSession } from 'next-auth';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
+import { GetRevisionTypes } from '@/isaac/public/api/Revision';
+import { Revision } from '@/isaac/models';
 
 const api = PublicAPIEndpoint;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, AuthOptions);
-    const { 
-        query: { slug, populate: populate_string }, 
+    const {
+        query: { slug, populate: populate_string },
         method,
         body
     } = req;
@@ -22,8 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const page: Page = (
             await api.Page.get(
                 GetPageTypes.PAGE_BY_SLUG,
-                SortType.NONE, 
-                { 
+                SortType.NONE,
+                {
                     p_slug: slug as string,
                     populate: populate
                 }
@@ -43,18 +45,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
             case 'PUT':
                 if (!session) throw new Error('You must be logged in.');
-
                 if (!body) throw new Error('PUT request has no body.');
-                
-                const clientRequest: ClientPageUpdateRequest = {
-                    title: body.title ?? null,
-                    category: body.category ?? null,
-                }
 
-                const updated = await api.Page.update(
-                    slug as string, 
-                    clientRequest
-                );
+                const clientRequest: ClientPageUpdateRequest = {}
+
+                if (body.title) clientRequest.title = body.title;
+                if (body.category) clientRequest.category = body.category;
+
+                const updated = await api.Page.update(slug as string, clientRequest);
+                const revision = await api.Revision.get(GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID, SortType.RECENTLY_CREATED, { p_id: page.id as string }) as Revision;
+                const text = ((clientRequest.title) ? clientRequest.title : page.title) + " " + revision.content
+                    .replaceAll(/<[^>]*>/g, ' ')
+                    .replaceAll(/\s{2,}/g, ' ')
+                    .trim();
+
+                await api.Search.add(page.id as string, text);
 
                 res.status(200).json({
                     success: true,
@@ -62,22 +67,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'DELETE':
-                // if (!session) throw new Error('You must be logged in.');
-                
-                const deletedPageAcknowledgment = await api.Page.delete({
-                    _id: page.id as string
-                });
-                
+                if (!session) throw new Error('You must be logged in.');
+
+                const deletedPageAcknowledgment = await api.Page.delete({ slug: page.slug as string });
+
                 // delete connections to this page
-                const deletedRevisionAcknowledgment = await api.Revision.delete({
-                    page: page.id as string
-                });
-                const deletedMetricPageClickAcknowledgment = await api.MetricPageClick.delete({
-                    page: page.id as string
-                });
-                const deletedMetricPageFeedbackAcknowledgment = await api.MetricPageFeedback.delete({
-                    page: page.id as string
-                });
+                const deletedRevisionAcknowledgment = await api.Revision.delete({ page: page.id as string });
+                const deletedMetricPageClickAcknowledgment = await api.MetricPageClick.delete({ page: page.id as string });
+                const deletedMetricPageFeedbackAcknowledgment = await api.MetricPageFeedback.delete({ page: page.id as string });
+                const deletedSearchAcknowledgment = await api.Search.delete(page.id as string);
 
                 res.status(200).json({
                     success: true,
@@ -85,7 +83,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         page: deletedPageAcknowledgment,
                         revision: deletedRevisionAcknowledgment,
                         metricPageClick: deletedMetricPageClickAcknowledgment,
-                        metricPageFeedback: deletedMetricPageFeedbackAcknowledgment
+                        metricPageFeedback: deletedMetricPageFeedbackAcknowledgment,
+                        search: deletedSearchAcknowledgment
                     }
                 });
                 break;

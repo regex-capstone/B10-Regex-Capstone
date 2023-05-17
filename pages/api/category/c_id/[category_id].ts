@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 break;
             case 'PUT':
-                // if (!session) throw new Error('You must be logged in.');
+                if (!session) throw new Error('You must be logged in.');
 
                 if (!body) throw new Error('PUT request has no body.');
                 if (!body.name) throw new Error('PUT request has no name.');
