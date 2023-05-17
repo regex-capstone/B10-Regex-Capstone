@@ -1,4 +1,5 @@
 import ISAACAPI from "@/isaac/ISAACAPI";
+import { Page } from "@/isaac/models";
 import { SearchResponse } from "@/isaac/services/search/SearchInterface";
 
 export default interface SearchPublicAPIInterface {
@@ -15,8 +16,8 @@ export const SearchPublicAPI = {
         const s = performance.now();
         
         results = (q === '') 
-            ? await isaac.Page.get({}, { created_at: -1 })
-            : await isaac.Search.search(q);
+            ? await isaac.Page.get({}, { created_at: -1 }) as Page[]
+            : await isaac.Search.search(q) as Page[];
 
         return {
             results: results,
