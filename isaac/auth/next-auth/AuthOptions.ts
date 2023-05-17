@@ -25,7 +25,7 @@ export const AuthOptions: NextAuthOptions = {
         // https://next-auth.js.org/configuration/callbacks
         async signIn({ user }) {
             const email = user.email as string;
-            const u: User = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email });
+            const u: User = await api.User.get(GetUserTypes.USER_BY_EMAIL, { email: email }) as User;
 
             return (!u) ? false : true;
         },
