@@ -4,6 +4,7 @@ import { ServerMetricPageFeedbackRequest } from '../models/MetricPageFeedback';
 import { ServerMetricSearchQueryRequest } from '../models/MetricSearchQuery';
 import { ServerPageRequest } from '../models/Page';
 import { ServerRevisionRequest } from '../models/Revision';
+import SearchSerial, { ServerSearchSerialRequest } from '../models/SearchSerial';
 import { ServerUserRequest } from '../models/User';
 import type { Page, Revision, Category, User, MetricPageClick, MetricSearchQuery, MetricPageFeedback } from '../models/index';
 
@@ -21,7 +22,8 @@ export default interface DatabaseAPI {
     User: ModelAPI<User, ServerUserRequest>,
     MetricPageClick: ModelAPI<MetricPageClick, ServerMetricPageClickRequest>,
     MetricSearchQuery: ModelAPI<MetricSearchQuery, ServerMetricSearchQueryRequest>,
-    MetricPageFeedback: ModelAPI<MetricPageFeedback, ServerMetricPageFeedbackRequest>
+    MetricPageFeedback: ModelAPI<MetricPageFeedback, ServerMetricPageFeedbackRequest>,
+    SearchSerial: ModelAPI<SearchSerial, ServerSearchSerialRequest>
 }
 
 /**

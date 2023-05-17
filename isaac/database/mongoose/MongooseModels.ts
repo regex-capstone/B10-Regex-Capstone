@@ -114,6 +114,21 @@ const MetricSearchQuerySchema = new mongoose.Schema({
     }
 }, { strict: true });
 
+const SearchSerialSchema = new mongoose.Schema({
+    page_ids: {
+        type: [String],
+        required: [true, 'Page indices are missing...']
+    },
+    tfidf_serial: {
+        type: String,
+        required: [true, 'Serialized string is missing...']
+    },
+    created_at: {
+        type: Number,
+        required: [true, 'Creation date is missing...']
+    }
+})
+
 export default {
     Page: mongoose.models.Page || mongoose.model<Page>('Page', PageSchema),
     Revision: mongoose.models.Revision || mongoose.model<Revision>('Revision', RevisionSchema),
@@ -121,5 +136,6 @@ export default {
     User: mongoose.models.User || mongoose.model<User>('User', UserSchema),
     MetricPageClick: mongoose.models.MetricPageClick || mongoose.model<MetricPageClick>('MetricPageClick', MetricPageClickSchema),
     MetricPageFeedback: mongoose.models.MetricPageFeedback || mongoose.model<MetricPageFeedback>('MetricPageFeedback', MetricPageFeedbackSchema),
-    MetricSearchQuery: mongoose.models.MetricSearchQuery || mongoose.model<MetricSearchQuery>('MetricSearchQuery', MetricSearchQuerySchema)
+    MetricSearchQuery: mongoose.models.MetricSearchQuery || mongoose.model<MetricSearchQuery>('MetricSearchQuery', MetricSearchQuerySchema),
+    SearchSerial: mongoose.models.SearchSerial || mongoose.model('SearchSerial', SearchSerialSchema)
 }

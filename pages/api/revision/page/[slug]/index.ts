@@ -45,7 +45,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
             case 'POST':
                 if (!session) throw new Error('You must be logged in.');
-
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.content) throw new Error('POST request has no content.');
 
@@ -59,6 +58,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
 
                 const revision = await api.Revision.add(clientRequest);
+
+                const text = page.title + " " + revision.content
+                    .replaceAll(/<[^>]*>/g, ' ')
+                    .replaceAll(/\s{2,}/g, ' ')
+                    .trim();
+                await api.Search.add(page.id as string, text);
 
                 res.status(200).json({
                     success: true,

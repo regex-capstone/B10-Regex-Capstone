@@ -4,7 +4,7 @@ import '@/isaac/database/mongoose/MongooseProvider';
 import PublicAPIEndpoint from '@/isaac/public/PublicAPI';
 import { GetPageTypes } from '@/isaac/public/api/Page';
 import Page, { ClientPageRequest } from '@/isaac/models/Page';
-import { ClientRevisionRequest } from '@/isaac/models/Revision';
+import Revision, { ClientRevisionRequest } from '@/isaac/models/Revision';
 import { parseSortType } from '@/isaac/public/SortType';
 import { getServerSession } from 'next-auth';
 import { AuthOptions } from '@/isaac/auth/next-auth/AuthOptions';
@@ -42,7 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 break;
             case 'POST':
                 if (!session) throw new Error('You must be logged in.');
-
                 if (!body) throw new Error('POST request has no body.');
                 if (!body.title) throw new Error('POST request has no title.');
 
@@ -60,7 +59,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     page: page.id as string
                 }
 
-                await api.Revision.add(initRevisionRequest);
+                const revision: Revision = await api.Revision.add(initRevisionRequest);
+
+                const text = page.title + " " + revision.content
+                    .replaceAll(/<[^>]*>/g, ' ')
+                    .replaceAll(/\s{2,}/g, ' ')
+                    .trim();
+                await api.Search.add(page.id as string, text);
 
                 res.status(200).json({
                     success: true,

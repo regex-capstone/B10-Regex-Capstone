@@ -1,44 +1,74 @@
-import { Page } from "@/isaac/models";
+import { SearchSerial } from "@/isaac/models";
 import { TfIdf } from "natural";
-import Search from "../SearchInterface";
 
-let corpus: TfIdf = new TfIdf();
-let isCorpusOutdated = true;
-
-export const NaturalProvider: Search = {
-    search(q: string, pages: Page[]) {
-        const query = q.toLowerCase();
-        let index = [] as Array<any>;
-
-        corpus.tfidfs(query, (i, measure) => {
+export const NaturalProvider = {
+    search: (q: string, searchSerial: SearchSerial) => {
+        const corpus = new TfIdf(JSON.parse(searchSerial.tfidf_serial));
+        let pageIdResults: any[] = [];
+        corpus.tfidfs(q, (i, measure) => {
             if (measure > 0) {
-                index.push({ page: pages[i], rating: measure });
+                pageIdResults.push({
+                    page_id: searchSerial.page_ids[i],
+                    rating: measure
+                });
             }
         });
-
-        return index
-            .sort((a, b) => b.rating - a.rating)
-            .map(i => i.page);
+        return pageIdResults.sort((a, b) => b.rating - a.rating)
     },
+    addDocument: (searchSerial: SearchSerial, pageId: string, docContent: string) => {
+        const rawCorpus = JSON.parse(searchSerial.tfidf_serial);
+        const pageIds = searchSerial.page_ids;
 
-    updateCorpus(pages: Page[]) {
-        const newCorpus = new TfIdf();
-
-        for (let i = 0; i < pages.length; i++) {
-            const document = pages[i].title.toLowerCase();
-            newCorpus.addDocument(document);
+        if (pageIds.includes(pageId)) { // page already exists in corpus
+            deleteInCorpus(pageId, pageIds, rawCorpus);
         }
 
-        corpus = newCorpus;
+        const corpus = new TfIdf(rawCorpus);
+        pageIds.push(pageId);
+        corpus.addDocument(docContent);
 
-        isCorpusOutdated = false;
+        return {
+            page_ids: pageIds,
+            tfidf_serial: JSON.stringify(corpus),
+        }
     },
+    deleteDocument: (searchSerial: SearchSerial, pageId: string) => {
+        const rawCorpus = JSON.parse(searchSerial.tfidf_serial);
+        const pageIds = searchSerial.page_ids;
 
-    setCorpusOutdated(isOutdated: boolean) {
-        isCorpusOutdated = isOutdated;
+        if (pageIds.includes(pageId)) {
+            deleteInCorpus(pageId, pageIds, rawCorpus);
+        }
+
+        return {
+            page_ids: pageIds,
+            tfidf_serial: JSON.stringify(rawCorpus),
+        }
     },
+    init: (pageIds: string[], docs: string[]) => {
+        let corpus = new TfIdf();
+        pageIds.forEach((pageId, i) => {
+            corpus.addDocument(docs[i]);
+        });
 
-    isCorpusOutdated() {
-        return isCorpusOutdated;
+        return {
+            page_ids: pageIds,
+            tfidf_serial: JSON.stringify(corpus),
+        }
+    }
+}
+
+function deleteInCorpus(pageId: string, pageIds: string[], corpusObject: any) {
+    const index = pageIds.indexOf(pageId);
+
+    if (index > -1) {
+        pageIds.splice(index, 1);
+        const documents = corpusObject.documents;
+        documents.splice(index, 1);
+    }
+
+    return {
+        page_ids: pageIds,
+        corpusObject: corpusObject
     }
 }

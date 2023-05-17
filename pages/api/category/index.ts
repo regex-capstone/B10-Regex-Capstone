@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 break;
             case 'POST':
-                if (!session) throw new Error('You must be logged in.');                
+                // if (!session) throw new Error('You must be logged in.');                
                 if (!body) throw new Error('POST request has no body.');
 
                 const existingCat = (
