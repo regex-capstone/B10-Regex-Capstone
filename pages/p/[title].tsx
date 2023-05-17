@@ -164,8 +164,6 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
             is_helpful: isHelpful
         }
 
-        console.log(clientRequest);
-
         const fetchOptions = {
             method: 'POST',
             headers: {
@@ -251,10 +249,6 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
 function Content(props: { page: PageData, revision: Revision }) {
     const { page, revision } = props;
     const html = DOMPurify.sanitize(revision.content);
-
-    useEffect(() => {
-        console.log(revision);
-    }, [])
 
     return (
         <>

@@ -52,22 +52,24 @@ export default function Search(props: SearchProps) {
     const [reload, setReload] = useState(false);
 
     useEffect(() => {
-        fetch('/api/category?sort_type=alphabetical')
-            .then(res => res.json())
-            .then(data => setCategories(data.payload));
-
-        fetch('/api/search/' + q)
-            .then(res => res.json())
-            .then(data => {
-                const freshPages = data.payload.results;
-                const timeElapsed = roundOff(data.payload.time_elapsed / 1000);
-
-                setCachedQuery(q);
-                setResults(freshPages);
-                setTimeElapsed(timeElapsed);
-            });
-
-        setReload(false);
+        if (reload) {
+            fetch('/api/category?sort_type=alphabetical')
+                .then(res => res.json())
+                .then(data => setCategories(data.payload));
+    
+            fetch('/api/search/' + q)
+                .then(res => res.json())
+                .then(data => {
+                    const freshPages = data.payload.results;
+                    const timeElapsed = roundOff(data.payload.time_elapsed / 1000);
+    
+                    setCachedQuery(q);
+                    setResults(freshPages);
+                    setTimeElapsed(timeElapsed);
+                });
+    
+            setReload(false);
+        }
     }, [reload, q]);
 
     useEffect(() => {
