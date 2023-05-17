@@ -12,11 +12,18 @@ export const SearchAPI = {
     search: async (q: string) => {
         let searchSerial: SearchSerial = await getSearchSerial();
         if (!searchSerial) searchSerial = await init();
+        
         const searchResponse = natural.search(q, searchSerial);
+
         const resultPageIds: string[] = searchResponse.map((result: any) => result.page_id);
         const response = await database.Page.get({ _id: { $in: resultPageIds } }, { created_at: -1 });
         if (isErrorResponse(response)) throw response.error;
-        return response.payload;
+
+        const results = resultPageIds.map((pageId: string) => {
+            return (response.payload as Page[]).find((page: Page) => page.id === pageId)
+        });
+
+        return results;
     },
     addDocument: async (pageId: string, docContent: string) => {
         let searchSerial: SearchSerial = await getSearchSerial();
@@ -85,7 +92,11 @@ async function init() {
         const recentRev = recentRevResponse.payload[0];
 
         const text = parse(recentRev.content).text;
-        docs[i] = doc + " " + text;
+
+        for (let j = 0; j < 4; j++) {   // r/programminghorror
+            docs[i] += ' ' + doc + ' ';
+        }
+        docs[i] += text;
     }
 
     const init = natural.init(pageIds, docs);

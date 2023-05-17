@@ -59,10 +59,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const revision = await api.Revision.add(clientRequest);
 
-                const text = page.title + " " + revision.content
+                let text = '';
+
+                for (let i = 0; i < 4; i++) {  // r/programminghorror
+                    text += page.title + ' ';
+                }
+
+                text += revision.content
                     .replaceAll(/<[^>]*>/g, ' ')
                     .replaceAll(/\s{2,}/g, ' ')
                     .trim();
+                    
                 await api.Search.add(page.id as string, text);
 
                 res.status(200).json({
