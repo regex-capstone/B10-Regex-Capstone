@@ -1,7 +1,6 @@
 import { Page as PageData, Revision as RevisionData } from '@/isaac/models';
-import { Box, Button, Container, Dialog, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, Container, Dialog, Grid, TextField } from "@mui/material";
 import { useRouter } from "next/router";
-import { Category } from "@/isaac/models"
 import React, { useEffect, useState } from 'react';
 import { useQuill } from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
@@ -169,51 +168,6 @@ function HTMLToEditorDialog(props: any) {
                     </Button>           
                 </Grid>
             </Grid>
-        </>
-    )
-}
-
-function CategorySelector(props: { categoryCallback: Function, titleCallback: Function, pageData: PageData | undefined }) {
-    const { categoryCallback, titleCallback, pageData } = props
-
-    const [categories, setCategories] = useState<Category[]>([])
-
-    useEffect(() => {
-        fetch('/api/category?sort_type=alphabetical')
-            .then(res => res.json())
-            .then(data => setCategories([...data.payload, { name: "Uncategorized", id: 'uncategorized', description: "Uncategorized" }]))
-    }, []);
-
-    const handleCategoryChange = (event: any) => {
-        categoryCallback(event.target.value);
-    }
-
-    const handleTitleChange = (event: any) => {
-        titleCallback(event.target.value)
-    }
-
-    return (
-        <>
-            <FormControl fullWidth>
-                <TextField label="Change Page Title" defaultValue={pageData?.title} onChange={handleTitleChange} sx={{
-                    marginBottom: "1em"
-                }}></TextField>
-            </FormControl>
-            <FormControl fullWidth>
-                <InputLabel id="category_label">Change Category</InputLabel>
-                <Select
-                    labelId="category_label"
-                    id="category_select"
-                    label="Select a Category"
-                    defaultValue={pageData ? pageData.category : 'Uncategorized'}
-                    onChange={handleCategoryChange}
-                    sx={{ marginBottom: "1em" }}
-                >
-                    {categories.map((category: Category) => (
-                        <MenuItem value={category.id}>{category.name}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
         </>
     )
 }
