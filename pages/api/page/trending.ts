@@ -18,9 +18,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         switch (method) {
             case 'GET':
                 const return_pages_amount = 5;
-                const aggregation = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES));
+                // need to filter the aggregation of any entries with empty page objects
+                const aggregation = (await api.MetricPageClick.aggregate(MetricPageClickAggType.TRENDING_PAGES)).filter((e:any) => e.page.length > 0);
 
                 let pages = aggregation.map((e: any) => e.page[0]);
+                // filtering undefined out of pages, just in case
+                pages = pages.filter((e: any) => e !== undefined);
                 const views = aggregation.map((e: any) => { 
                     return {
                         id: e._id,
