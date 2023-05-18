@@ -44,13 +44,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 });
                 break;
             case 'PUT':
-                if (!session) throw new Error('You must be logged in.');
+                // if (!session) throw new Error('You must be logged in.');
                 if (!body) throw new Error('PUT request has no body.');
 
                 const clientRequest: ClientPageUpdateRequest = {}
 
                 if (body.title) clientRequest.title = body.title;
                 if (body.category) clientRequest.category = body.category;
+
+                if (clientRequest.category === 'uncategorized') {
+                    clientRequest.category = undefined;
+                }
 
                 const updated = await api.Page.update(slug as string, clientRequest);
                 const revision = await api.Revision.get(GetRevisionTypes.RECENT_REVISION_OF_PAGE_ID, SortType.RECENTLY_CREATED, { p_id: page.id as string }) as Revision;
@@ -63,7 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 res.status(200).json({
                     success: true,
-                    payload: updated
+                    payload: (await api.Page.get(GetPageTypes.PAGE_BY_ID, SortType.NONE, { p_id: page.id as string })) as Page
                 });
                 break;
             case 'DELETE':
