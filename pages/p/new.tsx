@@ -151,6 +151,7 @@ export default function CreatePage() {
                                 <QuillTextEditor
                                     setContentCallback={setContent}
                                     setCategoryCallback={setCategory}
+                                    setTitleCallback={setTitle}
                                     title={title}
                                     categoryId={categoryId}
                                 />

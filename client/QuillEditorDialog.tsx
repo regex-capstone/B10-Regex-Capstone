@@ -64,14 +64,9 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             body: JSON.stringify(clientRequestCategory)
         }
 
-        console.log('options: ', options)
-
         const categoryResponse = await fetch(`/api/page/slug/${pageData.slug}`, options);
         const categoryData = await categoryResponse.json();
         const newPageData: PageData = categoryData.payload;
-
-        console.log('categoryData', categoryData)
-        console.log('newPageData', newPageData)
 
         if (!categoryData.success) {
             window.alert("ERROR Setting Category.");
@@ -96,8 +91,6 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
         if (!revisionResponse.ok) {
             console.error("ERROR CREATING REVISION.");  // TODO handle with toast?
         }
-
-        console.log('revisionData: ', revisionData)
 
         console.log('sending validation...');
         await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${pageData.slug}`);

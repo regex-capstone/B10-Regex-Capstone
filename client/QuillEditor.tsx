@@ -184,7 +184,6 @@ function CategorySelector(props: { categoryCallback: Function, titleCallback: Fu
     const { categoryCallback, titleCallback, pageData } = props
 
     const [categories, setCategories] = useState<Category[]>([])
-    console.log("categories: ", categories) 
 
     useEffect(() => {
         fetch('/api/category?sort_type=alphabetical')
