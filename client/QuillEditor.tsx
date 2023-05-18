@@ -10,8 +10,6 @@ import DOMPurify from 'isomorphic-dompurify';
 
 interface QuillTextEditorProps {
     setContentCallback: (content: string) => void;
-    setCategoryCallback: (content: string) => void;
-    setTitleCallback: (content: string) => void;
     pageData?: PageData;
     revisionData?: RevisionData;
     title?: string;
@@ -19,7 +17,7 @@ interface QuillTextEditorProps {
 }
 
 export default function QuillTextEditor(props: QuillTextEditorProps) {
-    const { setContentCallback, setCategoryCallback, setTitleCallback, pageData, revisionData } = props;
+    const { setContentCallback, pageData, revisionData } = props;
 
     const CreateQuillEditor = (content: string) => {
         const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -79,11 +77,6 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
 
         return (
             <Container>
-                <CategorySelector
-                    pageData={pageData}
-                    categoryCallback={setCategoryCallback}
-                    titleCallback={setTitleCallback}
-                />
                 <Dialog 
                     fullWidth={true} 
                     maxWidth={'lg'} 
