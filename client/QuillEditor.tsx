@@ -11,6 +11,7 @@ import DOMPurify from 'isomorphic-dompurify';
 interface QuillTextEditorProps {
     setContentCallback: (content: string) => void;
     setCategoryCallback: (content: string) => void;
+    setTitleCallback: (content: string) => void;
     pageData?: PageData;
     revisionData?: RevisionData;
     title?: string;
@@ -18,7 +19,7 @@ interface QuillTextEditorProps {
 }
 
 export default function QuillTextEditor(props: QuillTextEditorProps) {
-    const { setContentCallback, setCategoryCallback, pageData, revisionData } = props;
+    const { setContentCallback, setCategoryCallback, setTitleCallback, pageData, revisionData } = props;
 
     const CreateQuillEditor = (content: string) => {
         const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -77,7 +78,12 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
         })
 
         return (
-            <>
+            <Container>
+                <CategorySelector
+                    pageData={pageData}
+                    categoryCallback={setCategoryCallback}
+                    titleCallback={setTitleCallback}
+                />
                 <Dialog 
                     fullWidth={true} 
                     maxWidth={'lg'} 
@@ -94,14 +100,11 @@ export default function QuillTextEditor(props: QuillTextEditorProps) {
                 <Button
                     style={{ width: '100%' }}
                     onClick={() => setOpenDialog(prev => !prev)}
+                    sx={{ marginTop: "1em" }}
                 >
                     Open HTML Editor
                 </Button>
-                <CategorySelector
-                    pageData={pageData}
-                    callback={setCategoryCallback}
-                />
-            </>
+            </Container>
         );
     }
 
@@ -139,7 +142,7 @@ function HTMLToEditorDialog(props: any) {
                 container
                 direction="column"
                 style={{
-                    padding: '20px'
+                    padding: '20px',
                 }}
             >
                 <Grid item>
@@ -152,7 +155,7 @@ function HTMLToEditorDialog(props: any) {
                         onChange={(e) => setHTML(e.target.value)}
                         style={{ 
                             width: '100%',
-                            padding: '10px'
+                            padding: '10px',
                         }} 
                     />     
                 </Grid>
@@ -177,35 +180,48 @@ function HTMLToEditorDialog(props: any) {
     )
 }
 
-function CategorySelector(props: { callback: Function, pageData: PageData | undefined }) {
-    const { callback, pageData } = props
+function CategorySelector(props: { categoryCallback: Function, titleCallback: Function, pageData: PageData | undefined }) {
+    const { categoryCallback, titleCallback, pageData } = props
 
     const [categories, setCategories] = useState<Category[]>([])
+    console.log("categories: ", categories) 
 
     useEffect(() => {
         fetch('/api/category?sort_type=alphabetical')
             .then(res => res.json())
-            .then(data => setCategories([...data.payload, { name: "Uncategorized", id: null, description: "Uncategorized" }]))
+            .then(data => setCategories([...data.payload, { name: "Uncategorized", id: 'uncategorized', description: "Uncategorized" }]))
     }, []);
 
-    const handleChange = (event: any) => {
-        callback(event.target.value);
+    const handleCategoryChange = (event: any) => {
+        categoryCallback(event.target.value);
+    }
+
+    const handleTitleChange = (event: any) => {
+        titleCallback(event.target.value)
     }
 
     return (
-        <FormControl fullWidth>
-            <InputLabel id="category_label">Change Category</InputLabel>
-            <Select
-                labelId="dcategory_label"
-                id="category_select"
-                label="Select a Category"
-                defaultValue={pageData ? pageData.category : 'Uncategorized'}
-                onChange={handleChange}
-            >
-                {categories.map((category: Category) => (
-                    <MenuItem value={category.id}>{category.name}</MenuItem>
-                ))}
-            </Select>
-        </FormControl>
+        <>
+            <FormControl fullWidth>
+                <TextField label="Change Page Title" defaultValue={pageData?.title} onChange={handleTitleChange} sx={{
+                    marginBottom: "1em"
+                }}></TextField>
+            </FormControl>
+            <FormControl fullWidth>
+                <InputLabel id="category_label">Change Category</InputLabel>
+                <Select
+                    labelId="category_label"
+                    id="category_select"
+                    label="Select a Category"
+                    defaultValue={pageData ? pageData.category : 'Uncategorized'}
+                    onChange={handleCategoryChange}
+                    sx={{ marginBottom: "1em" }}
+                >
+                    {categories.map((category: Category) => (
+                        <MenuItem value={category.id}>{category.name}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+        </>
     )
 }

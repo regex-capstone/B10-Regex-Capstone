@@ -21,6 +21,7 @@ const loadingTextArr = [
 
 export default function QuillEditorDialog(props: QuillTextEditorProps) {
     const { pageData, revisionData, openDialog, setOpenDialogCallback } = props;
+    const [title, setTitle] = useState<string>('');
     const [content, setContent] = useState<string>('');
     const [category, setCategory] = useState<string>('');
     
@@ -48,10 +49,10 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             setLoadingText(loadingTextArr[textIndex % 3]);
             textIndex++;
         }, 200));
-
+        
         // handle category change
         const clientRequestCategory = {
-            title: pageData.title,
+            title: title,
             category: category
         }
 
@@ -63,8 +64,14 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             body: JSON.stringify(clientRequestCategory)
         }
 
+        console.log('options: ', options)
+
         const categoryResponse = await fetch(`/api/page/slug/${pageData.slug}`, options);
         const categoryData = await categoryResponse.json();
+        const newPageData: PageData = categoryData.payload;
+
+        console.log('categoryData', categoryData)
+        console.log('newPageData', newPageData)
 
         if (!categoryData.success) {
             window.alert("ERROR Setting Category.");
@@ -83,20 +90,22 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
             body: JSON.stringify(clientRequestRevision)
         }
 
-        const revisionResponse = await fetch(`/api/revision/page/${pageData.slug}`, revisionOptions);
+        const revisionResponse: Response = await fetch(`/api/revision/page/${newPageData.slug}`, revisionOptions);
         const revisionData = await revisionResponse.json();
 
-        if (!revisionData.success) {
+        if (!revisionResponse.ok) {
             console.error("ERROR CREATING REVISION.");  // TODO handle with toast?
         }
+
+        console.log('revisionData: ', revisionData)
 
         console.log('sending validation...');
         await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${pageData.slug}`);
         console.log('received validation!');
 
-        await router.push({
-            pathname: `/p/${pageData.slug}`
-        });
+        // await router.push({
+        //     pathname: `/p/${newPageData.slug}`
+        // });
 
         console.log('routing!');
         setSaving(false);
@@ -107,6 +116,7 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
         <>
             <Dialog fullWidth={true} maxWidth={'lg'} open={openDialog} onClose={setOpenDialogCallback}>
                 <QuillTextEditor
+                    setTitleCallback={setTitle}
                     setContentCallback={setContent}
                     setCategoryCallback={setCategory}
                     pageData={pageData}
