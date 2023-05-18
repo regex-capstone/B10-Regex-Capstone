@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 let text = '';
 
-                for (let i = 0; i < 4; i++) {  // r/programminghorror
+                for (let j = 0; j < 20; j++) {   // r/programminghorror
                     text += page.title + ' ';
                 }
 
