@@ -103,9 +103,9 @@ export default function QuillEditorDialog(props: QuillTextEditorProps) {
         await fetch(`/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATION_TOKEN}&path=/p/${pageData.slug}`);
         console.log('received validation!');
 
-        // await router.push({
-        //     pathname: `/p/${newPageData.slug}`
-        // });
+        await router.push({
+            pathname: `/p/${newPageData.slug}`
+        });
 
         console.log('routing!');
         setSaving(false);
