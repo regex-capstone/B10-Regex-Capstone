@@ -213,7 +213,6 @@ function TrendingCard() {
                 <Typography fontFamily="Encode Sans" fontSize={24}><b>Trending</b></Typography>
             </Box>
             <Stack direction="column">
-                {/* TODO: Fix pages containing null entries */}
                 {pages && views ? pages.map((p, i) => p ? <CardRow key={p.id} page={p} view={views[i].views} /> : undefined) : undefined}
             </Stack>
         </Card>

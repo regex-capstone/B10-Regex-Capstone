@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (body.category) clientRequest.category = body.category;
 
                 if (clientRequest.category === 'uncategorized') {
-                    clientRequest.category = undefined;
+                    clientRequest.category = null;
                 }
 
                 const updated = await api.Page.update(slug as string, clientRequest);
