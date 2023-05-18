@@ -145,9 +145,35 @@ export default function OverallAnalytics() {
             <Container>
                 <h1>Overall analytics for ISAAC</h1>
 
-                <Grid numColsLg={6} className="gap-6 mt-6">
-                    {/* Main section */}
-                    <Col numColSpanLg={4}>
+                <Grid numColsMd={2} numColsLg={3} className="gap-6 mt-6">
+                    <Card>
+                        <h2>Select data date range</h2>
+                        <Select
+                            value={dateRange}
+                            label="Date Range"
+                            onChange={(e) => setDateRange(e.target.value as any)}
+                            className="self-end px-5"
+                            style={{ flex: 1 }}
+                        >
+                            <MenuItem value={7}>7 days</MenuItem>
+                            <MenuItem value={14}>14 days</MenuItem>
+                            <MenuItem value={30}>30 days</MenuItem>
+                            <MenuItem value={60}>60 days</MenuItem>
+                            <MenuItem value={90}>90 days</MenuItem>
+                        </Select>
+                    </Card>
+                    <Card>
+                        <h2>Total page views last {dateRange} days</h2>
+                        <Text>{totalClicks}</Text>
+                    </Card>
+                    <Card>
+                        <h2>Total searches last {dateRange} days</h2>
+                        <Text>{totalSearches}</Text>
+                    </Card>
+                </Grid>
+
+                <div className="mt-6">
+                    <Grid numColsLg={2}>
                         <Card>
                             <Title>Top 10 search queries last {dateRange} days</Title>
                             <BarList data={searchTimeData} className="mt-2" />
@@ -163,38 +189,8 @@ export default function OverallAnalytics() {
                                 yAxisWidth={50}
                             />
                         </Card>
-                    </Col>
-
-                    {/* KPI sidebar */}
-                    <Col numColSpanLg={2}>
-                        <div className="space-y-10">
-                            <Card>
-                                <h2>Select data date range</h2>
-                                <Select
-                                    value={dateRange}
-                                    label="Date Range"
-                                    onChange={(e) => setDateRange(e.target.value as any)}
-                                    className="self-end px-5"
-                                    style={{ flex: 1 }}
-                                >
-                                    <MenuItem value={7}>7 days</MenuItem>
-                                    <MenuItem value={14}>14 days</MenuItem>
-                                    <MenuItem value={30}>30 days</MenuItem>
-                                    <MenuItem value={60}>60 days</MenuItem>
-                                    <MenuItem value={90}>90 days</MenuItem>
-                                </Select>
-                            </Card>
-                            <Card>
-                                <h2>Total page views last {dateRange} days</h2>
-                                <Text>{totalClicks}</Text>
-                            </Card>
-                            <Card>
-                                <h2>Total searches last {dateRange} days</h2>
-                                <Text>{totalSearches}</Text>
-                            </Card>
-                        </div>
-                    </Col>
-                </Grid>
+                    </Grid>
+                </div>
             </Container>
         </>
     );
