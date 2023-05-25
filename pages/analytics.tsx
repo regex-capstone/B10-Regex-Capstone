@@ -89,10 +89,10 @@ export default function OverallAnalytics() {
         const tempSearchData: MetricInterfaceBar[] = [];
 
         if (rawSearchData.length > 0) {
+            const threshold = new Date(new Date().setDate(new Date().getDate() - dateRange));
             for (let i = 0; i < rawSearchData.length; i++) {
                 const queryName = rawSearchData[i].name
                 const focusTime = new Date(rawSearchData[i].created_at as number);
-                const threshold = new Date(new Date().setDate(new Date().getDate() - dateRange));
 
                 if(focusTime >= threshold) {
                     processMetric(tempSearchData, queryName);
@@ -118,16 +118,17 @@ export default function OverallAnalytics() {
         fillClickArray(tempTimeData, dateRange, new Date());
 
         if (rawClickData.length > 0) {
+            const threshold = new Date(new Date().setDate(new Date().getDate() - dateRange));
             for (let i = 0; i < rawClickData.length; i++) {
                 const focusTime = new Date(rawClickData[i].name);
                 const focusDateTime = focusTime.toISOString().slice(0, 10);
 
-                processMetric(tempTimeData, focusDateTime);
+                if(focusTime >= threshold) {
+                    processMetric(tempTimeData, focusDateTime);
+                }
             }
-            // only run if array is not empty
-            if(tempTimeData.length !== 0) {
-                setTotalClicks(sumData(tempTimeData));
-            }
+            console.log(tempTimeData)
+            setTotalClicks(sumData(tempTimeData));
         }
         setClickTimeData(tempTimeData);
     }, [dateRange, rawClickData])
