@@ -93,7 +93,7 @@ async function init() {
 
         const text = parse(recentRev.content).text;
 
-        for (let j = 0; j < 4; j++) {   // r/programminghorror
+        for (let j = 0; j < 20; j++) {   // r/programminghorror
             docs[i] += ' ' + doc + ' ';
         }
         docs[i] += text;
