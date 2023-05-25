@@ -127,7 +127,6 @@ export default function OverallAnalytics() {
                     processMetric(tempTimeData, focusDateTime);
                 }
             }
-            console.log(tempTimeData)
             setTotalClicks(sumData(tempTimeData));
         }
         setClickTimeData(tempTimeData);
