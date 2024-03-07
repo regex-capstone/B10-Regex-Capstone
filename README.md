@@ -3,6 +3,7 @@ Repository for UW Informatics Capstone group B10 (Regex), 2023
 
 # Latest
 https://ischool-isaac.vercel.app/about - Landing Page
+
 https://isaac-wenjalan.vercel.app/ - web App
 
 # Contact Info
